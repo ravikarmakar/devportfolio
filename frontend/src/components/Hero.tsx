@@ -42,8 +42,7 @@ const Hero = () => {
             />
           </div>
           <p className="dark:text-textLight/70 text-gray-600 mb-8 text-lg">
-            Crafting beautiful web experiences with modern technologies.
-            Specialized in building full-stack applications with the MERN stack.
+            {user?.bio}
           </p>
           <div className="flex flex-wrap gap-4">
             <motion.button

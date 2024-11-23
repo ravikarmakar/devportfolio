@@ -1,43 +1,51 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-// Define the schema for individual skills
-const skillSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    iconUrl: {
-      type: String,
-      required: true,
-    },
-    level: {
-      type: Number,
-      min: 0,
-      max: 100,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-export const Skill = mongoose.model("Skill", skillSchema);
-
-// Define the schema for skill categories
 const skillCategorySchema = new mongoose.Schema(
   {
-    category: {
+    title: {
       type: String,
-      enum: ["frontend", "backend", "database", "devops", "design", "other"],
       required: true,
-      unique: true, // Ensure that the category is unique
     },
-    items: [skillSchema], // Array of skills
+    icon: {
+      type: String, // Icon reference as a string (e.g., a URL or a font icon class)
+    },
+    description: {
+      type: String, // Brief description of the category
+    },
+    // displayOrder: {
+    //   type: Number, // Allows ordering of categories if needed
+    //   default: 0,
+    // },
+    skills: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        level: {
+          type: Number,
+          required: true,
+        },
+        icon: {
+          type: String, // Icon reference for the skill
+        },
+        description: {
+          type: String, // Description of the skill
+        },
+        experienceYears: {
+          type: Number, // Number of years of experience in this skill
+          default: 0,
+        },
+        isInProgress: {
+          type: Boolean, // Flag to show if the skill is still being learned
+          default: false,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
 
-export const SkillCategory = mongoose.model(
-  "SkillCategory",
-  skillCategorySchema
-);
+const SkillCategory = mongoose.model("SkillCategory", skillCategorySchema);
+
+module.exports = SkillCategory;

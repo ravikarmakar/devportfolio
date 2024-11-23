@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .gradient-text {
-    @apply bg-gradient-to-r from-[#8af1ff] via-[rgb(223,18,255)] to-[#ff3434] bg-clip-text text-transparent;
-  }
-}
-
 @layer base {
   body {
     @apply transition-colors duration-200;
@@ -26,7 +20,7 @@
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-bold font-poppins mb-8 text-center dark:text-textLight text-textDark;
+    @apply text-3xl md:text-4xl font-bold font-poppins mb-8 text-center dark:text-white text-gray-900;
   }
 
   .btn-primary {
@@ -39,6 +33,46 @@
            backdrop-blur-sm transition-all duration-300 hover:shadow-xl
            dark:hover:bg-secondary/30;
   }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
 }
 
 .typing-cursor {
@@ -54,16 +88,3 @@
 html {
   scroll-behavior: smooth;
 }
-
-/* Gradient text effect with Pink-700, Blue-600, and Green-500 */
-/* .gradient-text {
-  background: linear-gradient(
-    to right,
-    #8b0000,
-    Deep Red #ff1493,
-    /* Rose Pink #dda0dd Lilac */
-/* ); */
-/* -webkit-background-clip: text; */
-/* background-clip: text; */
-/* color: transparent; */
-/* } */
