@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const skillCategorySchema = new mongoose.Schema(
   {
@@ -7,10 +7,10 @@ const skillCategorySchema = new mongoose.Schema(
       required: true,
     },
     icon: {
-      type: String, // Icon reference as a string (e.g., a URL or a font icon class)
+      type: String,
     },
     description: {
-      type: String, // Brief description of the category
+      type: String,
     },
     // displayOrder: {
     //   type: Number, // Allows ordering of categories if needed
@@ -26,26 +26,27 @@ const skillCategorySchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-        icon: {
-          type: String, // Icon reference for the skill
-        },
+        // icon: {
+        //   type: String, // Icon reference for the skill
+        // },
         description: {
           type: String, // Description of the skill
         },
-        experienceYears: {
-          type: Number, // Number of years of experience in this skill
-          default: 0,
-        },
-        isInProgress: {
-          type: Boolean, // Flag to show if the skill is still being learned
-          default: false,
-        },
+        // experienceYears: {
+        //   type: Number, // Number of years of experience in this skill
+        //   default: 0,
+        // },
+        // isInProgress: {
+        //   type: Boolean, // Flag to show if the skill is still being learned
+        //   default: false,
+        // },
       },
     ],
   },
   { timestamps: true }
 );
 
-const SkillCategory = mongoose.model("SkillCategory", skillCategorySchema);
-
-module.exports = SkillCategory;
+export const SkillCategory = mongoose.model(
+  "SkillCategory",
+  skillCategorySchema
+);

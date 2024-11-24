@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sun, Moon, Menu, X } from "lucide-react";
+import useUserStore from "../store/useUserStore";
 
 interface NavbarProps {
   darkMode: boolean;
@@ -9,26 +11,16 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const location = useLocation();
+  const { user } = useUserStore();
 
-  const sections = ["skills", "projects", "experience", "contact"];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const current = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const navLinks = [
+    { path: "/", label: "Home" },
+    { path: "/skills", label: "Skills" },
+    { path: "/projects", label: "Projects" },
+    { path: "/experience", label: "Experience" },
+    { path: "/contact", label: "Contact" },
+  ];
 
   return (
     <motion.nav
@@ -39,39 +31,53 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
       }`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <motion.a
-          href="#home"
+        <motion.div
           whileHover={{ scale: 1.05 }}
           className="text-2xl font-bold text-accent font-poppins"
         >
-          DevPortfolio
-        </motion.a>
+          <Link to="/">DevPortfolio</Link>
+        </motion.div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
-          {sections.map((section) => (
-            <a
-              key={section}
-              href={`#${section}`}
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
               className={`nav-link capitalize ${
-                activeSection === section ? "active" : ""
+                location.pathname === link.path ? "active" : ""
               } ${darkMode ? "text-textLight" : "text-gray-700"}`}
             >
-              {section}
-            </a>
+              {link.label}
+            </Link>
           ))}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full transition-colors ${
-              darkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
-            }`}
-          >
-            {darkMode ? (
-              <Sun size={20} className="text-textLight" />
-            ) : (
-              <Moon size={20} className="text-gray-700" />
-            )}
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`p-2 rounded-full transition-colors ${
+                darkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
+              }`}
+            >
+              {darkMode ? (
+                <Sun size={20} className="text-textLight" />
+              ) : (
+                <Moon size={20} className="text-gray-700" />
+              )}
+            </button>
+            <Link to="/profile">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="relative group cursor-pointer"
+              >
+                <img
+                  src={user?.profileImageUrl}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full border-2 border-accent object-cover"
+                />
+                {/* <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-bgDark"></div> */}
+              </motion.div>
+            </Link>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -95,12 +101,12 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
             darkMode ? "bg-bgDark/95" : "bg-white/95"
           }`}
         >
-          {sections.map((section) => (
-            <a
-              key={section}
-              href={`#${section}`}
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
               className={`block px-6 py-2 capitalize ${
-                activeSection === section
+                location.pathname === link.path
                   ? "text-accent"
                   : darkMode
                   ? "text-textLight"
@@ -108,29 +114,37 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
               } hover:text-accent transition-colors`}
               onClick={() => setIsOpen(false)}
             >
-              {section}
-            </a>
+              {link.label}
+            </Link>
           ))}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="block w-full text-left px-6 py-2"
-          >
-            <span
-              className={`flex items-center ${
-                darkMode ? "text-textLight" : "text-gray-700"
-              }`}
+          <div className="px-6 py-2 flex items-center justify-between">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="flex items-center"
             >
-              {darkMode ? (
-                <Sun size={20} className="mr-2" />
-              ) : (
-                <Moon size={20} className="mr-2" />
-              )}
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </span>
-          </button>
+              <span
+                className={`flex items-center ${
+                  darkMode ? "text-textLight" : "text-gray-700"
+                }`}
+              >
+                {darkMode ? (
+                  <Sun size={20} className="mr-2" />
+                ) : (
+                  <Moon size={20} className="mr-2" />
+                )}
+                {darkMode ? "Light Mode" : "Dark Mode"}
+              </span>
+            </button>
+            <Link to="/profile" onClick={() => setIsOpen(false)}>
+              <img
+                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop"
+                alt="Profile"
+                className="w-8 h-8 rounded-full border-2 border-accent"
+              />
+            </Link>
+          </div>
         </motion.div>
       )}
-      {/* Avatar Icon - Added */}
     </motion.nav>
   );
 };

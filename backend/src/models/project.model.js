@@ -22,20 +22,17 @@ const projectSchema = new mongoose.Schema(
       github: { type: String }, // GitHub repository link
       hosted: { type: String }, // Hosted site link
     },
-    status: {
-      type: String,
-      enum: ["upcoming", "in-progress", "completed"], // Status options
-      default: "upcoming", // Default status
-    },
+    // status: {
+    //   type: String,
+    //   enum: ["upcoming", "in-progress", "completed"], // Status options
+    //   default: "upcoming", // Default status
+    // },
     priority: {
       type: String,
       enum: ["high", "medium", "low"],
       default: "medium",
     },
-    // creator: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User", // Linking to User model, assuming you have a User model
-    // },
+
     tags: {
       type: [String],
     },
@@ -46,6 +43,4 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Project = mongoose.model("Project", projectSchema);
-
-module.exports = Project;
+export const Project = mongoose.model("Project", projectSchema);

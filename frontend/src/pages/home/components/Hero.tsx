@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { GithubIcon, Linkedin, Download } from "lucide-react";
-import useUserStore from "../store/useUserStore";
 import { useEffect } from "react";
+import useUserStore from "../../../store/useUserStore";
 
 const Hero = () => {
   const { user, fetchUserData } = useUserStore();
@@ -110,13 +110,13 @@ const Hero = () => {
 
           {/* Floating Particles */}
           <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
+            {[...Array(50)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-accent/50 rounded-full"
                 initial={{ x: 0, y: 0 }}
                 animate={{
-                  x: Math.random() * 200 - 100,
+                  x: Math.random() * 300 - 100,
                   y: Math.random() * 200 - 100,
                   opacity: [0.5, 1, 0.5],
                 }}

@@ -8,6 +8,5 @@ router.get("/", getAllProject);
 // router.get("/upcoming", getUpcomingProject);
 // router.post("/", createProject);
 // router.put("/:id", updateProject);
-// router.delete("/:id", deleteProject);
 
 export default router;

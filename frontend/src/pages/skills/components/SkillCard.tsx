@@ -1,4 +1,7 @@
-export const SkillCard = ({ skill, index }) => {
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+export const SkillCard = ({ skill, index }: any) => {
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,

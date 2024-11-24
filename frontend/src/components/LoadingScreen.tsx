@@ -36,7 +36,7 @@ const LoadingScreen = () => {
         >
           <h2 className="text-xl font-semibold mb-2 dark:text-white text-gray-800"></h2>
           <div className="flex items-center gap-1">
-            {[0, 1, 2, 4].map((index) => (
+            {[0, 1, 2, 3, 4].map((index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0.2 }}
