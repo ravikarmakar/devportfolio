@@ -1,11 +1,35 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import * as LucideIcons from "lucide-react";
+
+// Icon mapping object
+export const iconMap: { [key: string]: React.ComponentType<any> } = {
+  code: LucideIcons.Code2,
+  database: LucideIcons.Database,
+  server: LucideIcons.Server,
+  layout: LucideIcons.Layout,
+  git: LucideIcons.GitBranch,
+  container: LucideIcons.Container,
+  layers: LucideIcons.Layers,
+  cpu: LucideIcons.Cpu,
+  globe: LucideIcons.Globe,
+  palette: LucideIcons.Palette,
+  terminal: LucideIcons.Terminal,
+  shield: LucideIcons.Shield,
+  rocket: LucideIcons.Rocket,
+  clipboard: LucideIcons.Clipboard,
+  user: LucideIcons.User,
+  users: LucideIcons.Users,
+  settings: LucideIcons.Settings,
+};
 
 export const SkillCard = ({ skill, index }: any) => {
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
   });
+
+  const IconComponent = iconMap[skill.iconName] || LucideIcons.Circle;
 
   return (
     <motion.div
@@ -22,7 +46,7 @@ export const SkillCard = ({ skill, index }: any) => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-accent/10 dark:bg-accent/20">
-                {skill.icon}
+                <IconComponent className="w-5 h-5" />
               </div>
               <h4 className="font-medium text-base dark:text-white text-gray-800">
                 {skill.name}

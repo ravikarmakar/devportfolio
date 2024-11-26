@@ -6,7 +6,7 @@ const skillCategorySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    icon: {
+    iconName: {
       type: String,
     },
     description: {
@@ -26,9 +26,9 @@ const skillCategorySchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-        // icon: {
-        //   type: String, // Icon reference for the skill
-        // },
+        iconName: {
+          type: String, // Icon reference for the skill
+        },
         description: {
           type: String, // Description of the skill
         },

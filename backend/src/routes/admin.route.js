@@ -8,9 +8,21 @@ import {
   updateProject,
   deleteProject,
 } from "../controllers/admin.controller.js";
-// import verifyAdminAccess from "../middleware/verifyAdminAccess.js";
+import {
+  verifyAdminOTP,
+  getDashboard,
+} from "../controllers/admin.controller.js";
+
+import { adminEmailVerification } from "../middleware/adminAuth.middleware.js";
+import { protectAdminRoute } from "../middleware/verifyToken.middleware.js";
 
 const router = express.Router();
+
+router.post("/login", adminEmailVerification);
+router.post("/verify", verifyAdminOTP);
+router.get("/dashboard", protectAdminRoute, getDashboard);
+
+// other routes
 
 router.put("/user/:id", updateUser);
 

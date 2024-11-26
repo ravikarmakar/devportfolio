@@ -1,16 +1,29 @@
+// External Imports
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
+// Component Imports
 import Navbar from "./components/Navbar";
-import Projects from "./components/Projects";
-import Experience from "./components/Experience";
-import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import LoadingScreen from "./components/LoadingScreen";
+import NotFound from "./components/NotFound";
+
+// Page Imports
 import Home from "./pages/home/Home";
 import SkillPage from "./pages/skills/SkillPage";
 import ProfilePage from "./pages/profile/ProfilePage";
-import AdminPage from "./pages/admin/AdminPage";
+import Projects from "./components/Projects";
+import Experience from "./components/Experience";
+import Contact from "./components/Contact";
+
+// Admin Page Imports
+import AdminLayout from "./pages/admin/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
+import SkillsTab from "./pages/admin/components/SkillsTab";
+import ProjectsTab from "./pages/admin/components/ProjectsTab";
+import BlogsTab from "./pages/admin/components/BlogsTab";
+import MessagesTab from "./pages/admin/components/MessagesTab";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -32,10 +45,22 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  const MainLayout = ({ children }: { children: React.ReactNode }) => (
+    <div
+      className={`min-h-screen ${
+        darkMode ? "text-textLight" : "text-gray-900"
+      }`}
+    >
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+      {children}
+      <Footer />
+    </div>
+  );
 
   return (
     <AnimatePresence mode="wait">
@@ -51,23 +76,69 @@ function App() {
             darkMode ? "dark bg-bgDark" : "bg-gray-50"
           }`}
         >
-          <div
-            className={`min-h-screen ${
-              darkMode ? "text-textLight" : "text-gray-900"
-            }`}
-          >
-            <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-            <Routes>
-              <Route path="/" element={<Home />}></Route>
-              <Route path="/skills" element={<SkillPage />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/experience" element={<Experience />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/admin" element={<AdminPage />} />
-            </Routes>
-            <Footer />
-          </div>
+          <Routes>
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="projects" element={<ProjectsTab />} />
+              <Route path="skills" element={<SkillsTab />} />
+              <Route path="blog" element={<BlogsTab />} />
+              <Route path="messages" element={<MessagesTab />} />
+            </Route>
+
+            {/* Public Routes */}
+            <Route
+              path="/"
+              element={
+                <MainLayout>
+                  <Home />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/skills"
+              element={
+                <MainLayout>
+                  <SkillPage />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <MainLayout>
+                  <Projects />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/experience"
+              element={
+                <MainLayout>
+                  <Experience />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <MainLayout>
+                  <Contact />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <MainLayout>
+                  <ProfilePage />
+                </MainLayout>
+              }
+            />
+
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </motion.div>
       )}
     </AnimatePresence>

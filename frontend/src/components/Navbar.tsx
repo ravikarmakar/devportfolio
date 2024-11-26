@@ -15,7 +15,6 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
   const { user } = useUserStore();
 
   const navLinks = [
-    { path: "/", label: "Home" },
     { path: "/skills", label: "Skills" },
     { path: "/projects", label: "Projects" },
     { path: "/experience", label: "Experience" },
@@ -137,7 +136,7 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
             </button>
             <Link to="/profile" onClick={() => setIsOpen(false)}>
               <img
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop"
+                src={user?.profileImageUrl}
                 alt="Profile"
                 className="w-8 h-8 rounded-full border-2 border-accent"
               />

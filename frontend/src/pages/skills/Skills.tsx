@@ -1,19 +1,5 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import {
-  Code2,
-  Database,
-  Server,
-  Layout,
-  GitBranch,
-  Container,
-  Layers,
-  Cpu,
-  Globe,
-  Palette,
-  Terminal,
-  Shield,
-} from "lucide-react";
 import BackgroundElements from "../../components/elements/BackgroundElements";
 import { useSkillStore } from "../../store/useSkillStore";
 import { useEffect } from "react";

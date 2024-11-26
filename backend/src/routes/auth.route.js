@@ -1,7 +1,5 @@
 import express from "express";
 
-import { sendVerificationEmail } from "../utils/sendVerificationEmail.js";
-
 const router = express.Router();
 
 // Request access route (sends verification email)
