@@ -7,7 +7,7 @@ interface DataTableProps {
     label: string;
     render?: (value: any) => React.ReactNode;
   }>;
-  data: Array<any>;
+  SkillData: Array<any>;
   onEdit?: (item: any) => void;
   onDelete?: (item: any) => void;
   onView?: (item: any) => void;
@@ -15,11 +15,12 @@ interface DataTableProps {
 
 const DataTable = ({
   columns,
-  data,
+  SkillData,
   onEdit,
   onDelete,
   onView,
 }: DataTableProps) => {
+  // console.log(SkillData);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -41,7 +42,7 @@ const DataTable = ({
           </tr>
         </thead>
         <tbody className="bg-white dark:bg-secondary/10 divide-y divide-gray-200 dark:divide-gray-700">
-          {data.map((item, index) => (
+          {SkillData.map((skill, index) => (
             <tr key={index}>
               {columns.map((column) => (
                 <td
@@ -49,8 +50,8 @@ const DataTable = ({
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300"
                 >
                   {column.render
-                    ? column.render(item[column.key])
-                    : item[column.key]}
+                    ? column.render(skill[column.key])
+                    : skill[column.key]}
                 </td>
               ))}
               {(onEdit || onDelete || onView) && (
@@ -58,7 +59,7 @@ const DataTable = ({
                   <div className="flex justify-end gap-2">
                     {onView && (
                       <button
-                        onClick={() => onView(item)}
+                        onClick={() => onView(skill)}
                         className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                       >
                         <Eye size={18} />
@@ -66,7 +67,7 @@ const DataTable = ({
                     )}
                     {onEdit && (
                       <button
-                        onClick={() => onEdit(item)}
+                        onClick={() => onEdit(skill)}
                         className="text-accent hover:text-accent/80"
                       >
                         <Edit size={18} />
@@ -74,7 +75,7 @@ const DataTable = ({
                     )}
                     {onDelete && (
                       <button
-                        onClick={() => onDelete(item)}
+                        onClick={() => onDelete(skill)}
                         className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                       >
                         <Trash2 size={18} />

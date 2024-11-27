@@ -1,9 +1,10 @@
 import { User } from "../models/user.model.js";
 import { SkillCategory } from "../models/skills.model.js";
 import { Project } from "../models/project.model.js";
-
 import { verifyOTP } from "../utils/otpVerify.js";
 import { generateAdminToken } from "../service/auth.service.js";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
+import fs from "fs";
 
 export const verifyAdminOTP = async (req, res) => {
   try {
@@ -112,42 +113,41 @@ export const deleteSkills = async (req, res) => {
 };
 
 export const addNewProject = async (req, res) => {
-  const {
-    title,
-    description,
-    imgUrl,
-    technologies,
-    links,
-    priority,
-    tags,
-    details,
-  } = req.body;
+  const { title, description, status, technologies, links, priority, tags } =
+    req.body;
 
-  try {
-    // Create a new Project document
-    const newProject = new Project({
-      title,
-      description,
-      imgUrl,
-      technologies,
-      links,
-      priority,
-      tags,
-      details,
-    });
+  const imageFile = req.file ? req.file.path : null; // Path where the image is stored
 
-    // Save the new Project to the database
-    await newProject.save();
-
-    // Respond with the created project
-    res.status(201).json({
-      message: "Project created successfully",
-      data: newProject,
-    });
-  } catch (error) {
-    console.error("Error creating project:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+  if (imageFile) {
+    const imageUrl = await uploadOnCloudinary(imageFile);
+    fs.unlinkSync(imageFile); // Remove the local file after uploading
+    console.log("Uploaded Image URL:", imageUrl);
   }
+
+  // try {
+  //   // Create a new Project document
+  //   const newProject = new Project({
+  //     title,
+  //     description,
+  //     status,
+  //     technologies,
+  //     links,
+  //     priority,
+  //     tags,
+  //
+  //   });
+
+  //   // Save the new Project to the database
+  //   await newProject.save();
+
+  //   res.status(201).json({
+  //     message: "Project created successfully",
+  //     data: newProject,
+  //   });
+  // } catch (error) {
+  //   console.error("Error creating project:", error);
+  //   res.status(500).json({ message: "Server error", error: error.message });
+  // }
 };
 
 export const updateProject = async (req, res) => {

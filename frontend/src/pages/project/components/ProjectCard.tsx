@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { GithubIcon, ExternalLink } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import { Project } from "../../types";
+import { Project } from "../../../types";
 
 type ProjectCardProps = {
   project: Project;

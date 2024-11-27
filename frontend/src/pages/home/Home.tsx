@@ -1,7 +1,7 @@
 import Contact from "../../components/Contact";
-import Experience from "../../components/Experience";
+import Experience from "../experience/Experience";
 import Hero from "../home/components/Hero";
-import Projects from "../../components/Projects";
+import Projects from "../project/Projects";
 import Skills from "../skills/Skills";
 
 const Home = () => {

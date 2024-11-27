@@ -110,7 +110,7 @@ const Hero = () => {
 
           {/* Floating Particles */}
           <div className="absolute inset-0">
-            {[...Array(10)].map((_, i) => (
+            {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-accent/50 rounded-full"

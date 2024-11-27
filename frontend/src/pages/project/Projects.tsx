@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useProjectStore } from "../store/useProjectStore";
+import { useProjectStore } from "../../store/useProjectStore";
 import { useEffect } from "react";
-import { ProjectCard } from "./elements/ProjectCard";
+import { ProjectCard } from "./components/ProjectCard";
 
 const Projects = () => {
   const { projects, fetchProjects } = useProjectStore();

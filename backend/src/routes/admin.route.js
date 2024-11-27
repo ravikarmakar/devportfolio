@@ -1,4 +1,5 @@
 import express from "express";
+import { upload } from "../middleware/multer.js";
 import {
   addNewSkills,
   updateUser,
@@ -30,7 +31,7 @@ router.post("/skill", addNewSkills);
 router.put("/skill/:id", updateSkills);
 router.delete("/skill/:id", deleteSkills);
 
-router.post("/project", addNewProject);
+router.post("/project", upload.single("image"), addNewProject);
 router.put("/project/:id", updateProject);
 router.delete("/project/:id", deleteProject);
 

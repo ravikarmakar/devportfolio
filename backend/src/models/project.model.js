@@ -22,11 +22,11 @@ const projectSchema = new mongoose.Schema(
       github: { type: String }, // GitHub repository link
       hosted: { type: String }, // Hosted site link
     },
-    // status: {
-    //   type: String,
-    //   enum: ["upcoming", "in-progress", "completed"], // Status options
-    // default: "upcoming", // Default status
-    // },
+    status: {
+      type: String,
+      enum: ["upcoming", "in-progress", "completed"], // Status options
+      default: "upcoming", // Default status
+    },
     priority: {
       type: String,
       enum: ["high", "medium", "low"],
@@ -36,9 +36,9 @@ const projectSchema = new mongoose.Schema(
     tags: {
       type: [String],
     },
-    details: {
-      type: String,
-    },
+    // details: {
+    //   type: String,
+    // },
   },
   { timestamps: true }
 );
