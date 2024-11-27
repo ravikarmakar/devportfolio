@@ -6,7 +6,7 @@ import FormInput from "./elements/FormInput";
 import FormTextArea from "./elements/FormTextArea";
 // import FileUpload from "./elements/FileUpload";
 import ActionButton from "./elements/ActionButton";
-import DataTable from "./elements/DataTable";
+// import DataTable from "./elements/DataTable";
 
 // const blogSchema = z.object({
 //   title: z.string().min(1, "Title is required"),
@@ -140,13 +140,13 @@ const BlogsTab = () => {
         <h3 className="text-xl font-semibold dark:text-white mb-4">
           Blog Posts
         </h3>
-        <DataTable
+        {/* <DataTable
           columns={columns}
           data={mockPosts}
           onEdit={(item) => console.log("Edit:", item)}
           onDelete={(item) => console.log("Delete:", item)}
           onView={(item) => console.log("View:", item)}
-        />
+        /> */}
       </div>
     </div>
   );

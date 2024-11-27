@@ -21,6 +21,11 @@ const AdminLayout = () => {
       label: "Projects",
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
+    {
+      path: "/admin/experience",
+      icon: <Wrench size={20} />,
+      label: "Experience",
+    },
     { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
     { path: "/admin/messages", icon: <Mail size={20} />, label: "Messages" },
     {
