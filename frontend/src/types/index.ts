@@ -4,9 +4,13 @@ export interface User {
   email: string;
   bio: string;
   profileImageUrl: string;
-  socialLinks: Object;
+  // socialLinks: Object;
   currLocation: string;
   mobileNumber: string;
+  resumeUrl: string;
+  profileSummery: string;
+  websiteUrl: string;
+  aboutMe: string;
   createdAt: string;
   updatedAt: string;
 }

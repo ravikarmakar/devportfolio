@@ -1,9 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { axiosInstance } from "../../../lib/axios";
-import { Upload, X } from "lucide-react";
+import { Upload, X, Edit, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useProjectStore } from "../../../store/useProjectStore";
 
 const ProjectsTab = () => {
+  const { fetchProjects, projects } = useProjectStore();
+
+  const [action, setAction] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [links, setLinks] = useState<{ github: string; hosted: string }>({
@@ -21,6 +25,25 @@ const ProjectsTab = () => {
 
   const priorityOptions = ["high", "medium", "low"];
   const statusOptions = ["upcoming", "in-progress", "completed"];
+
+  console.log(action);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await axiosInstance.delete(`/admin/project/${id}`);
+      fetchProjects();
+      toast.success("Project deleted successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete project");
+    }
+  };
+
+  const handleUpdate = (id: string) => {};
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects, projects]);
 
   const handleGithubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLinks((prevLinks) => ({
@@ -90,7 +113,7 @@ const ProjectsTab = () => {
       priority,
       status,
       description,
-      imageUrl: image,
+      image,
     };
 
     console.log(projectData);
@@ -128,9 +151,29 @@ const ProjectsTab = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold dark:text-white mb-4">
-          Projects Management
-        </h2>
+        <div className="flex justify-between items-center gap-6 mb-4">
+          <h2 className="text-2xl font-bold dark:text-white mb-4">
+            Projects Management
+          </h2>
+          <div className="flex gap-4">
+            <button
+              className={`text-white bg-accent px-4 py-2 rounded-lg ${
+                action?.includes("create") ? "bg-blue-700" : ""
+              }`}
+              onClick={() => setAction("create")}
+            >
+              Create
+            </button>
+            <button
+              className={`text-white bg-accent px-4 py-2 rounded-lg ${
+                action?.includes("update") ? "bg-blue-700" : ""
+              }`}
+              onClick={() => setAction("update")}
+            >
+              Update
+            </button>
+          </div>
+        </div>
         <div className="bg-white dark:bg-secondary/20 rounded-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -320,7 +363,7 @@ const ProjectsTab = () => {
               <input
                 ref={fileInputRef}
                 type="file"
-                name="image"
+                name="image/*"
                 accept="image/jpeg,image/png,image/gif"
                 onChange={handleImageChange}
                 className="hidden"
@@ -369,11 +412,38 @@ const ProjectsTab = () => {
         </div>
       </div>
 
-      <div>
-        <h3 className="text-xl font-semibold dark:text-white mb-4">
+      <div className="border-t border-gray-400 dark:border-gray-600 px-2 py-4">
+        <h3 className="text-3xl mb-8 font-semibold dark:text-white">
           Existing Projects
         </h3>
-        {/* <DataTable columns={columns} /> */}
+
+        <div>
+          {projects.map((project, index) => (
+            <div
+              key={project?._id}
+              className="flex mb-4 w-70 flex-col gap-2 rounded-lg shadow-lg p-4 bg-[#191C1E]"
+            >
+              <h3 className="text-lg font-bold text-gray-300 md:text-xl">
+                {index + 1}. {project?.title}
+              </h3>
+              <p className="text-gray-400">{project?.description}</p>
+              <div className="mt-4 flex justify-end gap-4 items-center">
+                <button
+                  onClick={() => handleUpdate(project?._id)}
+                  className="flex items-center text-blue-500 rounded hover:text-blue-700 transition-all"
+                >
+                  <Edit />
+                </button>
+                <button
+                  onClick={() => handleDelete(project?._id)}
+                  className="flex items-center text-red-500 rounded hover:text-red-700 transition-all"
+                >
+                  <Trash2 />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

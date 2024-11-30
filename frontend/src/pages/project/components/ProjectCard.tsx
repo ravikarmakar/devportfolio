@@ -29,7 +29,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
     >
       <div className="relative overflow-hidden rounded-lg mb-4">
         <img
-          src="https://images.unsplash.com/photo-1557821552-17105176677c?w=800&h=600&fit=crop"
+          src={project.imgUrl}
           alt={project.title}
           className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-300"
         />

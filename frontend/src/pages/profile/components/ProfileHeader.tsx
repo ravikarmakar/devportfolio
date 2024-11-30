@@ -1,15 +1,14 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
-import {
-  Mail,
-  Github,
-  Linkedin,
-  Download,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+import { User } from "../../../types";
+import { Mail, Github, Linkedin, ArrowRight, Sparkles } from "lucide-react";
+import { DownloadButton } from "../../../components/ReasumeButton";
 
-const ProfileHeader = () => {
+interface ProfileHeaderProps {
+  user: User | null; // null agar user data abhi fetch nahi hua
+}
+
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
   return (
     <div className="min-h-[80vh] flex items-center">
       <div className="w-full grid md:grid-cols-2 gap-12 items-center">
@@ -31,7 +30,7 @@ const ProfileHeader = () => {
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-4 dark:text-textLight text-gray-900">
-            here ,<span className="text-accent block mt-2">Ravi Karmakar</span>
+            here,<span className="text-accent block mt-2">{user?.name}</span>
           </h1>
 
           <div className="text-xl md:text-2xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-500 font-bold h-[40px]">
@@ -39,9 +38,12 @@ const ProfileHeader = () => {
               sequence={[
                 "Backend Developer",
                 2000,
+
                 "Frontend Developer",
                 2000,
                 "Full Stack Developer",
+                2000,
+                "Mern Stack Developer",
                 2000,
               ]}
               wrapper="span"
@@ -65,14 +67,16 @@ const ProfileHeader = () => {
               <ArrowRight className="w-5 h-5" />
             </motion.button>
 
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => window.open(user?.resumeUrl, "_blank")}
               className="px-6 py-3 bg-accent/10 text-accent rounded-lg hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-2"
             >
               <Download className="w-5 h-5" />
               Download CV
-            </motion.button>
+            </motion.button> */}
+            <DownloadButton user={user} />
           </div>
 
           <div className="mt-8 flex gap-4">
@@ -131,7 +135,7 @@ const ProfileHeader = () => {
           >
             <div className="relative w-64 h-64">
               <img
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop"
+                src={user?.profileImageUrl}
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover border-4 border-accent shadow-xl"
               />

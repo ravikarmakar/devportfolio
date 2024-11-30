@@ -25,6 +25,7 @@ import SkillsTab from "./pages/admin/components/SkillsTab";
 import ProjectsTab from "./pages/admin/components/ProjectsTab";
 import BlogsTab from "./pages/admin/components/BlogsTab";
 import MessagesTab from "./pages/admin/components/MessagesTab";
+import ProfileTab from "./pages/admin/components/ProfileTab";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -85,6 +86,7 @@ function App() {
               <Route path="skills" element={<SkillsTab />} />
               <Route path="blog" element={<BlogsTab />} />
               <Route path="messages" element={<MessagesTab />} />
+              <Route path="profile" element={<ProfileTab />} />
             </Route>
 
             {/* Public Routes */}

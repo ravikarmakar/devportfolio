@@ -30,6 +30,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    websiteUrl: {
+      type: String,
+      trim: true,
+    },
+    resumeUrl: {
+      type: String,
+      trim: true,
+    },
+    aboutMe: {
+      type: String,
+      trim: true,
+    },
+    profileSummery: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

@@ -3,8 +3,19 @@ import ProfileHeader from "./components/ProfileHeader";
 import AboutSection from "./components/AboutSection";
 import InterestsSection from "./components/InterestsSection";
 import ProfessionalSummary from "./components/ProfessionalSummary";
+import useUserStore from "../../store/useUserStore";
+import { useEffect } from "react";
+import GoalsSection from "./components/GoalsSection";
 
 const Profile = () => {
+  const { fetchUserData, user } = useUserStore();
+
+  useEffect(() => {
+    if (!user) {
+      fetchUserData();
+    }
+  }, [fetchUserData, user]);
+
   return (
     <section className="py-20 px-6">
       <div className="max-w-4xl mx-auto">
@@ -14,10 +25,11 @@ const Profile = () => {
           transition={{ duration: 0.5 }}
           className="space-y-12"
         >
-          <ProfileHeader />
-          <ProfessionalSummary />
-          <AboutSection />
+          <ProfileHeader user={user} />
+          <ProfessionalSummary user={user} />
+          <AboutSection user={user} />
           <InterestsSection />
+          <GoalsSection />
         </motion.div>
 
         {/* Background Elements */}

@@ -1,8 +1,12 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Code2, Server, Database, Rocket } from "lucide-react";
+import { User } from "../../../types";
 
-const ProfessionalSummary = () => {
+interface ProfileSummaryrProps {
+  user: User | null; // null agar user data abhi fetch nahi hua
+}
+
+const ProfessionalSummary: React.FC<ProfileSummaryrProps> = ({ user }) => {
   const summaryPoints = [
     {
       icon: <Code2 className="w-6 h-6 text-accent" />,
@@ -43,11 +47,7 @@ const ProfessionalSummary = () => {
       <div className="bg-white dark:bg-secondary/20 rounded-xl p-6 backdrop-blur-sm">
         <div className="mb-8">
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            Full Stack Developer with 4+ years of experience in building
-            scalable web applications and RESTful APIs. Passionate about
-            creating efficient, maintainable code and staying current with
-            emerging technologies. Strong focus on user experience and
-            performance optimization.
+            {user?.profileSummery}
           </p>
         </div>
 

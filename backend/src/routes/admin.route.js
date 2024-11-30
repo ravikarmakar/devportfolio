@@ -1,5 +1,6 @@
 import express from "express";
 import { upload } from "../middleware/multer.js";
+
 import {
   addNewSkills,
   updateUser,
@@ -9,23 +10,19 @@ import {
   updateProject,
   deleteProject,
 } from "../controllers/admin.controller.js";
-import {
-  verifyAdminOTP,
-  getDashboard,
-} from "../controllers/admin.controller.js";
-
-import { adminEmailVerification } from "../middleware/adminAuth.middleware.js";
-import { protectAdminRoute } from "../middleware/verifyToken.middleware.js";
 
 const router = express.Router();
 
-router.post("/login", adminEmailVerification);
-router.post("/verify", verifyAdminOTP);
-router.get("/dashboard", protectAdminRoute, getDashboard);
-
 // other routes
 
-router.put("/user/:id", updateUser);
+router.put(
+  "/user/:id",
+  upload.fields([
+    { name: "profileImage", maxCount: 1 }, // Single profile image
+    { name: "resumeFile", maxCount: 1 }, // Single resume
+  ]),
+  updateUser
+);
 
 router.post("/skill", addNewSkills);
 router.put("/skill/:id", updateSkills);

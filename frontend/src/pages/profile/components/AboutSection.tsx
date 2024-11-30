@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { BookOpen, Award, Coffee, Heart } from "lucide-react";
+import { User } from "../../../types";
 
-const AboutSection = () => {
+interface ProfileAboutProps {
+  user: User | null; // null agar user data abhi fetch nahi hua
+}
+
+const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
   const stats = [
     { icon: BookOpen, label: "Years Experience", value: "4+" },
     { icon: Award, label: "Projects Completed", value: "50+" },
@@ -19,11 +24,7 @@ const AboutSection = () => {
       <h2 className="text-2xl font-bold mb-6 dark:text-white">About Me</h2>
       <div className="bg-white dark:bg-secondary/20 rounded-xl p-6 backdrop-blur-sm">
         <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-          Passionate full-stack developer with expertise in building modern web
-          applications. I specialize in React, Node.js, and cloud technologies.
-          When I'm not coding, you'll find me exploring new technologies,
-          contributing to open-source projects, or sharing knowledge through
-          technical writing.
+          {user?.aboutMe}
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

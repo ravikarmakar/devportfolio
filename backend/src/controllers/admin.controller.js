@@ -1,32 +1,9 @@
 import { User } from "../models/user.model.js";
 import { SkillCategory } from "../models/skills.model.js";
 import { Project } from "../models/project.model.js";
-import { verifyOTP } from "../utils/otpVerify.js";
-import { generateAdminToken } from "../service/auth.service.js";
+
 import { uploadOnCloudinary } from "../config/cloudinary.js";
-import fs from "fs";
-
-export const verifyAdminOTP = async (req, res) => {
-  try {
-    const { otp } = req.body;
-    const adminEmail = process.env.ADMIN_EMAIL;
-
-    const verification = verifyOTP(adminEmail, otp);
-
-    if (!verification.valid) {
-      return res.status(400).json({ error: verification.message });
-    }
-
-    const token = generateAdminToken(adminEmail);
-
-    res.status(200).json({
-      message: "Admin access granted",
-      token,
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Verification failed" });
-  }
-};
+// import fs from "fs";
 
 export const getDashboard = (req, res) => {
   res.json({ message: "Welcome to admin dashboard" });
@@ -34,17 +11,53 @@ export const getDashboard = (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
+
+  const {
+    name,
+    email,
+    phone,
+    location,
+    websiteUrl,
+    bio,
+    profileSummery,
+    aboutMe,
+  } = req.body;
+
+  const profileImg = req.files?.profileImage?.[0]?.path || null; // Cloudinary path for profileImage
+  const resume = req.files?.resumeFile?.[0]?.path || null; // Cloudinary path for resume
+
+  const profileUrl = await uploadOnCloudinary(profileImg);
+  const resumeUrl = await uploadOnCloudinary(resume);
+
+  const updateData = {
+    name,
+    email,
+    mobileNumber: phone,
+    profileImageUrl: profileUrl,
+    resumeUrl: resumeUrl,
+    currLocation: location,
+    websiteUrl,
+    bio,
+    profileSummery,
+    aboutMe,
+  };
+
+  console.log(updateData);
+
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+    // Update user in the database
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
-    res
-      .status(200)
-      .json({ message: "User updated successfully", data: updatedUser });
+
+    res.status(200).json({
+      message: "User updated successfully",
+      data: updatedUser,
+    });
   } catch (error) {
     console.log("Error in updateUser controller:", error);
     res.status(500).json({ message: "Internal server error", error });
@@ -113,41 +126,43 @@ export const deleteSkills = async (req, res) => {
 };
 
 export const addNewProject = async (req, res) => {
-  const { title, description, status, technologies, links, priority, tags } =
-    req.body;
+  const {
+    title,
+    description,
+    status,
+    technologies,
+    links,
+    priority,
+    tags,
+    image,
+  } = req.body;
 
-  const imageFile = req.file ? req.file.path : null; // Path where the image is stored
+  const imageUrl = await uploadOnCloudinary(image);
 
-  if (imageFile) {
-    const imageUrl = await uploadOnCloudinary(imageFile);
-    fs.unlinkSync(imageFile); // Remove the local file after uploading
-    console.log("Uploaded Image URL:", imageUrl);
+  try {
+    // Create a new Project document
+    const newProject = new Project({
+      title,
+      description,
+      status,
+      technologies,
+      links,
+      priority,
+      tags,
+      imgUrl: req.body.image,
+    });
+
+    // Save the new Project to the database
+    await newProject.save();
+
+    res.status(201).json({
+      message: "Project created successfully",
+      data: newProject,
+    });
+  } catch (error) {
+    console.error("Error creating project:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-
-  // try {
-  //   // Create a new Project document
-  //   const newProject = new Project({
-  //     title,
-  //     description,
-  //     status,
-  //     technologies,
-  //     links,
-  //     priority,
-  //     tags,
-  //
-  //   });
-
-  //   // Save the new Project to the database
-  //   await newProject.save();
-
-  //   res.status(201).json({
-  //     message: "Project created successfully",
-  //     data: newProject,
-  //   });
-  // } catch (error) {
-  //   console.error("Error creating project:", error);
-  //   res.status(500).json({ message: "Server error", error: error.message });
-  // }
 };
 
 export const updateProject = async (req, res) => {
