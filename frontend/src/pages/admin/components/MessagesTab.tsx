@@ -1,182 +1,344 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Star, Trash2, Archive, Clock } from "lucide-react";
-import ActionButton from "./elements/ActionButton";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Star, Archive, Trash2, Search } from "lucide-react";
+import MessageCard from "./elements/MessageCard";
+import { useContactStore } from "../../../store/useContectStore";
 
+// Types
 interface Message {
-  id: number;
-  sender: string;
+  _id: string;
+  name: string;
   email: string;
   subject: string;
   message: string;
-  date: string;
   read: boolean;
   starred: boolean;
+  archived: boolean;
+  seenTimeStamp: string;
 }
 
 const MessagesTab = () => {
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [messages] = useState<Message[]>([
-    {
-      id: 1,
-      sender: "John Doe",
-      email: "john@example.com",
-      subject: "Project Inquiry",
-      message: "Hi, I'm interested in working with you on a project...",
-      date: "2024-03-10 14:30",
-      read: false,
-      starred: false,
-    },
-    {
-      id: 2,
-      sender: "Jane Smith",
-      email: "jane@example.com",
-      subject: "Collaboration Opportunity",
-      message:
-        "Hello, I came across your portfolio and would love to discuss...",
-      date: "2024-03-09 09:15",
-      read: true,
-      starred: true,
-    },
-  ]);
+  // State
 
-  const MessageCard = ({ message }: { message: Message }) => (
-    <motion.div
-      whileHover={{ scale: 1.01 }}
-      onClick={() => setSelectedMessage(message)}
-      className={`p-4 rounded-lg cursor-pointer transition-colors ${
-        message.read
-          ? "bg-white dark:bg-secondary/20"
-          : "bg-accent/5 dark:bg-accent/10"
-      } ${
-        selectedMessage?.id === message.id
-          ? "border-2 border-accent"
-          : "border border-gray-200 dark:border-gray-700"
-      }`}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-2 h-2 rounded-full ${
-              message.read ? "bg-gray-300" : "bg-accent"
-            }`}
-          />
-          <h3 className="font-medium dark:text-white">{message.sender}</h3>
-        </div>
-        <div className="flex items-center gap-2">
-          {message.starred && (
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-          )}
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            <Clock className="w-4 h-4 inline mr-1" />
-            {new Date(message.date).toLocaleDateString()}
-          </span>
-        </div>
-      </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-        {message.subject}
-      </p>
-      <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-        {message.message}
-      </p>
-    </motion.div>
-  );
+  const { fetchAllMessage, messages, markAsRead } = useContactStore();
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [filter, setFilter] = useState<
+    "all" | "unread" | "starred" | "archived"
+  >("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [replyMode, setReplyMode] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  // Effects
+  useEffect(() => {
+    fetchAllMessage();
+  }, [fetchAllMessage, messages, markAsRead]);
+
+  // Handlers
+  const handleMessageSelect = async (_id: string) => {
+    if (messages) {
+      const message = messages.find((m) => m._id === _id);
+      if (message && !message.read) {
+        try {
+          // Call markAsRead from Zustand store to update backend
+          const updatedMessage = await markAsRead(_id);
+          if (updatedMessage) {
+            console.log("Message marked as read:", updatedMessage);
+          }
+        } catch (error) {
+          console.error("Error marking message as read:", error);
+        }
+      }
+      setSelectedMessage(message || null);
+      setReplyMode(false);
+    }
+  };
+
+  const handleStar = async (id: string) => {
+    try {
+      // await fetch(`/api/messages/${id}/star`, { method: 'PUT' });
+      setMessages(
+        messages?.map((m) => (m._id === id ? { ...m, starred: !m.starred } : m))
+      );
+    } catch (error) {
+      console.error("Error starring message:", error);
+    }
+  };
+
+  const handleArchive = async (id: string) => {
+    try {
+      // await fetch(`/api/messages/${id}/archive`, { method: 'PUT' });
+      setMessages(
+        messages.map((m) => (m.id === id ? { ...m, archived: !m.archived } : m))
+      );
+    } catch (error) {
+      console.error("Error archiving message:", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      // await fetch(`/api/messages/${id}`, { method: 'DELETE' });
+      setMessages(messages.filter((m) => m.id !== id));
+      if (selectedMessage?.id === id) {
+        setSelectedMessage(null);
+      }
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+  };
+
+  const handleReply = async () => {
+    if (!selectedMessage || !replyText.trim()) return;
+
+    try {
+      // await fetch(`/api/messages/${selectedMessage.id}/reply`, {
+      //   method: 'POST',
+      //   body: JSON.stringify({ message: replyText }),
+      // });
+
+      // For demo purposes, just clear the reply
+      setReplyText("");
+      setReplyMode(false);
+
+      // You might want to add the reply to the message thread
+      // or refresh the messages
+    } catch (error) {
+      console.error("Error sending reply:", error);
+    }
+  };
+
+  // Filter messages
+  const filteredMessages = messages?.filter((message) => {
+    const matchesSearch =
+      message.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      message.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      message.message.toLowerCase().includes(searchQuery.toLowerCase());
+
+    switch (filter) {
+      case "unread":
+        return !message.read && matchesSearch;
+      case "starred":
+        return message.starred && matchesSearch;
+      case "archived":
+        return message.archived && matchesSearch;
+      default:
+        return !message.archived && matchesSearch;
+    }
+  });
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold dark:text-white mb-4">Messages</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Messages List */}
-          <div className="lg:col-span-1 space-y-4">
-            <div className="flex gap-2 mb-4">
-              <ActionButton
-                label="All"
-                variant="secondary"
-                icon={<Mail size={16} />}
-              />
-              <ActionButton
-                label="Starred"
-                variant="secondary"
-                icon={<Star size={16} />}
-              />
-              <ActionButton
-                label="Archived"
-                variant="secondary"
-                icon={<Archive size={16} />}
-              />
-            </div>
-            <div className="space-y-3">
-              {messages.map((message) => (
-                <MessageCard key={message.id} message={message} />
-              ))}
-            </div>
+    <div className="h-[calc(100vh-6rem)] flex overflow-hidden">
+      {/* Sidebar */}
+      <div className="w-full md:w-96 bg-white dark:bg-secondary/20 border-r dark:border-gray-700 flex flex-col">
+        {/* Search and Filter */}
+        <div className="p-4 border-b dark:border-gray-700">
+          <div className="relative mb-4">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
+              size={20}
+            />
+            <input
+              type="text"
+              placeholder="Search messages..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none focus:ring-2 focus:ring-accent"
+            />
           </div>
 
-          {/* Message Detail */}
-          <div className="lg:col-span-2">
-            {selectedMessage ? (
-              <div className="bg-white dark:bg-secondary/20 rounded-xl p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h3 className="text-xl font-semibold dark:text-white mb-2">
-                      {selectedMessage.subject}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span>From: {selectedMessage.sender}</span>
-                      <span>({selectedMessage.email})</span>
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(selectedMessage.date).toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <ActionButton
-                      label=""
-                      variant="secondary"
-                      icon={<Star size={16} />}
-                      onClick={() => console.log("Star message")}
-                    />
-                    <ActionButton
-                      label=""
-                      variant="secondary"
-                      icon={<Archive size={16} />}
-                      onClick={() => console.log("Archive message")}
-                    />
-                    <ActionButton
-                      label=""
-                      variant="danger"
-                      icon={<Trash2 size={16} />}
-                      onClick={() => console.log("Delete message")}
-                    />
-                  </div>
-                </div>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-gray-700 dark:text-gray-300">
-                    {selectedMessage.message}
-                  </p>
-                </div>
-                <div className="mt-6 flex justify-end">
-                  <ActionButton
-                    label="Reply"
-                    icon={<Mail size={16} />}
-                    onClick={() => console.log("Reply to message")}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="bg-white dark:bg-secondary/20 rounded-xl p-6 text-center">
-                <Mail className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium dark:text-white mb-2">
-                  No Message Selected
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Select a message from the list to view its contents
-                </p>
-              </div>
-            )}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setFilter("all")}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200
+                ${
+                  filter === "all"
+                    ? "bg-accent text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter("unread")}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200
+                ${
+                  filter === "unread"
+                    ? "bg-accent text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+            >
+              Unread
+            </button>
+            <button
+              onClick={() => setFilter("starred")}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200
+                ${
+                  filter === "starred"
+                    ? "bg-accent text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+            >
+              Starred
+            </button>
+            <button
+              onClick={() => setFilter("archived")}
+              className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-200
+                ${
+                  filter === "archived"
+                    ? "bg-accent text-white"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                }`}
+            >
+              Archived
+            </button>
           </div>
         </div>
+
+        {/* Messages List */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <AnimatePresence>
+            {filteredMessages &&
+              filteredMessages.map((message) => (
+                <MessageCard
+                  key={message?._id}
+                  message={message}
+                  isSelected={selectedMessage?._id === message?._id}
+                  onSelect={handleMessageSelect}
+                  onStar={handleStar}
+                  onArchive={handleArchive}
+                  onDelete={handleDelete}
+                />
+              ))}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Message Detail */}
+      <div className="hidden md:flex flex-1 bg-gray-50 dark:bg-gray-900">
+        {selectedMessage ? (
+          <div className="flex-1 flex flex-col">
+            {/* Message Header */}
+            <div className="p-6 bg-white dark:bg-secondary/20 border-b dark:border-gray-700">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h2 className="text-xl font-semibold dark:text-white mb-2">
+                    {selectedMessage.subject}
+                  </h2>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                    <span>From: {selectedMessage.name}</span>
+                    <span>({selectedMessage.email})</span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleStar(selectedMessage._id)}
+                    className={`p-2 rounded-lg transition-colors duration-200
+                      ${
+                        selectedMessage.starred
+                          ? "bg-yellow-100 dark:bg-yellow-500/20 text-yellow-500"
+                          : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400"
+                      }`}
+                  >
+                    <Star
+                      size={20}
+                      className={selectedMessage.starred ? "fill-current" : ""}
+                    />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleArchive(selectedMessage._id)}
+                    className={`p-2 rounded-lg transition-colors duration-200
+                      ${
+                        selectedMessage.archived
+                          ? "bg-purple-100 dark:bg-purple-500/20 text-purple-500"
+                          : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400"
+                      }`}
+                  >
+                    <Archive size={20} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleDelete(selectedMessage._id)}
+                    className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-500/20 text-gray-400 hover:text-red-500 transition-colors duration-200"
+                  >
+                    <Trash2 size={20} />
+                  </motion.button>
+                </div>
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                {selectedMessage.read ? "Read" : "Unread"} - {Date()}
+              </div>
+            </div>
+
+            {/* Message Content */}
+            <div className="flex-1 p-6 overflow-y-auto">
+              <div className="prose dark:prose-invert max-w-none">
+                <p className="text-gray-700 dark:text-gray-300">
+                  {selectedMessage.message}
+                </p>
+              </div>
+            </div>
+
+            {/* Reply Section */}
+            <div className="p-6 bg-white dark:bg-secondary/20 border-t dark:border-gray-700">
+              {replyMode ? (
+                <div className="space-y-4">
+                  <textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Type your reply..."
+                    className="w-full p-4 rounded-lg bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-accent resize-none"
+                    rows={4}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setReplyMode(false)}
+                      className="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+                    >
+                      Cancel
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleReply}
+                      className="px-4 py-2 rounded-lg bg-accent text-white hover:bg-accent/90 transition-colors duration-200"
+                    >
+                      Send Reply
+                    </motion.button>
+                  </div>
+                </div>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setReplyMode(true)}
+                  className="w-full p-4 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-accent hover:text-accent transition-all duration-200"
+                >
+                  Click to Reply
+                </motion.button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <Mail className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">
+                No Message Selected
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400">
+                Select a message from the list to view its contents
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

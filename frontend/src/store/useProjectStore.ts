@@ -13,6 +13,7 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
   projects: [],
   isLoading: false,
   error: null,
+
   fetchProjects: async () => {
     set({ isLoading: true, error: null });
     try {

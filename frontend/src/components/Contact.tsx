@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import useUserStore from "../store/useUserStore";
+import { toast } from "react-hot-toast";
+import { axiosInstance } from "../lib/axios";
 
 const Contact = () => {
   const [ref, inView] = useInView({
@@ -10,18 +12,43 @@ const Contact = () => {
     threshold: 0.1,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
+    subject: "",
   });
 
   const { user } = useUserStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
+
+    try {
+      setIsLoading(true);
+
+      await axiosInstance.post("/message/contact", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+        subject: "",
+      });
+
+      toast.success("Message sent successfully!");
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      toast.error("Failed to send message: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
@@ -123,6 +150,22 @@ const Contact = () => {
               />
             </div>
             <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Subject
+              </label>
+              <input
+                type="subject"
+                id="subject"
+                name="subject"
+                maxLength={25}
+                minLength={5}
+                value={formData.subject}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg bg-secondary/20 border border-secondary/30 focus:border-accent focus:outline-none"
+                required
+              />
+            </div>
+            <div>
               <label
                 htmlFor="message"
                 className="block text-sm font-medium mb-2"
@@ -145,8 +188,17 @@ const Contact = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Send size={20} />
-              Send Message
+              {isLoading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  <span> Sending...</span>
+                </>
+              ) : (
+                <>
+                  <Send size={20} />
+                  <span> Send Message</span>
+                </>
+              )}
             </motion.button>
           </motion.form>
         </div>
@@ -156,3 +208,8 @@ const Contact = () => {
 };
 
 export default Contact;
+
+{
+  /* <Send size={20} />
+<span> Send Message</span> */
+}

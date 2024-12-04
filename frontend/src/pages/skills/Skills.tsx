@@ -12,7 +12,7 @@ const Skills = () => {
     fetchSkillCategories();
   }, [fetchSkillCategories, skillCategories]);
 
-  console.log(skillCategories);
+  // console.log(skillCategories);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,

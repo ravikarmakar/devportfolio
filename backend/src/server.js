@@ -6,6 +6,7 @@ import skillsRoutes from "./routes/skills.route.js";
 import userRoutes from "./routes/users.route.js";
 import authRoute from "./routes/auth.route.js";
 import adminRoute from "./routes/admin.route.js";
+import messageRoute from "./routes/message.route.js";
 import { connectDB } from "./config/db.js";
 
 dotenv.config();
@@ -29,9 +30,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/skills", skillsRoutes);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
-// app.use("/api/about", aboutRoutes);
-// app.use("/api/experiences", experienceRoutes);
-// app.use("/api/contact", contactRoutes);
+app.use("/api/message", messageRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -26,7 +26,7 @@ const ProjectsTab = () => {
   const priorityOptions = ["high", "medium", "low"];
   const statusOptions = ["upcoming", "in-progress", "completed"];
 
-  console.log(action);
+  // console.log(action);
 
   const handleDelete = async (id: string) => {
     try {
@@ -44,6 +44,8 @@ const ProjectsTab = () => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects, projects]);
+
+  console.log(projects);
 
   const handleGithubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLinks((prevLinks) => ({

@@ -48,3 +48,17 @@ export interface SkillCategory {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Message {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  subject: string;
+  read: boolean;
+  starred: boolean;
+  archived: boolean;
+  seenTimeStamp: string;
+  createdAt: string;
+  updatedAt: string;
+}
