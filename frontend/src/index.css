@@ -97,3 +97,16 @@
 html {
   scroll-behavior: smooth;
 }
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animation-delay-1500 {
+  animation-delay: 1.5s;
+}

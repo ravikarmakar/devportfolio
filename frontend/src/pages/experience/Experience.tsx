@@ -28,7 +28,7 @@ const experiences = [
     logo: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=100&h=100&fit=crop",
   },
   {
-    company: "StartUp Hub",
+    company: "StartUp Loop",
     position: "Frontend Developer",
     period: "2018 - 2019",
     description:

@@ -15,7 +15,8 @@ import Home from "./pages/home/Home";
 import SkillPage from "./pages/skills/SkillPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import ProjectPage from "./pages/project/ProjectPage";
-import ExperiencePage from "./pages/experience/ExperiencePage";
+// import ExperiencePage from "./pages/experience/ExperiencePage";
+import Education from "./pages/education/Education";
 import Contact from "./components/Contact";
 
 // Admin Page Imports
@@ -114,14 +115,14 @@ function App() {
                 </MainLayout>
               }
             />
-            <Route
+            {/* <Route
               path="/experience"
               element={
                 <MainLayout>
                   <ExperiencePage />
                 </MainLayout>
               }
-            />
+            /> */}
             <Route
               path="/contact"
               element={

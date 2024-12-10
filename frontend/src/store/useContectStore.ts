@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Message } from "../types";
 import { axiosInstance } from "../lib/axios";
+import toast from "react-hot-toast";
 
 interface ContactStoreState {
   messages: Message[] | null;
@@ -41,5 +42,15 @@ export const useContactStore = create<ContactStoreState>((set) => ({
     }
   },
 
-  deleteMessage: async (_id: string) => {},
+  deleteMessage: async (_id: string) => {
+    try {
+      const response = await axiosInstance.delete(`/message/${_id}`);
+
+      if (response.status === 200) {
+        toast.success("Message deleted successfully");
+      }
+    } catch (error: any) {
+      toast.error("Error deleting message:", error);
+    }
+  },
 }));

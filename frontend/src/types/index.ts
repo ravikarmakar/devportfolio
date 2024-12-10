@@ -58,7 +58,7 @@ export interface Message {
   read: boolean;
   starred: boolean;
   archived: boolean;
-  seenTimeStamp: string;
+  seenTimestamp: string;
   createdAt: string;
   updatedAt: string;
 }

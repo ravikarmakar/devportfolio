@@ -80,7 +80,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7 }}
-          className="relative w-full h-[400px] flex items-center justify-center"
+          className="relative w-full h-[500px] flex items-center justify-center overflow-hidden"
         >
           {/* Background Gradient Orbs */}
           <div className="absolute inset-0">
@@ -88,7 +88,7 @@ const Hero = () => {
             <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500/20 rounded-full blur-xl animate-pulse animation-delay-2000" />
           </div>
 
-          {/* Geometric Shapes */}
+          {/* Original Geometric Shapes */}
           <motion.div
             animate={{
               rotate: 360,
@@ -105,6 +105,51 @@ const Hero = () => {
               <div className="absolute inset-0 border-2 border-accent/30 rounded-lg transform rotate-45" />
               <div className="absolute inset-0 border-2 border-accent/20 rounded-lg transform -rotate-45 animate-pulse" />
               <div className="absolute inset-[25%] border-2 border-accent/40 rounded-full animate-pulse" />
+            </div>
+          </motion.div>
+
+          {/* Extra Geometric Shape with Glow Effect */}
+          <motion.div
+            animate={{
+              rotate: -360,
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <div className="relative w-48 h-48">
+              <div className="absolute inset-0 border-[3px] border-blue-400/30 rounded-full transform rotate-45 blur-lg animate-pulse" />
+              <div className="absolute inset-0 border-[2px] border-pink-400/50 rounded-lg transform -rotate-45 animate-pulse" />
+              {/* <div className="absolute inset-[20%] bg-gradient-to-r from-blue-400 via-pink-400 to-purple-500 rounded-full blur-lg animate-spin-slow" /> */}
+            </div>
+          </motion.div>
+
+          {/* New Triangle Shape with Continuous Rotation */}
+          <motion.div
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            {/* Triangle Shape */}
+            <div className="relative w-40 h-40">
+              <div
+                className="absolute inset-0 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent 
+        border-b-[70px] border-b-blue-400 transform rotate-60 blur-md shadow-lg"
+              />
+              <div
+                className="absolute inset-0 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent 
+        border-b-[70px] border-b-pink-400 transform -rotate-60 blur-md shadow-lg animate-pulse"
+              />
             </div>
           </motion.div>
 
@@ -140,3 +185,62 @@ const Hero = () => {
 };
 
 export default Hero;
+
+<motion.div
+  initial={{ opacity: 0, scale: 0.8 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.7 }}
+  className="relative w-full h-[400px] flex items-center justify-center"
+>
+  {/* Background Gradient Orbs */}
+  <div className="absolute inset-0">
+    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/20 rounded-full blur-xl animate-pulse" />
+    <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500/20 rounded-full blur-xl animate-pulse animation-delay-2000" />
+  </div>
+
+  {/* Geometric Shapes */}
+  <motion.div
+    animate={{
+      rotate: 360,
+      scale: [1, 1.1, 1],
+    }}
+    transition={{
+      duration: 20,
+      repeat: Infinity,
+      ease: "linear",
+    }}
+    className="absolute inset-0 flex items-center justify-center"
+  >
+    <div className="relative w-64 h-64">
+      <div className="absolute inset-0 border-2 border-accent/30 rounded-lg transform rotate-45" />
+      <div className="absolute inset-0 border-2 border-accent/20 rounded-lg transform -rotate-45 animate-pulse" />
+      <div className="absolute inset-[25%] border-2 border-accent/40 rounded-full animate-pulse" />
+    </div>
+  </motion.div>
+
+  {/* Floating Particles */}
+  <div className="absolute inset-0">
+    {[...Array(20)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute w-2 h-2 bg-accent/50 rounded-full"
+        initial={{ x: 0, y: 0 }}
+        animate={{
+          x: Math.random() * 300 - 100,
+          y: Math.random() * 200 - 100,
+          opacity: [0.5, 1, 0.5],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          delay: i * 0.2,
+          ease: "easeInOut",
+        }}
+        style={{
+          left: `${50 + Math.random() * 20}%`,
+          top: `${50 + Math.random() * 20}%`,
+        }}
+      />
+    ))}
+  </div>
+</motion.div>;

@@ -15,9 +15,9 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
   const { user } = useUserStore();
 
   const navLinks = [
-    { path: "/skills", label: "Skills" },
-    { path: "/projects", label: "Projects" },
-    { path: "/experience", label: "Experience" },
+    { path: "/", label: "Home" },
+    // { path: "/projects", label: "Projects" },
+    { path: "/blog", label: "Blog" },
     { path: "/contact", label: "Contact" },
   ];
 

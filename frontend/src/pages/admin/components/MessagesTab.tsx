@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Star, Archive, Trash2, Search } from "lucide-react";
 import MessageCard from "./elements/MessageCard";
 import { useContactStore } from "../../../store/useContectStore";
+import toast from "react-hot-toast";
 
 // Types
 interface Message {
@@ -14,13 +15,31 @@ interface Message {
   read: boolean;
   starred: boolean;
   archived: boolean;
-  seenTimeStamp: string;
+  seenTimestamp: string;
 }
+
+export const formatDate = (dateString: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  const date = new Date(dateString);
+  const formattedDate = date.toLocaleString("en-GB", options);
+
+  // Convert AM/PM to uppercase
+  return formattedDate.replace(/(am|pm)/i, (match) => match.toUpperCase());
+};
 
 const MessagesTab = () => {
   // State
 
-  const { fetchAllMessage, messages, markAsRead } = useContactStore();
+  const { fetchAllMessage, messages, markAsRead, deleteMessage } =
+    useContactStore();
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [filter, setFilter] = useState<
     "all" | "unread" | "starred" | "archived"
@@ -32,7 +51,7 @@ const MessagesTab = () => {
   // Effects
   useEffect(() => {
     fetchAllMessage();
-  }, [fetchAllMessage, messages, markAsRead]);
+  }, [fetchAllMessage, markAsRead]);
 
   // Handlers
   const handleMessageSelect = async (_id: string) => {
@@ -51,6 +70,36 @@ const MessagesTab = () => {
       }
       setSelectedMessage(message || null);
       setReplyMode(false);
+    }
+  };
+
+  const handleDelete = async (_id: string) => {
+    try {
+      if (window.confirm("Are you sure you want to delete this message?")) {
+        await deleteMessage(_id);
+      }
+    } catch (error: any) {
+      toast.error("Error deleting message:", error);
+    }
+  };
+
+  const handleReply = async () => {
+    if (!selectedMessage || !replyText.trim()) return;
+
+    try {
+      // await fetch(`/api/messages/${selectedMessage.id}/reply`, {
+      //   method: 'POST',
+      //   body: JSON.stringify({ message: replyText }),
+      // });
+
+      // For demo purposes, just clear the reply
+      setReplyText("");
+      setReplyMode(false);
+
+      // You might want to add the reply to the message thread
+      // or refresh the messages
+    } catch (error) {
+      console.error("Error sending reply:", error);
     }
   };
 
@@ -73,38 +122,6 @@ const MessagesTab = () => {
       );
     } catch (error) {
       console.error("Error archiving message:", error);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      // await fetch(`/api/messages/${id}`, { method: 'DELETE' });
-      setMessages(messages.filter((m) => m.id !== id));
-      if (selectedMessage?.id === id) {
-        setSelectedMessage(null);
-      }
-    } catch (error) {
-      console.error("Error deleting message:", error);
-    }
-  };
-
-  const handleReply = async () => {
-    if (!selectedMessage || !replyText.trim()) return;
-
-    try {
-      // await fetch(`/api/messages/${selectedMessage.id}/reply`, {
-      //   method: 'POST',
-      //   body: JSON.stringify({ message: replyText }),
-      // });
-
-      // For demo purposes, just clear the reply
-      setReplyText("");
-      setReplyMode(false);
-
-      // You might want to add the reply to the message thread
-      // or refresh the messages
-    } catch (error) {
-      console.error("Error sending reply:", error);
     }
   };
 
@@ -271,7 +288,8 @@ const MessagesTab = () => {
                 </div>
               </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                {selectedMessage.read ? "Read" : "Unread"} - {Date()}
+                {selectedMessage.read ? "Seen" : "Unread"} -{" "}
+                {formatDate(selectedMessage.seenTimestamp)}
               </div>
             </div>
 

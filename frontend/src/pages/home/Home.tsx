@@ -1,5 +1,6 @@
 import Contact from "../../components/Contact";
-import Experience from "../experience/Experience";
+import Education from "../education/Education";
+// import Experience from "../experience/Experience";
 import Hero from "../home/components/Hero";
 import Projects from "../project/Projects";
 import Skills from "../skills/Skills";
@@ -10,7 +11,8 @@ const Home = () => {
       <Hero />
       <Skills />
       <Projects />
-      <Experience />
+      {/* <Experience /> */}
+      <Education />
       <Contact />
     </>
   );

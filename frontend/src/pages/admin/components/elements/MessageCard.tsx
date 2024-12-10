@@ -13,6 +13,30 @@ interface MessageCardProps {
   onDelete: (_id: string) => void;
 }
 
+const formatTime = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // Ensure 2 digits for minutes
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  // Convert to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  return `${String(hours).padStart(2, "0")}:${minutes} ${ampm}`;
+};
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0"); // Ensures 2 digits for day
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth is zero-based
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
+
 const MessageCard: React.FC<MessageCardProps> = ({
   message,
   isSelected,
@@ -63,9 +87,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
               {message.name}
             </h3>
             <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
-              {formatDistanceToNow(new Date(message.createdAt), {
-                addSuffix: true,
-              })}
+              {formatDate(message.createdAt)}
             </span>
           </div>
 
@@ -130,8 +152,9 @@ const MessageCard: React.FC<MessageCardProps> = ({
       </div>
 
       {/* Time Indicator */}
-      <div className="absolute bottom-2 right-2">
-        <Clock size={12} className="text-gray-400 dark:text-gray-500" />
+      <div className="absolute bottom-2 right-2 flex justify-center items-center gap-1 text-gray-400 text-sm">
+        {/* <Clock size={12} className="text-gray-400 dark:text-gray-500" /> */}
+        {formatTime(message.createdAt)}
       </div>
     </motion.div>
   );

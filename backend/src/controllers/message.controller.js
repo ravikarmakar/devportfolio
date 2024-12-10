@@ -56,7 +56,6 @@ export const deleteMessage = async (req, res) => {
 
 export const updateRead = async (req, res) => {
   const { id } = req.params;
-  const { read } = req.body;
 
   try {
     if (!id) {
@@ -66,9 +65,10 @@ export const updateRead = async (req, res) => {
     const updatedMessage = await Message.findByIdAndUpdate(
       id,
       {
-        read,
+        ...req.body,
+        read: true,
+        seenTimestamp: new Date(),
       },
-
       {
         new: true,
       }
