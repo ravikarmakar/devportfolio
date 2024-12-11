@@ -45,7 +45,7 @@ const ProjectsTab = () => {
     fetchProjects();
   }, [fetchProjects, projects]);
 
-  console.log(projects);
+  // console.log(projects);
 
   const handleGithubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLinks((prevLinks) => ({
@@ -192,7 +192,7 @@ const ProjectsTab = () => {
                   name="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -213,7 +213,7 @@ const ProjectsTab = () => {
                   name="technologies"
                   value={technologies}
                   onChange={(e) => setTechnologies(e.target.value.split(","))}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -234,7 +234,7 @@ const ProjectsTab = () => {
                   name="githubUrl"
                   value={links.github}
                   onChange={handleGithubChange}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -255,7 +255,7 @@ const ProjectsTab = () => {
                   name="hostedUrl"
                   value={links.hosted}
                   onChange={handleHostedChange}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -276,7 +276,7 @@ const ProjectsTab = () => {
                   name="tags"
                   value={tags}
                   onChange={(e) => setTags(e.target.value.split(","))}
-                  className={`w-full rows-4 px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full rows-4 px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -295,7 +295,7 @@ const ProjectsTab = () => {
                   id="priority"
                   value={priority}
                   onChange={handlePriorityChange}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -321,7 +321,7 @@ const ProjectsTab = () => {
                   id="status"
                   value={status}
                   onChange={handleStatusChange}
-                  className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                     error
                       ? "border-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-600 focus:border-accent"
@@ -350,7 +350,7 @@ const ProjectsTab = () => {
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+                className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
                   error
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-300 dark:border-gray-600 focus:border-accent"

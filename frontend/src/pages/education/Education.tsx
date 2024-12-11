@@ -50,7 +50,7 @@ const Education = () => {
       "Embarked on a comprehensive self-learning journey in web development, mastering modern technologies and best practices through hands-on projects and continuous learning.",
     milestones: [
       {
-        year: "2023",
+        year: "End of 2023",
         achievements: [
           "Started with HTML, CSS, and JavaScript fundamentals",
           "Built responsive websites and basic web applications",
@@ -58,7 +58,7 @@ const Education = () => {
         ],
       },
       {
-        year: "2024",
+        year: "Mid of 2024",
         achievements: [
           "Mastered React.js and modern frontend development",
           "Learned Node.js and Express.js for backend development",
@@ -70,7 +70,6 @@ const Education = () => {
         achievements: [
           "Advanced full-stack development with MERN stack",
           "Cloud deployment and DevOps practices",
-          "Contributing to open-source projects",
         ],
       },
     ],
@@ -95,7 +94,7 @@ const Education = () => {
           className="text-center mb-16"
         >
           <h2 className="section-title inline-flex items-center justify-center gap-2">
-            <BookOpen className="w-8 h-8 text-accent" />
+            {/* <BookOpen className="w-8 h-8 text-accent" /> */}
             Educational Background
           </h2>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">

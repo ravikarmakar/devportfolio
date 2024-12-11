@@ -8,10 +8,10 @@ interface ProfileAboutProps {
 
 const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
   const stats = [
-    { icon: BookOpen, label: "Years Experience", value: "4+" },
-    { icon: Award, label: "Projects Completed", value: "50+" },
-    { icon: Coffee, label: "Cups of Coffee", value: "1000+" },
-    { icon: Heart, label: "Happy Clients", value: "30+" },
+    { icon: BookOpen, label: "Years Experience", value: "1+" },
+    { icon: Award, label: "Projects Completed", value: "10+" },
+    { icon: Coffee, label: "Cups of Coffee", value: "500+" },
+    { icon: Heart, label: "Happy Clients", value: "5+" },
   ];
 
   return (

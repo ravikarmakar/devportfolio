@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
@@ -13,8 +13,10 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { axiosInstance } from "../../lib/axios";
 
 const AdminLayout = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -36,6 +38,25 @@ const AdminLayout = () => {
       label: "Settings",
     },
   ];
+
+  const handleLogout = async () => {
+    try {
+      // Call the backend logout endpoint
+      const response = await axiosInstance.post(
+        "/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data.message); // "Logout successful"
+        navigate("/profile"); // Redirect to login page
+      }
+    } catch (error: any) {
+      console.error("Logout failed:", error.message);
+      alert("Failed to logout. Please try again.");
+    }
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -91,14 +112,13 @@ const AdminLayout = () => {
           </nav>
 
           <div className="mt-auto pt-4 border-t border-gray-200 dark:border-secondary/30">
-            <Link
-              to="/"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            <div
+              className="flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
+              onClick={handleLogout}
             >
               <LogOut size={20} />
               <span className="ml-3">Exit Admin</span>
-            </Link>
+            </div>
           </div>
         </div>
       </aside>

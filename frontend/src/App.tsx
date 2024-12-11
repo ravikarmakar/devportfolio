@@ -1,6 +1,6 @@
 // External Imports
 import { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
@@ -16,7 +16,6 @@ import SkillPage from "./pages/skills/SkillPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import ProjectPage from "./pages/project/ProjectPage";
 // import ExperiencePage from "./pages/experience/ExperiencePage";
-import Education from "./pages/education/Education";
 import Contact from "./components/Contact";
 
 // Admin Page Imports
@@ -27,6 +26,8 @@ import ProjectsTab from "./pages/admin/components/ProjectsTab";
 import BlogsTab from "./pages/admin/components/BlogsTab";
 import MessagesTab from "./pages/admin/components/MessagesTab";
 import ProfileTab from "./pages/admin/components/ProfileTab";
+import LoginPage from "./pages/auth/LoginPage";
+import { ProtectedAdminRoute } from "./pages/auth/ProtectAdmin";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -81,13 +82,15 @@ function App() {
         >
           <Routes>
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="projects" element={<ProjectsTab />} />
-              <Route path="skills" element={<SkillsTab />} />
-              <Route path="blog" element={<BlogsTab />} />
-              <Route path="messages" element={<MessagesTab />} />
-              <Route path="profile" element={<ProfileTab />} />
+            <Route element={<ProtectedAdminRoute />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="projects" element={<ProjectsTab />} />
+                <Route path="skills" element={<SkillsTab />} />
+                <Route path="blog" element={<BlogsTab />} />
+                <Route path="messages" element={<MessagesTab />} />
+                <Route path="profile" element={<ProfileTab />} />
+              </Route>
             </Route>
 
             {/* Public Routes */}
@@ -100,21 +103,29 @@ function App() {
               }
             />
             <Route
+              path="/login"
+              element={
+                <MainLayout>
+                  <LoginPage />
+                </MainLayout>
+              }
+            />
+            {/* <Route
               path="/skills"
               element={
                 <MainLayout>
                   <SkillPage />
                 </MainLayout>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/projects"
               element={
                 <MainLayout>
                   <ProjectPage />
                 </MainLayout>
               }
-            />
+            /> */}
             {/* <Route
               path="/experience"
               element={

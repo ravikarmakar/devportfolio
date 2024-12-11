@@ -6,6 +6,7 @@ import ProfessionalSummary from "./components/ProfessionalSummary";
 import useUserStore from "../../store/useUserStore";
 import { useEffect } from "react";
 import GoalsSection from "./components/GoalsSection";
+import EducationSection from "./components/EducationSection";
 
 const Profile = () => {
   const { fetchUserData, user } = useUserStore();
@@ -28,6 +29,7 @@ const Profile = () => {
           <ProfileHeader user={user} />
           <ProfessionalSummary user={user} />
           <AboutSection user={user} />
+          <EducationSection />
           <InterestsSection />
           <GoalsSection />
         </motion.div>

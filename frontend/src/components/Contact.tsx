@@ -63,15 +63,24 @@ const Contact = () => {
   return (
     <section id="contact" className="py-20 px-6">
       <div className="max-w-7xl mx-auto">
-        <motion.h2
-          className="section-title"
+        <motion.div
+          ref={ref}
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
-          ref={ref}
+          className="text-center mb-16"
         >
-          Get In Touch
-        </motion.h2>
+          <h2 className="section-title inline-flex items-center justify-center gap-2">
+            {/* <BookOpen className="w-8 h-8 text-accent" /> */}
+            Get in touch
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            Contact me for collaboration, professional inquiries, or project
+            opportunities. I am open to connecting and discussing how I can
+            contribute to your goals.
+          </p>
+        </motion.div>
+
         <div className="grid md:grid-cols-2 gap-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}

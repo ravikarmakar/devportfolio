@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import projectRoutes from "./routes/project.route.js";
 import skillsRoutes from "./routes/skills.route.js";
 import userRoutes from "./routes/users.route.js";
@@ -21,6 +22,7 @@ app.use(
   })
 );
 
+app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -28,9 +30,9 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/skills", skillsRoutes);
+app.use("/api/message", messageRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
-app.use("/api/message", messageRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

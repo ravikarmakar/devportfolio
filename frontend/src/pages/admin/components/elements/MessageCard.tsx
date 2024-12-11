@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { formatDistanceToNow } from "date-fns";
-import { Star, Clock, Mail, Archive, Trash2 } from "lucide-react";
+import { Star, Archive, Trash2 } from "lucide-react";
 import { Message } from "../../../../types";
 
 interface MessageCardProps {

@@ -1,7 +1,15 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { User } from "../../../types";
-import { Mail, Github, Linkedin, ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  Mail,
+  Github,
+  Linkedin,
+  ArrowRight,
+  Sparkles,
+  ShieldOff,
+} from "lucide-react";
 import { DownloadButton } from "../../../components/ReasumeButton";
 
 interface ProfileHeaderProps {
@@ -97,7 +105,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
               <Github size={20} />
             </motion.a>
             <motion.a
-              href="https://linkedin.com/feed/"
+              href="https://linkedin.com/in/ravikarmakar"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -105,6 +113,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
             >
               <Linkedin size={20} />
             </motion.a>
+
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              className="p-2 bg-accent/10 rounded-full text-accent hover:bg-accent hover:text-white transition-colors"
+            >
+              <Link to="/login" rel="noopener noreferrer">
+                <ShieldOff size={20} />
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
 
