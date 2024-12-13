@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   GraduationCap,
@@ -95,7 +96,7 @@ const Education = () => {
         >
           <h2 className="section-title inline-flex items-center justify-center gap-2">
             {/* <BookOpen className="w-8 h-8 text-accent" /> */}
-            Educational Background
+            Educational Backgrounddd
           </h2>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             A unique combination of formal physics education and self-taught
@@ -297,7 +298,7 @@ const Education = () => {
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-20 left-20 w-72 h-72 bg-accent/5 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
           <div className="absolute top-40 right-20 w-72 h-72 bg-purple-500/5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
-          <div className="absolute -bottom-20 left-40 w-72 h-72 bg-blue-500/5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
+          <div className="absolute -bottom-20 left-40 w-72 h-72 bg-green-500/5 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000" />
         </div>
       </div>
     </section>

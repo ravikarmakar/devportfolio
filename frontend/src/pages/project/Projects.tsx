@@ -3,9 +3,10 @@ import { useInView } from "react-intersection-observer";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useEffect } from "react";
 import { ProjectCard } from "./components/ProjectCard";
+import ProjectCardLoadingSkeleton from "./components/ProjectCardLoadingSkeleton";
 
 const Projects = () => {
-  const { projects, fetchProjects } = useProjectStore();
+  const { projects, fetchProjects, isLoading } = useProjectStore();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -13,7 +14,7 @@ const Projects = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects, projects]);
+  }, [fetchProjects]);
 
   return (
     <section id="projects" className="py-20 px-6">
@@ -36,9 +37,17 @@ const Projects = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.title} project={project} index={index} />
-          ))}
+          {isLoading ? (
+            <ProjectCardLoadingSkeleton index={projects.length} />
+          ) : (
+            projects.map((project, index) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

@@ -4,6 +4,8 @@ import BackgroundElements from "../../components/elements/BackgroundElements";
 import { useSkillStore } from "../../store/useSkillStore";
 import { useEffect } from "react";
 import { CategorySection } from "./components/CategorySection";
+import { ArrowRight } from "lucide-react";
+import TitleWithAnimation from "../../components/elements/TitleWithAnimation";
 
 const Skills = () => {
   const { fetchSkillCategories, skillCategories } = useSkillStore();
@@ -35,11 +37,17 @@ const Skills = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="section-title">Technical Expertise</h2>
+          {/* <h2 className="section-title">Technical Expertise</h2> */}
+
+          <TitleWithAnimation text="Technical Expertise" />
+
           <p className="dark:text-gray-300 text-gray-600 max-w-2xl mx-auto">
             Specialized in modern web technologies with a focus on building
             scalable and performant applications
           </p>
+          {/* <div className="inline-flex items-center mt-4 gap-2 text-accent group-hover:gap-4 transition-all">
+            Skills <ArrowRight size={20} />
+          </div> */}
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">

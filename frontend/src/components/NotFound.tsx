@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Home, AlertCircle } from "lucide-react";
+import FloatingParticles from "./elements/FloatingParticles";
 
 const NotFound = () => {
   // Animation variants
@@ -56,28 +57,7 @@ const NotFound = () => {
       </div>
 
       {/* Floating Particles */}
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-accent/30 rounded-full"
-          initial={{ x: 0, y: 0 }}
-          animate={{
-            x: Math.random() * 400 - 200,
-            y: Math.random() * 400 - 200,
-            opacity: [0.3, 1, 0.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            delay: i * 0.2,
-            ease: "easeInOut",
-          }}
-          style={{
-            left: `${50 + Math.random() * 20}%`,
-            top: `${50 + Math.random() * 20}%`,
-          }}
-        />
-      ))}
+      <FloatingParticles count={20} />
 
       <motion.div
         variants={containerVariants}

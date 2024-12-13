@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
+import toast from "react-hot-toast";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -49,12 +50,11 @@ const AdminLayout = () => {
       );
 
       if (response.status === 200) {
-        console.log(response.data.message); // "Logout successful"
+        toast.success("Logout successful");
         navigate("/profile"); // Redirect to login page
       }
     } catch (error: any) {
-      console.error("Logout failed:", error.message);
-      alert("Failed to logout. Please try again.");
+      toast.error("Logout failed:", error.message);
     }
   };
 

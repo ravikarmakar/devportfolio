@@ -11,6 +11,7 @@ import {
   ShieldOff,
 } from "lucide-react";
 import { DownloadButton } from "../../../components/ReasumeButton";
+import FloatingParticles from "../../../components/elements/FloatingParticles";
 
 interface ProfileHeaderProps {
   user: User | null; // null agar user data abhi fetch nahi hua
@@ -38,7 +39,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold mb-4 dark:text-textLight text-gray-900">
-            here,<span className="text-accent block mt-2">{user?.name}</span>
+            here,
+            <span className="text-accent block mt-2">
+              {user?.name || "Ravi Karmakar"}
+            </span>
           </h1>
 
           <div className="text-xl md:text-2xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-500 font-bold h-[40px]">
@@ -67,6 +71,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
 
           <div className="flex flex-wrap gap-4">
             <motion.button
+              disabled
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="btn-primary flex items-center gap-2"
@@ -171,28 +176,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
           </motion.div>
 
           {/* Floating Particles */}
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-accent/50 rounded-full"
-              initial={{ x: 0, y: 0 }}
-              animate={{
-                x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100,
-                opacity: [0.5, 1, 0.5],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: i * 0.2,
-                ease: "easeInOut",
-              }}
-              style={{
-                left: `${50 + Math.random() * 20}%`,
-                top: `${50 + Math.random() * 20}%`,
-              }}
-            />
-          ))}
+          <FloatingParticles count={30} />
         </motion.div>
       </div>
     </div>

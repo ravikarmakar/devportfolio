@@ -4,7 +4,7 @@ import { Download } from "lucide-react";
 import { User } from "../types";
 
 interface DownloadButtonProps {
-  user: User | null; // Resume URL must be a string
+  user: User | null; // User object with resumeUrl as a string
 }
 
 export const DownloadButton: React.FC<DownloadButtonProps> = ({ user }) => {
@@ -16,11 +16,12 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({ user }) => {
       return;
     }
 
+    console.log("Downloading from URL:", resumeUrl); // Debugging log
+
     try {
-      // Create a link element for downloading the file
       const link = document.createElement("a");
-      link.href = resumeUrl; // Updated Cloudinary URL
-      link.download = "Resume.pdf"; // Set the download file name
+      link.href = resumeUrl;
+      link.download = `${user?.name || "Resume"}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -32,8 +33,9 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({ user }) => {
 
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      aria-label="Download Resume" // Accessibility improvement
+      whileHover={{ scale: 1.05 }} // Hover animation
+      whileTap={{ scale: 0.95 }} // Tap animation
       onClick={handleDownload}
       className="px-6 py-3 bg-accent/10 text-accent rounded-lg hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-2"
     >

@@ -3,13 +3,19 @@ import { TypeAnimation } from "react-type-animation";
 import { GithubIcon, Linkedin, Download } from "lucide-react";
 import { useEffect } from "react";
 import useUserStore from "../../../store/useUserStore";
+import FloatingParticles from "../../../components/elements/FloatingParticles";
+import LoadingSkeleton from "./LoadingSkeleton";
 
 const Hero = () => {
-  const { user, fetchUserData } = useUserStore();
+  const { user, fetchUserData, isLoading } = useUserStore();
 
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <section
@@ -22,9 +28,9 @@ const Hero = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold font-poppins mb-4 dark:text-textLight text-gray-900">
+          <h1 className="text-4xl md:text-6xl font-bold font-roboto mb-4 dark:text-textLight text-gray-900">
             Hi, I'm <br />
-            <span className="text-accent">{user?.name}</span>
+            <span className="text-accent">{user?.name || "Ravi Karmakar"}</span>
           </h1>
           <div className="text-xl md:text-2xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-600 font-bold gradient-text">
             <TypeAnimation
@@ -154,30 +160,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Floating Particles */}
-          <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-2 h-2 bg-accent/50 rounded-full"
-                initial={{ x: 0, y: 0 }}
-                animate={{
-                  x: Math.random() * 300 - 100,
-                  y: Math.random() * 200 - 100,
-                  opacity: [0.5, 1, 0.5],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  left: `${50 + Math.random() * 20}%`,
-                  top: `${50 + Math.random() * 20}%`,
-                }}
-              />
-            ))}
-          </div>
+          <FloatingParticles count={30} />
         </motion.div>
       </div>
     </section>
@@ -185,62 +168,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
-<motion.div
-  initial={{ opacity: 0, scale: 0.8 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.7 }}
-  className="relative w-full h-[400px] flex items-center justify-center"
->
-  {/* Background Gradient Orbs */}
-  <div className="absolute inset-0">
-    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/20 rounded-full blur-xl animate-pulse" />
-    <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500/20 rounded-full blur-xl animate-pulse animation-delay-2000" />
-  </div>
-
-  {/* Geometric Shapes */}
-  <motion.div
-    animate={{
-      rotate: 360,
-      scale: [1, 1.1, 1],
-    }}
-    transition={{
-      duration: 20,
-      repeat: Infinity,
-      ease: "linear",
-    }}
-    className="absolute inset-0 flex items-center justify-center"
-  >
-    <div className="relative w-64 h-64">
-      <div className="absolute inset-0 border-2 border-accent/30 rounded-lg transform rotate-45" />
-      <div className="absolute inset-0 border-2 border-accent/20 rounded-lg transform -rotate-45 animate-pulse" />
-      <div className="absolute inset-[25%] border-2 border-accent/40 rounded-full animate-pulse" />
-    </div>
-  </motion.div>
-
-  {/* Floating Particles */}
-  <div className="absolute inset-0">
-    {[...Array(20)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute w-2 h-2 bg-accent/50 rounded-full"
-        initial={{ x: 0, y: 0 }}
-        animate={{
-          x: Math.random() * 300 - 100,
-          y: Math.random() * 200 - 100,
-          opacity: [0.5, 1, 0.5],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: i * 0.2,
-          ease: "easeInOut",
-        }}
-        style={{
-          left: `${50 + Math.random() * 20}%`,
-          top: `${50 + Math.random() * 20}%`,
-        }}
-      />
-    ))}
-  </div>
-</motion.div>;

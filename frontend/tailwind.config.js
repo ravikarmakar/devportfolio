@@ -15,6 +15,7 @@ export default {
         textDark: "#1a1a1a",
       },
       fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
         inter: ["Inter", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
       },
