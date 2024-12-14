@@ -1,152 +1,211 @@
 import { useState, useRef, useEffect } from "react";
-import { axiosInstance } from "../../../lib/axios";
-import { Upload, X, Edit, Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { Edit, Trash2, Plus, X, Pencil } from "lucide-react";
 import { useProjectStore } from "../../../store/useProjectStore";
+import FormInput from "./elements/FormInput";
+import FormTextArea from "./elements/FormTextArea";
+import FileUpload from "./elements/FileUpload";
+import toast from "react-hot-toast";
+import SelectInput from "./elements/SelectInput";
+import ActionButton from "./elements/ActionButton";
+
+type Links = {
+  github: string;
+  hosted: string;
+};
+
+type FormDataType = {
+  _id?: string;
+  title: string;
+  technologies: string[];
+  links: Links;
+  tags: string[];
+  priority: "high" | "medium" | "low";
+  status: "upcoming" | "in-progress" | "completed";
+  description: string;
+  image: string | null;
+};
 
 const ProjectsTab = () => {
-  const { fetchProjects, projects } = useProjectStore();
+  const {
+    fetchProjects,
+    projects,
+    createProject,
+    deleteProject,
+    updateProject,
+    isLoading,
+  } = useProjectStore();
 
-  const [action, setAction] = useState<string>("");
-  const [title, setTitle] = useState<string>("");
-  const [technologies, setTechnologies] = useState<string[]>([]);
-  const [links, setLinks] = useState<{ github: string; hosted: string }>({
-    github: "",
-    hosted: "",
+  const [formData, setFormData] = useState<FormDataType>({
+    title: "",
+    technologies: [],
+    links: { github: "", hosted: "" },
+    tags: [],
+    priority: "medium",
+    status: "upcoming",
+    description: "",
+    image: null,
   });
-  const [tags, setTags] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [priority, setPriority] = useState<string>("medium");
-  const [status, setStatus] = useState<string>("active");
-  const [description, setDescription] = useState<string>("");
-  const [image, setImage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const priorityOptions = ["high", "medium", "low"];
+  const [action, setAction] = useState<"create" | "update">("create");
+  const [error, setError] = useState<string | null | undefined>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const priorityOptions: ("high" | "medium" | "low")[] = [
+    "high",
+    "medium",
+    "low",
+  ];
   const statusOptions = ["upcoming", "in-progress", "completed"];
-
-  // console.log(action);
-
-  const handleDelete = async (id: string) => {
-    try {
-      await axiosInstance.delete(`/admin/project/${id}`);
-      fetchProjects();
-      toast.success("Project deleted successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to delete project");
-    }
-  };
-
-  const handleUpdate = (id: string) => {};
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects, projects]);
+  }, [fetchProjects]);
 
-  // console.log(projects);
+  // All handlers
 
-  const handleGithubChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLinks((prevLinks) => ({
-      ...prevLinks,
-      github: e.target.value,
-    }));
+  const handleReset = () => {
+    setFormData({
+      title: "",
+      technologies: [],
+      links: { github: "", hosted: "" },
+      priority: "low",
+      status: "upcoming",
+      description: "",
+      image: null,
+      tags: [],
+    });
+    setAction("create");
   };
 
-  const handleHostedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLinks((prevLinks) => ({
-      ...prevLinks,
-      hosted: e.target.value,
-    }));
-  };
-
-  const handlePriorityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPriority(e.target.value);
-  };
-
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value);
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Check file type
-      if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
-        setError("Only JPEG, PNG, and GIF images are allowed");
-        return;
-      }
-
-      // Check file size (5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Image size should be less than 5MB");
-        return;
-      }
-
-      // Read and set image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result as string);
-        setError(null);
-      };
-      reader.readAsDataURL(file);
+  const handleUpdate = (id: string) => {
+    if (!projects || projects.length === 0) {
+      toast.error("No projects available for update.");
+      return;
     }
+
+    const projectToEdit = projects.find((project) => project._id === id);
+
+    if (projectToEdit) {
+      setAction("update");
+
+      function isPriority(
+        priority: "high" | "medium" | "low" | number
+      ): priority is "high" | "medium" | "low" {
+        return priorityOptions.includes(priority as "high" | "medium" | "low");
+      }
+
+      const validPriority: "high" | "medium" | "low" = isPriority(
+        projectToEdit.priority
+      )
+        ? projectToEdit.priority
+        : "medium";
+
+      const validStatus: "upcoming" | "in-progress" | "completed" = [
+        "upcoming",
+        "in-progress",
+        "completed",
+      ].includes(projectToEdit.status)
+        ? (projectToEdit.status as "upcoming" | "in-progress" | "completed")
+        : "upcoming";
+      setFormData({
+        _id: projectToEdit._id,
+        title: projectToEdit.title,
+        technologies: projectToEdit.technologies,
+        links: projectToEdit.links,
+        priority: validPriority,
+        status: validStatus,
+        description: projectToEdit.description,
+        image: projectToEdit.imgUrl,
+        tags: projectToEdit.tags,
+      });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteProject(id);
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "technologies" || name === "tags" ? value.split(",") : value,
+    }));
+  };
+
+  const handleLinksChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      links: { ...prev.links, [name]: value },
+    }));
+  };
+
+  const handleFileSelect = (selectedFile: File) => {
+    if (!["image/jpeg", "image/png", "image/gif"].includes(selectedFile.type)) {
+      setError("Only JPEG, PNG, and GIF images are allowed");
+      return;
+    }
+
+    if (selectedFile.size > 10 * 1024 * 1024) {
+      setError("Image size should be less than 10MB");
+      return;
+    }
+
+    setFile(selectedFile);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData((prev) => ({ ...prev, image: reader.result as string }));
+      setError(null);
+    };
+    reader.readAsDataURL(selectedFile);
   };
 
   const handleImageRemove = () => {
-    setImage(null);
+    console.log("handleImageRemove called");
+    setFormData((prev) => ({ ...prev, image: null }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setFile(null);
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const projectData = {
-      title,
-      technologies,
-      links: {
-        github: links.github,
-        hosted: links.hosted,
-      },
-      tags,
-      priority,
-      status,
-      description,
-      image,
-    };
-
-    console.log(projectData);
-
     try {
-      setIsLoading(true);
-      setError(null);
-      await axiosInstance.post("/admin/project", projectData, {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      if (action === "create") {
+        await createProject(formData);
+      } else if (action === "update" && formData._id) {
+        await updateProject(formData._id, formData);
+      }
 
-      setTitle("");
-      setTechnologies([]);
-      setLinks({ github: "", hosted: "" });
-      setTags([]);
-      setPriority("medium");
-      setStatus("active");
-      setDescription("");
-      setImage(null);
-
-      toast.success("Project added successfully");
+      setFormData((prev) => ({
+        ...prev,
+        title: "",
+        technologies: [],
+        links: { github: "", hosted: "" },
+        description: "",
+        image: null,
+        tags: [],
+      }));
+      setFile(null);
+      setAction("create");
     } catch (error: any) {
-      toast.error("Failed to add Project: " + error.message);
-      setError("Failed to add Project: " + error.message);
-      console.error("Error submitting form:", error);
-    } finally {
-      setIsLoading(false);
-      setError(null);
+      console.error("Submission failed:", error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -157,259 +216,141 @@ const ProjectsTab = () => {
           <h2 className="text-2xl font-bold dark:text-white mb-4">
             Projects Management
           </h2>
-          <div className="flex gap-4">
-            <button
-              className={`text-white bg-accent px-4 py-2 rounded-lg ${
-                action?.includes("create") ? "bg-blue-700" : ""
-              }`}
-              onClick={() => setAction("create")}
-            >
-              Create
-            </button>
-            <button
-              className={`text-white bg-accent px-4 py-2 rounded-lg ${
-                action?.includes("update") ? "bg-blue-700" : ""
-              }`}
-              onClick={() => setAction("update")}
-            >
-              Update
-            </button>
-          </div>
         </div>
         <div className="bg-white dark:bg-secondary/20 rounded-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="mb-4">
-                <label
-                  htmlFor="title"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Project Title
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                />
-              </div>
+              {/* Title */}
+              <FormInput
+                label="Project Title"
+                placeholder="Project Title"
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
+              />
 
-              <div className="mb-4">
-                <label
-                  htmlFor="technologies"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Technologies Used
-                </label>
-                <input
-                  type="text"
-                  id="technologies"
-                  name="technologies"
-                  value={technologies}
-                  onChange={(e) => setTechnologies(e.target.value.split(","))}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                />
-              </div>
+              {/*Technologies  */}
+              <FormInput
+                label="Technologies Used"
+                name="technologies"
+                type="text"
+                placeholder="React.js, Next.js, JavaScript, TypeScript, etc."
+                value={formData.technologies.join(",")}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
+              />
+              <FormInput
+                label="Tags Used"
+                name="tags"
+                type="text"
+                placeholder="React.js, Next.js, JavaScript, TypeScript, etc."
+                value={formData.tags.join(",")}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
+              />
 
-              <div className="mb-4">
-                <label
-                  htmlFor="githubUrl"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  GitHub URL
-                </label>
-                <input
-                  type="githubUrl"
-                  id="githubUrl"
-                  name="githubUrl"
-                  value={links.github}
-                  onChange={handleGithubChange}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                />
-              </div>
+              {/* Links : Github and Live Demo */}
+              <FormInput
+                label="GitHub URL"
+                name="github"
+                type="url"
+                value={formData.links.github}
+                placeholder="https://github.com/username/project"
+                onChange={handleLinksChange}
+                error={error}
+                required={true}
+              />
+              <FormInput
+                label="Live Demo URL"
+                name="hosted"
+                type="url"
+                placeholder="https://example.com"
+                value={formData.links.hosted}
+                onChange={handleLinksChange}
+                error={error}
+                required={true}
+              />
 
-              <div className="mb-4">
-                <label
-                  htmlFor="hostedUrl"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Live Demo URL
-                </label>
-                <input
-                  type="hostedUrl"
-                  id="hostedUrl"
-                  name="hostedUrl"
-                  value={links.hosted}
-                  onChange={handleHostedChange}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                />
-              </div>
+              {/* All Selecters  */}
 
-              <div className="mb-4">
-                <label
-                  htmlFor="tags"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Tags
-                </label>
-                <input
-                  type="tags"
-                  id="tags"
-                  name="tags"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value.split(","))}
-                  className={`w-full rows-4 px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="priority"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Priority:{" "}
-                </label>
-                <select
-                  id="priority"
-                  value={priority}
-                  onChange={handlePriorityChange}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                >
-                  {priorityOptions.map((priorityOption) => (
-                    <option key={priorityOption} value={priorityOption}>
-                      {priorityOption.charAt(0).toUpperCase() +
-                        priorityOption.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="status"
-                  className="block text-sm text-blue-500 font-medium dark:text-gray-300 mb-1"
-                >
-                  Status:{" "}
-                </label>
-                <select
-                  id="status"
-                  value={status}
-                  onChange={handleStatusChange}
-                  className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                    error
-                      ? "border-red-500 focus:border-red-500"
-                      : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                  } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
-                >
-                  {statusOptions.map((statusOption) => (
-                    <option key={statusOption} value={statusOption}>
-                      {statusOption.charAt(0).toUpperCase() +
-                        statusOption.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Project Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
-                  error
-                    ? "border-red-500 focus:border-red-500"
-                    : "border-gray-300 dark:border-gray-600 focus:border-accent"
-                } focus:outline-none focus:ring-2 focus:ring-accent/20 transition-colors`}
+              <SelectInput
+                label="Status"
+                name="status"
+                value={formData.status}
+                options={statusOptions}
+                onChange={handleInputChange}
+                error={error}
+              />
+              <SelectInput
+                label="Priority"
+                name="priority"
+                value={formData.priority}
+                options={priorityOptions}
+                onChange={handleInputChange}
+                error={error}
               />
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Project Screenshot
-              </label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                name="image/*"
-                accept="image/jpeg,image/png,image/gif"
-                onChange={handleImageChange}
-                className="hidden"
+            {/* Description */}
+            <FormTextArea
+              label="Description"
+              placeholder="Add your project description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              error={error ?? undefined}
+              required={true}
+              rows={4}
+            />
+
+            {/* Project Image */}
+            <FileUpload
+              label="Project Image"
+              name="projectImage"
+              accept="image/*"
+              error={!file ? "File is required" : undefined}
+              currentFile={file?.name}
+              onFileSelect={handleFileSelect}
+              onFileRemove={handleImageRemove}
+              required={true}
+              fileInputRef={fileInputRef}
+            />
+
+            {/* Action Buttons */}
+            <div className="mt-6 flex justify-end gap-4">
+              {/* Reset Button */}
+              <ActionButton
+                label="Reset"
+                type="reset"
+                variant="secondary"
+                icon={<X className="w-4 h-4" />}
+                isLoading={false}
+                onClick={handleReset}
               />
 
-              {image ? (
-                <div className="flex items-center gap-2 p-2 bg-accent/10 rounded-lg">
-                  <span className="text-sm text-gray-600 dark:text-gray-300 flex-1 truncate">
-                    <img src={image} alt="" />
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleImageRemove}
-                    className="p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-full text-red-500"
-                  >
-                    <X size={20} className="text-red-500" />
-                  </button>
-                </div>
-              ) : (
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-accent transition-colors"
-                >
-                  <Upload className="mx-auto h-8 w-8 text-gray-400 dark:text-gray-500" />
-                  <p className="mt-2 text-sm text-gray-600">
-                    Click to upload image (JPEG, PNG, GIF)
-                  </p>
-                  <p className="text-xs text-gray-500">Max 5MB</p>
-                </div>
-              )}
-
-              {error && (
-                <p className="mt-2 text-sm text-red-500 text-center">{error}</p>
-              )}
-            </div>
-
-            <div className="flex justify-end">
-              <button
+              {/* Conditional Button for Create/Update */}
+              <ActionButton
+                label={action === "create" ? "Create" : "Update"}
                 type="submit"
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-accent hover:bg-accent/90 text-white"
-              >
-                {isLoading ? "Saving..." : "Save Project"}
-              </button>
+                variant="primary"
+                isLoading={isLoading}
+                disabled={isLoading}
+                icon={
+                  action === "create" ? (
+                    <Plus className="w-4 h-4" />
+                  ) : (
+                    <Pencil className="w-4 h-4" />
+                  )
+                }
+              />
             </div>
+
+            {/*  */}
           </form>
         </div>
       </div>
@@ -432,12 +373,14 @@ const ProjectsTab = () => {
               <div className="mt-4 flex justify-end gap-4 items-center">
                 <button
                   onClick={() => handleUpdate(project?._id)}
+                  disabled={isLoading}
                   className="flex items-center text-blue-500 rounded hover:text-blue-700 transition-all"
                 >
                   <Edit />
                 </button>
                 <button
                   onClick={() => handleDelete(project?._id)}
+                  disabled={isLoading}
                   className="flex items-center text-red-500 rounded hover:text-red-700 transition-all"
                 >
                   <Trash2 />

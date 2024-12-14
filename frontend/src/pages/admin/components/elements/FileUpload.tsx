@@ -1,15 +1,15 @@
-import React, { useRef } from "react";
 import { Upload, X } from "lucide-react";
 
 interface FileUploadProps {
-  label: string;
+  label: string; //
   name: string;
-  accept?: string;
+  accept?: string; //
   error?: string;
   currentFile?: string;
   onFileSelect: (file: File) => void;
   onFileRemove?: () => void;
   required?: boolean;
+  fileInputRef: React.RefObject<HTMLInputElement>;
 }
 
 const FileUpload = ({
@@ -20,9 +20,10 @@ const FileUpload = ({
   currentFile,
   onFileSelect,
   onFileRemove,
+  fileInputRef,
   required = false,
 }: FileUploadProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,6 +72,7 @@ const FileUpload = ({
         ref={fileInputRef}
         type="file"
         name={name}
+        value={""}
         accept={accept}
         onChange={handleFileChange}
         className="hidden"

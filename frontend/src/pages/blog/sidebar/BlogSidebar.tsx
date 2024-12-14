@@ -1,13 +1,6 @@
 import { motion } from "framer-motion";
 import { useBlog } from "../context/BlogContext";
-import {
-  Book,
-  Video,
-  PenTool,
-  Newspaper,
-  ArrowBigLeft,
-  ArrowLeft,
-} from "lucide-react";
+import { Book, Video, PenTool, Newspaper, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const BlogSidebar = () => {

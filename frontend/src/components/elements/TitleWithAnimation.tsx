@@ -4,25 +4,13 @@ import { motion } from "framer-motion";
 const TitleWithAnimation = ({ text }: any) => {
   return (
     <motion.h2
-      className="section-title"
-      initial={{ color: "white" }} // Initial text color
-      whileHover={{
-        color: "#007BFF", // Hover text color
-        transition: { duration: 1 }, // Smooth transition},
-      }}
+      className="text-xl font-semibold text-white mb-2 relative inline-block"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
     >
       {text}
-
-      {/* Underline animation */}
-      <motion.div
-        className="absolute bottom-0 left-0 bg-blue-500 h-0.5 w-full"
-        initial={{ width: "0%", left: "40%" }} // Start from middle
-        whileHover={{
-          width: "100%", // Full width of underline on hover
-          left: 0, // Move underline to the left when hovered
-          transition: { duration: 0.5, ease: "easeInOut" }, // Smooth transition
-        }}
-      />
+      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
     </motion.h2>
   );
 };

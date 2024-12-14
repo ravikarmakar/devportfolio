@@ -60,6 +60,10 @@ const ProfileTab = () => {
   }, [fetchUserData]);
 
   // console.log(user);
+  // const handleImageRemove = () => {
+  //   setFormData((prev) => ({ ...prev, image: null }));
+  //   if (fileInputRef.current) fileInputRef.current.value = "";
+  // };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

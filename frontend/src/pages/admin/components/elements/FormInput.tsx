@@ -1,20 +1,24 @@
 interface FormInputProps {
   label: string;
+  value: string;
   name: string;
   type?: string;
   placeholder?: string;
-  error?: string;
-  register: any;
+  error?: string | null;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   required?: boolean;
 }
 
 const FormInput = ({
   label,
   name,
+  value,
   type = "text",
   placeholder,
   error,
-  register,
+  onChange,
   required = false,
 }: FormInputProps) => {
   return (
@@ -26,11 +30,13 @@ const FormInput = ({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <input
-        {...register(name)}
+        name={name}
         type={type}
         id={name}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
-        className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+        className={`w-full px-4 py-2 rounded-lg text-gray-400 bg-white dark:bg-secondary/20 border ${
           error
             ? "border-red-500 focus:border-red-500"
             : "border-gray-300 dark:border-gray-600 focus:border-accent"

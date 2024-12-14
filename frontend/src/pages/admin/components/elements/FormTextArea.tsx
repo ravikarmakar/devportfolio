@@ -1,9 +1,12 @@
+import { ChangeEvent } from "react";
+
 interface FormTextAreaProps {
   label: string;
   name: string;
+  value?: string;
   placeholder?: string;
   error?: string;
-  register: any;
+  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   required?: boolean;
   rows?: number;
 }
@@ -13,7 +16,8 @@ const FormTextArea = ({
   name,
   placeholder,
   error,
-  register,
+  onChange,
+  value,
   required = false,
   rows = 4,
 }: FormTextAreaProps) => {
@@ -26,11 +30,13 @@ const FormTextArea = ({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <textarea
-        {...register(name)}
+        name={name}
         id={name}
         rows={rows}
+        value={value}
         placeholder={placeholder}
-        className={`w-full px-4 py-2 rounded-lg bg-white dark:bg-secondary/20 border ${
+        onChange={onChange}
+        className={`w-full px-4 py-2 rounded-lg text-gray-300 bg-white dark:bg-secondary/20 border ${
           error
             ? "border-red-500 focus:border-red-500"
             : "border-gray-300 dark:border-gray-600 focus:border-accent"

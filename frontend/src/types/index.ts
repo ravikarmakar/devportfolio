@@ -25,6 +25,7 @@ export interface Project {
     github: string;
     hosted: string;
   };
+  status: string;
   priority: number;
   tags: string[];
   deatils: string;

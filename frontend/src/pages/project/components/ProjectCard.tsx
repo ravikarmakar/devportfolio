@@ -36,7 +36,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-bgDark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
           <div className="flex gap-4">
             <a
-              href={project.links.github}
+              href={project?.links?.github || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-accent"
@@ -44,7 +44,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               <GithubIcon size={24} />
             </a>
             <a
-              href={project.links.hosted}
+              href={project?.links?.hosted || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-accent"

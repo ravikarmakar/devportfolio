@@ -1,13 +1,15 @@
 import { User } from "../models/user.model.js";
 import { SkillCategory } from "../models/skills.model.js";
 import { Project } from "../models/project.model.js";
+import mongoose from "mongoose";
 
 import { uploadOnCloudinary } from "../config/cloudinary.js";
-// import fs from "fs";
 
 export const getDashboard = (req, res) => {
   res.json({ message: "Welcome to admin dashboard" });
 };
+
+// Profile..
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
@@ -63,6 +65,8 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
+
+// Skills..
 
 export const addNewSkills = async (req, res) => {
   const { title, iconName, description, skills } = req.body;
@@ -125,22 +129,22 @@ export const deleteSkills = async (req, res) => {
   }
 };
 
-export const addNewProject = async (req, res) => {
-  const {
-    title,
-    description,
-    status,
-    technologies,
-    links,
-    priority,
-    tags,
-    image,
-  } = req.body;
+// Project..
 
-  const imageUrl = await uploadOnCloudinary(image);
+export const addNewProject = async (req, res) => {
+  const { title, description, status, technologies, priority, tags, image } =
+    req.body;
+
+  const links = JSON.parse(req.body.links || "{}");
 
   try {
-    // Create a new Project document
+    if (!title || !description || !image) {
+      return res
+        .status(400)
+        .json({ message: "Title, description, and image are required" });
+    }
+    const imageUrl = await uploadOnCloudinary(image);
+
     const newProject = new Project({
       title,
       description,
@@ -149,10 +153,9 @@ export const addNewProject = async (req, res) => {
       links,
       priority,
       tags,
-      imgUrl: req.body.image,
+      imgUrl: image,
     });
 
-    // Save the new Project to the database
     await newProject.save();
 
     res.status(201).json({
@@ -166,12 +169,30 @@ export const addNewProject = async (req, res) => {
 };
 
 export const updateProject = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const updatedProject = await Project.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const { id } = req.params;
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid or missing project ID" });
+    }
+
+    const { image, ...otherFileds } = req.body;
+
+    const updateData = { ...otherFileds };
+
+    if (image) {
+      const imageUrl = await uploadOnCloudinary(image);
+      updateData.imgUrl = imageUrl;
+    }
+
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (!updatedProject) {
       return res.status(404).json({ message: "Project not found" });
@@ -182,8 +203,10 @@ export const updateProject = async (req, res) => {
       data: updatedProject,
     });
   } catch (error) {
-    console.error("Error in updateProject controller:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error in updateProject on admin controller:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server error", error: error.message });
   }
 };
 
