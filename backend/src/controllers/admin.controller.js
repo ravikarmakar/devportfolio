@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import { SkillCategory } from "../models/skills.model.js";
 import { Project } from "../models/project.model.js";
 import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
 
 import { uploadOnCloudinary } from "../config/cloudinary.js";
 
@@ -10,64 +11,55 @@ export const getDashboard = (req, res) => {
 };
 
 // Profile..
-
 export const updateUser = async (req, res) => {
-  const { id } = req.params;
-
-  const {
-    name,
-    email,
-    phone,
-    location,
-    websiteUrl,
-    bio,
-    profileSummery,
-    aboutMe,
-  } = req.body;
-
-  const profileImg = req.files?.profileImage?.[0]?.path || null; // Cloudinary path for profileImage
-  const resume = req.files?.resumeFile?.[0]?.path || null; // Cloudinary path for resume
-
-  const profileUrl = await uploadOnCloudinary(profileImg);
-  const resumeUrl = await uploadOnCloudinary(resume);
-
-  const updateData = {
-    name,
-    email,
-    mobileNumber: phone,
-    profileImageUrl: profileUrl,
-    resumeUrl: resumeUrl,
-    currLocation: location,
-    websiteUrl,
-    bio,
-    profileSummery,
-    aboutMe,
-  };
-
-  console.log(updateData);
-
   try {
-    // Update user in the database
-    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    const { id } = req.params;
+    const { image, resume, ...otherFileds } = req.body;
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+    const updateData = { ...otherFileds };
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "User ID is required." });
     }
 
-    res.status(200).json({
-      message: "User updated successfully",
-      data: updatedUser,
-    });
+    if (image) {
+      const uploadResult = await uploadOnCloudinary(image);
+      if (!uploadResult) {
+        return res.status(500).json({ message: "Image upload failed." });
+      }
+      updateData.profileImageUrl = uploadResult; // Save the Cloudinary URL
+    }
+
+    if (resume) {
+      const uploadResult = await uploadOnCloudinary(resume);
+      if (!uploadResult) {
+        return res.status(500).json({ message: "Resume upload failed." });
+      }
+      updateData.resumeUrl = uploadResult;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "User updated successfully.", user: updatedUser });
   } catch (error) {
-    console.log("Error in updateUser controller:", error);
-    res.status(500).json({ message: "Internal server error", error });
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while updating the user." });
   }
 };
 
 // Skills..
-
 export const addNewSkills = async (req, res) => {
   const { title, iconName, description, skills } = req.body;
 
@@ -130,7 +122,6 @@ export const deleteSkills = async (req, res) => {
 };
 
 // Project..
-
 export const addNewProject = async (req, res) => {
   const { title, description, status, technologies, priority, tags, image } =
     req.body;

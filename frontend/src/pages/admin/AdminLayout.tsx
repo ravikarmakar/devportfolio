@@ -51,7 +51,7 @@ const AdminLayout = () => {
 
       if (response.status === 200) {
         toast.success("Logout successful");
-        navigate("/profile"); // Redirect to login page
+        navigate("/profile");
       }
     } catch (error: any) {
       toast.error("Logout failed:", error.message);

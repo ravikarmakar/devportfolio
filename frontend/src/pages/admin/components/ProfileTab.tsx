@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  Upload,
-  Save,
-  X,
-  User,
-  Mail,
-  MapPin,
-  Phone,
-  Globe,
-  FileText,
-  Briefcase,
-} from "lucide-react";
-import { axiosInstance } from "../../../lib/axios";
+import { X, Pencil } from "lucide-react";
 import useUserStore from "../../../store/useUserStore.js";
-import toast from "react-hot-toast";
+import FileUpload from "./elements/FileUpload.js";
+import FormTextArea from "./elements/FormTextArea.js";
+import FormInput from "./elements/FormInput.js";
+import ActionButton from "./elements/ActionButton.js";
+import { toast } from "react-hot-toast";
 
 interface ProfileFormData {
+  _id?: string;
   name: string;
   email: string;
   phone: string;
@@ -25,13 +18,13 @@ interface ProfileFormData {
   bio: string;
   profileSummery: string;
   aboutMe: string;
+  profileImage?: string | null;
+  resumeFile?: string | null;
 }
 
 const ProfileTab = () => {
-  const { fetchUserData, user } = useUserStore();
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { fetchUserData, user, isLoading, updateUser } = useUserStore();
+
   const [formData, setFormData] = useState<ProfileFormData>({
     name: "",
     email: "",
@@ -41,7 +34,17 @@ const ProfileTab = () => {
     bio: "",
     profileSummery: "",
     aboutMe: "",
+    profileImage: null,
+    resumeFile: null,
   });
+
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  const [error, setError] = useState<string | null | undefined>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchUserData();
@@ -59,11 +62,69 @@ const ProfileTab = () => {
     }
   }, [fetchUserData]);
 
-  // console.log(user);
-  // const handleImageRemove = () => {
-  //   setFormData((prev) => ({ ...prev, image: null }));
-  //   if (fileInputRef.current) fileInputRef.current.value = "";
-  // };
+  const handleReset = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      location: "",
+      websiteUrl: "",
+      bio: "",
+      profileSummery: "",
+      aboutMe: "",
+      profileImage: null,
+      resumeFile: null,
+    });
+    setIsUpdateMode(false);
+  };
+
+  const handleFileSelect = (file: File, fileType: "resume" | "image") => {
+    const reader = new FileReader();
+
+    if (fileType === "resume") {
+      if (file.type !== "application/pdf") {
+        setError("Only PDF files are allowed for resume.");
+        return;
+      }
+
+      reader.onloadend = () => {
+        setResumeFile(file); // Optional: Keep the original file object
+        setFormData((prev) => ({ ...prev, resume: reader.result as string }));
+        setError(null);
+      };
+
+      reader.readAsDataURL(file); // Read file as Data URL (Base64)
+    } else if (fileType === "image") {
+      if (!["image/jpeg", "image/png"].includes(file.type)) {
+        setError("Only JPEG and PNG images are allowed.");
+        return;
+      }
+
+      reader.onloadend = () => {
+        setProfileImage(file); // Optional: Keep the original file object
+        setFormData((prev) => ({ ...prev, image: reader.result as string })); // Save string data
+        setError(null);
+      };
+
+      reader.readAsDataURL(file); // Read file as Data URL (Base64)
+    }
+
+    setError(null);
+  };
+
+  const handleFileRemove = (fileType: "resume" | "image") => {
+    if (fileType === "resume") {
+      setResumeFile(null);
+      setFormData((prev) => ({ ...prev, resume: null }));
+    } else if (fileType === "image") {
+      setProfileImage(null);
+      setFormData((prev) => ({ ...prev, image: null }));
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setError(null);
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,171 +133,52 @@ const ProfileTab = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfileImage(file);
-    }
-  };
-
-  const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setResumeFile(file);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setIsLoading(true);
+    const requiredFields = [
+      "name",
+      "email",
+      "phone",
+      "location",
+      "websiteUrl",
+      "bio",
+      "profileSummery",
+      "aboutMe",
+    ];
 
+    const hasEmptyFields = requiredFields.some(
+      (field) => formData[field as keyof typeof formData] === ""
+    );
+
+    if (hasEmptyFields) {
+      setError("All fields are required");
+      toast.error("All fields are required");
+      return;
+    }
     try {
-      // Create FormData instance
-      const data = new FormData();
+      await updateUser(formData);
 
-      // Append form data
-      data.append("name", formData.name);
-      data.append("email", formData.email);
-      data.append("phone", formData.phone);
-      data.append("location", formData.location);
-      data.append("websiteUrl", formData.websiteUrl);
-      data.append("bio", formData.bio);
-      data.append("profileSummery", formData.profileSummery);
-      data.append("aboutMe", formData.aboutMe);
+      setFormData((prev) => ({
+        ...prev,
+        name: "",
+        email: "",
+        phone: "",
+        location: "",
+        websiteUrl: "",
+        bio: "",
+        profileSummery: "",
+        aboutMe: "",
+        profileImage: null,
+        resumeFile: null,
+      }));
 
-      // Addimg profileImage if it exists
-      if (profileImage) {
-        data.append("profileImage", profileImage);
-      } else {
-        console.error("Profile image is missing!");
-      }
-
-      // Check and add resumeFile if it exists
-      if (resumeFile) {
-        data.append("resumeFile", resumeFile);
-      } else {
-        console.error("Resume file is missing!");
-      }
-
-      // Send data to backend
-      await axiosInstance.put(`/admin/user/${user?._id}`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Clear form data
-      // setFormData({
-      //   name: "",
-      //   email: "",
-      //   phone: "",
-      //   location: "",
-      //   website: "",
-      //   bio: "",
-      //   profileSummery: "",
-      //   aboutMe: "",
-      // });
-
-      setProfileImage(null);
       setResumeFile(null);
-
-      toast.success("Profile updated successfully!");
-    } catch (error: any) {
-      toast.error("Error updating profile:", error);
-      console.error("Error updating profile:", error);
-    } finally {
-      setIsLoading(false);
+      setProfileImage(null);
+    } catch (error) {
+      toast.error("Failed to update profile. Please try again.");
     }
   };
-
-  const InputField = ({
-    icon: Icon,
-    label,
-    name,
-    value,
-    type = "text",
-  }: {
-    icon: any;
-    label: string;
-    name: string;
-    value: string;
-    type?: string;
-  }) => (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-        {label}
-      </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon className="h-5 w-5 text-gray-400" />
-        </div>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={handleInputChange}
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                   bg-white dark:bg-secondary/20 text-gray-900 dark:text-gray-100 
-                   focus:ring-2 focus:ring-accent focus:border-transparent"
-        />
-      </div>
-    </div>
-  );
-
-  const FileUploadField = ({
-    label,
-    accept,
-    file,
-    onChange,
-    onRemove,
-  }: {
-    label: string;
-    accept: string;
-    file: File | null;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onRemove: () => void;
-  }) => (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-        {label}
-      </label>
-      {file ? (
-        <div className="flex items-center gap-2 p-2 bg-accent/10 rounded-lg">
-          <span className="text-sm text-gray-600 dark:text-gray-300 flex-1 truncate">
-            {file.name}
-          </span>
-          <button
-            type="button"
-            onClick={onRemove}
-            className="p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-full text-red-500"
-          >
-            <X size={16} />
-          </button>
-        </div>
-      ) : (
-        <div className="relative">
-          <input
-            type="file"
-            accept={accept}
-            onChange={onChange}
-            className="hidden"
-            id={label}
-          />
-          <label
-            htmlFor={label}
-            className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 
-                     dark:border-gray-600 rounded-lg cursor-pointer hover:border-accent transition-colors"
-          >
-            <Upload className="h-6 w-6 text-gray-400" />
-            <span className="text-sm text-gray-500">
-              Click to upload or drag and drop
-            </span>
-          </label>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className="py-6 px-4 sm:px-6 lg:px-8">
@@ -260,146 +202,160 @@ const ProfileTab = () => {
           <div className="bg-white dark:bg-secondary/20 shadow rounded-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <FileUploadField
+                {/* Profile Picture */}
+                <FileUpload
                   label="Profile Picture"
-                  accept="image/*"
-                  file={profileImage}
-                  onChange={handleImageUpload}
-                  onRemove={() => setProfileImage(null)}
+                  name="profileImage"
+                  accept="image/jpeg, image/png"
+                  onFileSelect={(file) => handleFileSelect(file, "image")}
+                  onFileRemove={() => handleFileRemove("image")}
+                  fileInputRef={profileImageInputRef}
+                  error={!profileImage ? "" : undefined}
+                  required={true}
+                  currentFile={profileImage?.name}
                 />
               </div>
 
-              <InputField
-                icon={User}
-                label="Full Name"
+              {/* Profile Name */}
+              <FormInput
+                // icon={User}
+                label="Name"
+                placeholder="Enter your name"
+                type="text"
                 name="name"
                 value={formData.name}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
               />
 
-              {/* <InputField
-                icon={Briefcase}
-                label="About Me"
-                name="title"
-                value={formData.aboutMe}
-             
-              /> */}
-
-              <InputField
-                icon={Mail}
+              {/* Email */}
+              <FormInput
+                // icon={Mail}
                 label="Email"
+                placeholder="Email"
+                type="email"
                 name="email"
                 value={formData.email}
-                type="email"
+                onChange={handleInputChange}
+                error={error}
+                required={true}
               />
 
-              <InputField
-                icon={Phone}
+              {/* Phone */}
+              <FormInput
+                // icon={Phone}
                 label="Phone"
+                placeholder="Number"
+                type="text"
                 name="phone"
                 value={formData.phone}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
               />
 
-              <InputField
-                icon={MapPin}
+              {/* Location */}
+              <FormInput
+                // icon={MapPin}
                 label="Location"
+                placeholder="Location"
+                type="text"
                 name="location"
                 value={formData.location}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
               />
 
-              <InputField
-                icon={Globe}
+              {/* Website */}
+              <FormInput
+                // icon={Globe}
                 label="Website"
-                name="website"
-                value={formData.websiteUrl}
+                placeholder="Website"
                 type="url"
+                name="websiteUrl"
+                value={formData.websiteUrl}
+                onChange={handleInputChange}
+                error={error}
+                required={true}
               />
 
+              {/* All TextArea */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Bio <span className="text-red-500">*</span>
-                </label>
-                <textarea
+                {/* Bio */}
+                <FormTextArea
+                  label="Bio"
+                  placeholder="Add your Bio"
                   name="bio"
                   value={formData.bio}
                   onChange={handleInputChange}
+                  error={error ?? undefined}
+                  required={true}
                   rows={4}
-                  className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                           bg-white dark:bg-secondary/20 text-gray-900 dark:text-gray-100 
-                           focus:ring-2 focus:ring-accent focus:border-transparent"
                 />
-              </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  About me <span className="text-red-500">*</span>
-                </label>
-                <textarea
+                {/* About me */}
+                <FormTextArea
+                  label="About me"
+                  placeholder="Write somthing about your"
                   name="aboutMe"
                   value={formData.aboutMe}
                   onChange={handleInputChange}
+                  error={error ?? undefined}
+                  required={true}
                   rows={4}
-                  className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                           bg-white dark:bg-secondary/20 text-gray-900 dark:text-gray-100 
-                           focus:ring-2 focus:ring-accent focus:border-transparent"
                 />
-              </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Proffessional Summary <span className="text-red-500">*</span>
-                </label>
-                <textarea
+                {/* Proffessional Summary */}
+                <FormTextArea
+                  label="Proffessional Summary"
+                  placeholder="Your Proffessional Summary here"
                   name="profileSummery"
                   value={formData.profileSummery}
                   onChange={handleInputChange}
+                  error={error ?? undefined}
+                  required={true}
                   rows={4}
-                  className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                           bg-white dark:bg-secondary/20 text-gray-900 dark:text-gray-100 
-                           focus:ring-2 focus:ring-accent focus:border-transparent"
                 />
               </div>
 
+              {/* Resume/CV */}
               <div className="md:col-span-2">
-                <FileUploadField
-                  label="Resume/CV"
-                  accept=".pdf,.doc,.docx"
-                  file={resumeFile}
-                  onChange={handleResumeUpload}
-                  onRemove={() => setResumeFile(null)}
+                <FileUpload
+                  label="Upload Resume (PDF)"
+                  name="resumeFile"
+                  accept="application/pdf"
+                  onFileSelect={(file) => handleFileSelect(file, "resume")}
+                  onFileRemove={() => handleFileRemove("resume")}
+                  fileInputRef={fileInputRef}
+                  error={!resumeFile ? "" : undefined}
+                  required={true}
+                  currentFile={resumeFile?.name}
                 />
               </div>
             </div>
 
             <div className="mt-6 flex justify-end gap-4">
-              <button
-                type="button"
-                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
-                         text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 
-                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
-              >
-                Cancel
-              </button>
-              <button
+              {/* Reset */}
+              <ActionButton
+                label="Reset"
+                type="reset"
+                variant="secondary"
+                icon={<X className="w-4 h-4" />}
+                isLoading={false}
+                onClick={handleReset}
+              />
+
+              {/* Update */}
+              <ActionButton
+                label={isUpdateMode ? "Update" : "Want to Update?"}
                 type="submit"
+                variant="primary"
+                isLoading={isLoading}
                 disabled={isLoading}
-                className="flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg 
-                         hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 
-                         focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? (
-                  <>
-                    <span className="animate-spin">
-                      <Upload className="h-5 w-5" />
-                    </span>
-                    Updating...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-5 w-5" />
-                    Save Changes
-                  </>
-                )}
-              </button>
+                icon={<Pencil className="w-4 h-4" />}
+              />
             </div>
           </div>
         </form>

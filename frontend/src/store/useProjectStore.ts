@@ -88,15 +88,20 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
   updateProject: async (id: string, updatedData: any) => {
     set({ isLoading: true, error: null });
     try {
-      await axiosInstance.put(`/admin/project/${id}`, updatedData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosInstance.put(
+        `/admin/project/${id}`,
+        updatedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      toast.success("Project updated successfully");
-
-      await get().fetchProjects();
+      if (response.status === 200) {
+        toast.success("Project updated successfully");
+        await get().fetchProjects();
+      }
 
       // Optionally, you can use the response to update local state or trigger additional actions
       // For example: set({ projects: response.data.data });

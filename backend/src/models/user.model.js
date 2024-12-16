@@ -26,11 +26,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    profileImageUrl: {
+
+    websiteUrl: {
       type: String,
       trim: true,
     },
-    websiteUrl: {
+    profileImageUrl: {
       type: String,
       trim: true,
     },

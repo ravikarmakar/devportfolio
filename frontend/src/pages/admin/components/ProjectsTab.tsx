@@ -83,6 +83,11 @@ const ProjectsTab = () => {
       return;
     }
 
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
     const projectToEdit = projects.find((project) => project._id === id);
 
     if (projectToEdit) {
@@ -173,7 +178,6 @@ const ProjectsTab = () => {
   };
 
   const handleImageRemove = () => {
-    console.log("handleImageRemove called");
     setFormData((prev) => ({ ...prev, image: null }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -313,7 +317,7 @@ const ProjectsTab = () => {
               label="Project Image"
               name="projectImage"
               accept="image/*"
-              error={!file ? "File is required" : undefined}
+              error={!file ? "" : undefined}
               currentFile={file?.name}
               onFileSelect={handleFileSelect}
               onFileRemove={handleImageRemove}
