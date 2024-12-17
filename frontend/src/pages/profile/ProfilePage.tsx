@@ -7,15 +7,18 @@ import useUserStore from "../../store/useUserStore";
 import { useEffect } from "react";
 import GoalsSection from "./components/GoalsSection";
 import EducationSection from "./components/EducationSection";
+import ProfileHeaderLoading from "./components/skeletons/ProfileHeaderLoading";
 
 const Profile = () => {
-  const { fetchUserData, user } = useUserStore();
+  const { fetchUserData, user, isLoading } = useUserStore();
 
   useEffect(() => {
     if (!user) {
       fetchUserData();
     }
   }, [fetchUserData, user]);
+
+  // const isLoading = true;
 
   return (
     <section className="py-20 px-6">
@@ -26,7 +29,7 @@ const Profile = () => {
           transition={{ duration: 0.5 }}
           className="space-y-12"
         >
-          <ProfileHeader user={user} />
+          {isLoading ? <ProfileHeaderLoading /> : <ProfileHeader user={user} />}
           <ProfessionalSummary user={user} />
           <AboutSection user={user} />
           <EducationSection />

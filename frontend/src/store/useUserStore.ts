@@ -45,7 +45,7 @@ const useUserStore = create<UserStoreState>((set, get) => ({
         }
       );
 
-      set({ user: response.data, isLoading: false });
+      set({ user: response.data });
       if (response.status === 200) {
         toast.success("User updated successfully");
         await get().fetchUserData();

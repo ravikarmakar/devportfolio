@@ -12,20 +12,19 @@ const projectSchema = new mongoose.Schema(
     },
     imgUrl: {
       type: String,
-      required: true,
     },
     technologies: {
       type: [String],
       required: true,
     },
     links: {
-      github: { type: String }, // GitHub repository link
-      hosted: { type: String }, // Hosted site link
+      github: { type: String },
+      hosted: { type: String },
     },
     status: {
       type: String,
-      enum: ["upcoming", "in-progress", "completed"], // Status options
-      default: "upcoming", // Default status
+      enum: ["upcoming", "in-progress", "completed"],
+      default: "upcoming",
     },
     priority: {
       type: String,

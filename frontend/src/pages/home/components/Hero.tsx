@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import useUserStore from "../../../store/useUserStore";
 import FloatingParticles from "../../../components/elements/FloatingParticles";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const { user, fetchUserData, isLoading } = useUserStore();
@@ -78,6 +79,19 @@ const Hero = () => {
               >
                 <Linkedin size={24} />
               </motion.a>
+
+              <Link to="/profile">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="relative group cursor-pointer"
+                >
+                  <img
+                    src={user?.profileImageUrl}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full border-2 border-accent object-cover md:hidden"
+                  />
+                </motion.div>
+              </Link>
             </div>
           </div>
         </motion.div>

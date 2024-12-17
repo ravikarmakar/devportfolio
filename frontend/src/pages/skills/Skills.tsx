@@ -4,17 +4,15 @@ import BackgroundElements from "../../components/elements/BackgroundElements";
 import { useSkillStore } from "../../store/useSkillStore";
 import { useEffect } from "react";
 import { CategorySection } from "./components/CategorySection";
-// import { ArrowRight } from "lucide-react";
-// import TitleWithAnimation from "../../components/elements/TitleWithAnimation";
+// import { CategorySectionsSkeleton } from "./components/CategorySectionsSkeleton";
 
 const Skills = () => {
-  const { fetchSkillCategories, skillCategories } = useSkillStore();
+  const { fetchCategories, Categories } = useSkillStore();
 
   useEffect(() => {
-    fetchSkillCategories();
-  }, [fetchSkillCategories, skillCategories]);
+    fetchCategories();
+  }, [fetchCategories]);
 
-  // console.log(skillCategories);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -50,7 +48,7 @@ const Skills = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {skillCategories.map((category, index) => (
+          {Categories.map((category, index) => (
             <CategorySection
               key={category.title}
               category={category}

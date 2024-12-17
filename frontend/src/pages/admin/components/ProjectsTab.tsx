@@ -112,6 +112,7 @@ const ProjectsTab = () => {
       ].includes(projectToEdit.status)
         ? (projectToEdit.status as "upcoming" | "in-progress" | "completed")
         : "upcoming";
+
       setFormData({
         _id: projectToEdit._id,
         title: projectToEdit.title,
@@ -321,7 +322,7 @@ const ProjectsTab = () => {
               currentFile={file?.name}
               onFileSelect={handleFileSelect}
               onFileRemove={handleImageRemove}
-              required={true}
+              required={false}
               fileInputRef={fileInputRef}
             />
 
