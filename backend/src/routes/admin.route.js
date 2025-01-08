@@ -35,7 +35,7 @@ router.put("/skill/:id", updateSkill);
 
 // Project
 router.post("/project", upload.single("image"), addNewProject);
-router.put("/project/:id", updateProject);
+router.put("/project/:id", upload.single("image"), updateProject);
 router.delete("/project/:id", deleteProject);
 
 export default router;

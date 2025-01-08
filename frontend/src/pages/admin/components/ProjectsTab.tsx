@@ -194,6 +194,7 @@ const ProjectsTab = () => {
       if (action === "create") {
         await createProject(formData);
       } else if (action === "update" && formData._id) {
+        console.log(formData);
         await updateProject(formData._id, formData);
       }
 

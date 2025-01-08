@@ -182,7 +182,7 @@ const LoginPage = () => {
                   to="/profile"
                   className="italic hover:underline hover:text-teal-300"
                 >
-                  Go back to Profile
+                  Back to Profile
                 </Link>{" "}
               </span>
             </p>

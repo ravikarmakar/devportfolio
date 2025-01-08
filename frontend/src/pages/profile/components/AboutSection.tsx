@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { BookOpen, Award, Coffee, Heart } from "lucide-react";
 import { User } from "../../../types";
+import DynamicIcon from "../../../components/icon/IconImport";
 
 interface ProfileAboutProps {
   user: User | null; // null agar user data abhi fetch nahi hua
@@ -8,10 +8,10 @@ interface ProfileAboutProps {
 
 const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
   const stats = [
-    { icon: BookOpen, label: "Years Experience", value: "1+" },
-    { icon: Award, label: "Projects Completed", value: "10+" },
-    { icon: Coffee, label: "Cups of Coffee", value: "500+" },
-    { icon: Heart, label: "Happy Clients", value: "5+" },
+    { icon: "BookOpen", label: "Years Experience", value: "1+" },
+    { icon: "Award", label: "Projects Completed", value: "10+" },
+    { icon: "Coffee", label: "Cups of Coffee", value: "500+" },
+    { icon: "Heart", label: "Happy Clients", value: "5+" },
   ];
 
   return (
@@ -29,7 +29,6 @@ const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, index) => {
-            const Icon = stat.icon;
             return (
               <motion.div
                 key={stat.label}
@@ -40,7 +39,11 @@ const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
               >
                 <div className="mb-2 flex justify-center">
                   <div className="p-2 bg-accent/10 rounded-lg">
-                    <Icon className="w-6 h-6 text-accent" />
+                    <DynamicIcon
+                      size={24}
+                      iconName={stat.icon}
+                      className="w-6 h-6 text-accent"
+                    />
                   </div>
                 </div>
                 <div className="font-bold text-2xl dark:text-white mb-1">

@@ -11,7 +11,7 @@ interface UserStoreState {
   updateUser: (formData: any) => Promise<void>;
 }
 
-const useUserStore = create<UserStoreState>((set, get) => ({
+export const useUserStore = create<UserStoreState>((set, get) => ({
   user: null,
   isLoading: false,
   error: null,
@@ -58,5 +58,3 @@ const useUserStore = create<UserStoreState>((set, get) => ({
     }
   },
 }));
-
-export default useUserStore;

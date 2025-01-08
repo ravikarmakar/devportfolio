@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import * as LucideIcons from "lucide-react";
+import DynamicIcon from "../../../components/icon/IconImport";
 
 // Icon mapping object
 export const iconMap: { [key: string]: React.ComponentType<any> } = {
@@ -46,6 +47,7 @@ export const SkillCard = ({ skill, index }: any) => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-accent/10 dark:bg-accent/20">
+                {/* <DynamicIcon iconName={skill.iconName} className="w-5 h-5" /> */}
                 <IconComponent className="w-5 h-5" />
               </div>
               <h4 className="font-medium text-base dark:text-white text-gray-800">

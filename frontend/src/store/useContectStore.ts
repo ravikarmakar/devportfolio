@@ -7,15 +7,38 @@ interface ContactStoreState {
   messages: Message[] | null;
   error: string | null;
   isLoading: boolean;
+  sendMessage: (formData: any) => Promise<void>;
   fetchAllMessage: () => Promise<void>;
   markAsRead: (id: string) => Promise<Message | null>;
   deleteMessage: (id: string) => Promise<void>;
 }
 
-export const useContactStore = create<ContactStoreState>((set) => ({
+export const useContactStore = create<ContactStoreState>((set, get) => ({
   messages: null,
   error: null,
   isLoading: false,
+
+  sendMessage: async (formData: any) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await axiosInstance.post("/message/contact", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 201) {
+        toast.success("Message sent successfully!");
+        await get().fetchAllMessage();
+      }
+    } catch (error: any) {
+      set({ error: "Failed to send message" });
+      toast.error("Failed to send message: " + error.message);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
   fetchAllMessage: async () => {
     set({ isLoading: true, error: null });

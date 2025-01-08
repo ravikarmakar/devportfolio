@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { GithubIcon, Linkedin, Download } from "lucide-react";
 import { useEffect } from "react";
-import useUserStore from "../../../store/useUserStore";
+import { useUserStore } from "../../../store/useUserStore";
 import FloatingParticles from "../../../components/elements/FloatingParticles";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { Link } from "react-router-dom";

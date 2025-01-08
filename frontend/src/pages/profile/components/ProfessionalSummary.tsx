@@ -1,33 +1,35 @@
 import { motion } from "framer-motion";
-import { Code2, Server, Database, Rocket } from "lucide-react";
 import { User } from "../../../types";
+import DynamicIcon from "../../../components/icon/IconImport";
 
 interface ProfileSummaryrProps {
   user: User | null; // null agar user data abhi fetch nahi hua
 }
 
 const ProfessionalSummary: React.FC<ProfileSummaryrProps> = ({ user }) => {
+  // const IconComponent = iconMap[skill.iconName] || LucideIcons.Circle;
+
   const summaryPoints = [
     {
-      icon: <Code2 className="w-6 h-6 text-accent" />,
+      icon: "Code2",
       title: "Frontend Development",
       description:
         "Expert in React.js, TypeScript, and modern frontend frameworks with a focus on building responsive and performant web applications.",
     },
     {
-      icon: <Server className="w-6 h-6 text-accent" />,
+      icon: "Server",
       title: "Backend Development",
       description:
         "Proficient in Node.js and Express.js, creating scalable server-side solutions and RESTful APIs.",
     },
     {
-      icon: <Database className="w-6 h-6 text-accent" />,
+      icon: "Database",
       title: "Database Management",
       description:
         "Experience with MongoDB, MySQL, and database optimization techniques for efficient data management.",
     },
     {
-      icon: <Rocket className="w-6 h-6 text-accent" />,
+      icon: "Rocket",
       title: "DevOps & Deployment",
       description:
         "Skilled in CI/CD pipelines, Docker containerization, and cloud deployment using AWS and other platforms.",
@@ -61,7 +63,13 @@ const ProfessionalSummary: React.FC<ProfileSummaryrProps> = ({ user }) => {
               className="flex gap-4 p-4 rounded-lg hover:bg-accent/5 transition-colors duration-300"
             >
               <div className="flex-shrink-0">
-                <div className="p-2 bg-accent/10 rounded-lg">{point.icon}</div>
+                <div className="p-2 bg-accent/10 rounded-lg">
+                  <DynamicIcon
+                    iconName={point.icon}
+                    size={24}
+                    className="w-6 h-6 text-accent"
+                  />
+                </div>
               </div>
               <div>
                 <h3 className="text-lg font-semibold mb-2 dark:text-white">

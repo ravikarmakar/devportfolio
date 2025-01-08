@@ -12,55 +12,55 @@ export const getDashboard = (req, res) => {
 
 // Profile..
 export const updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { image, resume, ...otherFileds } = req.body;
+  console.log(req.body);
+  // try {
+  //   const { id } = req.params;
+  //   const { image, resume, ...otherFileds } = req.body;
 
-    const updateData = { ...otherFileds };
+  //   const updateData = { ...otherFileds };
 
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "User ID is required." });
-    }
+  //   if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+  //     return res.status(400).json({ message: "User ID is required." });
+  //   }
 
-    if (image) {
-      const uploadResult = await uploadOnCloudinary(image);
-      if (!uploadResult) {
-        return res.status(500).json({ message: "Image upload failed." });
-      }
-      updateData.profileImageUrl = uploadResult; // Save the Cloudinary URL
-    }
+  //   if (image) {
+  //     const uploadResult = await uploadOnCloudinary(image);
+  //     if (!uploadResult) {
+  //       return res.status(500).json({ message: "Image upload failed." });
+  //     }
+  //     updateData.profileImageUrl = uploadResult; // Save the Cloudinary URL
+  //   }
 
-    if (resume) {
-      const uploadResult = await uploadOnCloudinary(resume);
-      if (!uploadResult) {
-        return res.status(500).json({ message: "Resume upload failed." });
-      }
-      updateData.resumeUrl = uploadResult;
-    }
+  //   if (resume) {
+  //     const uploadResult = await uploadOnCloudinary(resume);
+  //     if (!uploadResult) {
+  //       return res.status(500).json({ message: "Resume upload failed." });
+  //     }
+  //     updateData.resumeUrl = uploadResult;
+  //   }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { $set: updateData },
-      { new: true, runValidators: true }
-    );
+  //   const updatedUser = await User.findByIdAndUpdate(
+  //     id,
+  //     { $set: updateData },
+  //     { new: true, runValidators: true }
+  //   );
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "User not found." });
-    }
+  //   if (!updatedUser) {
+  //     return res.status(404).json({ message: "User not found." });
+  //   }
 
-    res
-      .status(200)
-      .json({ message: "User updated successfully.", user: updatedUser });
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the user." });
-  }
+  //   res
+  //     .status(200)
+  //     .json({ message: "User updated successfully.", user: updatedUser });
+  // } catch (error) {
+  //   console.error("Error updating user:", error);
+  //   res
+  //     .status(500)
+  //     .json({ message: "An error occurred while updating the user." });
+  // }
 };
 
 // Skill & Category
-
 export const newSkillCategory = async (req, res) => {
   try {
     const { title, iconName, description } = req.body;
@@ -291,7 +291,12 @@ export const updateProject = async (req, res) => {
     const updateData = { ...otherFileds };
 
     if (image) {
-      const imageUrl = await uploadOnCloudinary(image);
+      const imageUrl = await Promise.race([
+        uploadOnCloudinary(image),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Cloudinary timeout")), 10000)
+        ),
+      ]);
       updateData.imgUrl = imageUrl;
     }
 

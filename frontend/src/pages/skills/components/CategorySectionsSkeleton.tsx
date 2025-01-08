@@ -29,9 +29,9 @@ export const CategorySectionSkeleton: React.FC<
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.2 }}
-      className="space-y-6 animate-pulse"
+      className="p-4 rounded-lg shadow-md space-y-6 bg-gray-50 dark:bg-gray-800 animate-pulse"
     >
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4">
         <div className="p-3 rounded-xl bg-accent/20 text-white relative overflow-hidden">
           <IconComponent className="w-6 h-6 text-gray-300 dark:text-gray-600" />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
@@ -50,16 +50,17 @@ export const CategorySectionSkeleton: React.FC<
   );
 };
 
-// Optional: Create a CategorySectionsSkeleton for multiple loading sections
 export const CategorySectionsSkeleton: React.FC<{ count?: number }> = ({
   count = 2,
 }) => {
   return (
-    <div className="space-y-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
       {Array(count)
         .fill(0)
         .map((_, index) => (
-          <CategorySectionSkeleton key={index} index={index} />
+          <div key={index} className="flex flex-col">
+            <CategorySectionSkeleton index={index} />
+          </div>
         ))}
     </div>
   );

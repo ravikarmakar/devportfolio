@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { axiosInstance } from "../../lib/axios";
 import { Outlet, Navigate } from "react-router-dom";
+import LoadingScreen from "../../components/LoadingScreen";
 
 export const ProtectedAdminRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,7 +31,7 @@ export const ProtectedAdminRoute = () => {
   }, []);
 
   if (isLoading) {
-    return <div className="loading-spinner">Loading...</div>; // Improved UX
+    return <LoadingScreen key="loading" />;
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;

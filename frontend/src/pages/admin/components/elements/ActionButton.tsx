@@ -10,6 +10,7 @@ interface ActionButtonProps {
   icon?: React.ReactNode;
   fullWidth?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 const ActionButton = ({
@@ -21,11 +22,12 @@ const ActionButton = ({
   icon,
   fullWidth = false,
   disabled = false,
+  className,
 }: ActionButtonProps) => {
   const baseStyles =
     "flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200";
   const variantStyles = {
-    primary: "bg-accent hover:bg-accent/90 text-white",
+    primary: `bg-accent hover:bg-accent/90 text-white ${className}`,
     secondary:
       "bg-gray-200 dark:bg-secondary/20 hover:bg-gray-300 dark:hover:bg-secondary/30 text-gray-700 dark:text-gray-200",
     danger: "bg-red-500 hover:bg-red-600 text-white",

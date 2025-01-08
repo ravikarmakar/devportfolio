@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { X, Pencil } from "lucide-react";
-import useUserStore from "../../../store/useUserStore.js";
+import { useUserStore } from "../../../store/useUserStore.js";
 import FileUpload from "./elements/FileUpload.js";
 import FormTextArea from "./elements/FormTextArea.js";
 import FormInput from "./elements/FormInput.js";
@@ -157,6 +157,7 @@ const ProfileTab = () => {
       return;
     }
     try {
+      console.log(formData);
       await updateUser(formData);
 
       setFormData((prev) => ({

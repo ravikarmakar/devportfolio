@@ -4,10 +4,10 @@ import BackgroundElements from "../../components/elements/BackgroundElements";
 import { useSkillStore } from "../../store/useSkillStore";
 import { useEffect } from "react";
 import { CategorySection } from "./components/CategorySection";
-// import { CategorySectionsSkeleton } from "./components/CategorySectionsSkeleton";
+import { CategorySectionSkeleton } from "./components/CategorySectionsSkeleton";
 
 const Skills = () => {
-  const { fetchCategories, Categories } = useSkillStore();
+  const { fetchCategories, Categories, isLoading } = useSkillStore();
 
   useEffect(() => {
     fetchCategories();
@@ -48,13 +48,17 @@ const Skills = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {Categories.map((category, index) => (
-            <CategorySection
-              key={category.title}
-              category={category}
-              index={index}
-            />
-          ))}
+          {isLoading ? (
+            <CategorySectionSkeleton />
+          ) : (
+            Categories.map((category, index) => (
+              <CategorySection
+                key={category.title}
+                category={category}
+                index={index}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

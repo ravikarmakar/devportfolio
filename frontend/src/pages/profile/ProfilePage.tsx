@@ -3,7 +3,7 @@ import ProfileHeader from "./components/ProfileHeader";
 import AboutSection from "./components/AboutSection";
 import InterestsSection from "./components/InterestsSection";
 import ProfessionalSummary from "./components/ProfessionalSummary";
-import useUserStore from "../../store/useUserStore";
+import { useUserStore } from "../../store/useUserStore";
 import { useEffect } from "react";
 import GoalsSection from "./components/GoalsSection";
 import EducationSection from "./components/EducationSection";
