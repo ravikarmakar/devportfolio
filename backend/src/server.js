@@ -23,6 +23,8 @@ app.use(
   })
 );
 
+console.log("working on branch");
+
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
