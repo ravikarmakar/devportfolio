@@ -8,6 +8,7 @@ import userRoutes from "./routes/users.route.js";
 import authRoute from "./routes/auth.route.js";
 import adminRoute from "./routes/admin.route.js";
 import messageRoute from "./routes/message.route.js";
+import morgan from "morgan";
 import { connectDB } from "./config/db.js";
 
 dotenv.config();
@@ -17,11 +18,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: "http://localhost:3002",
     credentials: true,
   })
 );
 
+app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));

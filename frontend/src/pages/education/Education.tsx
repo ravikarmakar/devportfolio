@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import {
   GraduationCap,
-  BookOpen,
   Code2,
   Brain,
   Atom,
@@ -16,13 +15,25 @@ import {
   Lightbulb,
   Award,
   Target,
+  ChevronRight,
 } from "lucide-react";
 
 const Education = () => {
+  const [isAccordionOpen, setIsAccordionOpen] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleAccordion = (index: any) => {
+    setIsAccordionOpen(isAccordionOpen === index ? null : index);
+  };
+
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   const formalEducation = {
     degree: "B.Sc. Physics (Honors)",
@@ -46,7 +57,7 @@ const Education = () => {
 
   const selfTaughtJourney = {
     title: "Self-taught Full-Stack Developer",
-    period: "2022 - Present",
+    period: "2023 to 2024 - Present",
     description:
       "Embarked on a comprehensive self-learning journey in web development, mastering modern technologies and best practices through hands-on projects and continuous learning.",
     milestones: [
@@ -59,7 +70,7 @@ const Education = () => {
         ],
       },
       {
-        year: "Mid of 2024",
+        year: "Overall 2024",
         achievements: [
           "Mastered React.js and modern frontend development",
           "Learned Node.js and Express.js for backend development",
@@ -67,7 +78,7 @@ const Education = () => {
         ],
       },
       {
-        year: "2024 - Present",
+        year: "Start of 2025 - Present",
         achievements: [
           "Advanced full-stack development with MERN stack",
           "Cloud deployment and DevOps practices",
@@ -85,26 +96,25 @@ const Education = () => {
 
   return (
     <section className="py-20 px-6 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <h2 className="section-title inline-flex items-center justify-center gap-2">
-            {/* <BookOpen className="w-8 h-8 text-accent" /> */}
-            Educational Backgrounddd
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            A unique combination of formal physics education and self-taught
-            programming expertise, bringing analytical thinking and technical
-            skills together.
-          </p>
-        </motion.div>
-
+      {/* Section Header */}
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-16"
+      >
+        <h2 className="section-title inline-flex items-center justify-center gap-2">
+          {/* <BookOpen className="w-8 h-8 text-accent" /> */}
+          Educational Background
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          A unique combination of formal physics education and self-taught
+          programming expertise, bringing analytical thinking and technical
+          skills together.
+        </p>
+      </motion.div>
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
         {/* Formal Education Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -231,30 +241,49 @@ const Education = () => {
                   >
                     <div className="absolute left-2 top-1 w-4 h-4 rounded-full bg-accent transform -translate-x-1/2" />
                     <div className="bg-accent/5 dark:bg-accent/10 p-6 rounded-xl">
-                      <h5 className="text-lg font-semibold dark:text-white mb-3">
-                        {milestone.year}
-                      </h5>
-                      <ul className="space-y-2">
-                        {milestone.achievements.map((achievement, i) => (
-                          <motion.li
-                            key={achievement}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={
-                              inView
-                                ? { opacity: 1, x: 0 }
-                                : { opacity: 0, x: -10 }
-                            }
-                            transition={{
-                              duration: 0.3,
-                              delay: index * 0.2 + i * 0.1,
+                      <div className="flex justify-between items-center mb-3">
+                        <h5 className="text-lg font-semibold dark:text-white">
+                          {milestone.year}
+                        </h5>
+                        <span
+                          onClick={() => toggleAccordion(index)}
+                          className="cursor-pointer"
+                        >
+                          <motion.div
+                            initial={{ rotate: 0 }}
+                            animate={{
+                              rotate: isAccordionOpen === index ? 90 : 0,
                             }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <ChevronRight size={20} />
+                          </motion.div>
+                        </span>
+                      </div>
+                      <motion.ul
+                        initial={{ height: 0 }}
+                        animate={{
+                          height: isAccordionOpen === index ? "auto" : 0,
+                        }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-2 overflow-hidden"
+                      >
+                        {milestone.achievements.map((achievement) => (
+                          <li
+                            key={achievement}
                             className="flex items-center gap-2 text-gray-700 dark:text-gray-300"
                           >
-                            <div className="w-1.5 h-1.5 bg-accent rounded-full" />
-                            {achievement}
-                          </motion.li>
+                            <div className="w-1.5 h-1.5 bg-accent rounded-full md:w-1.5 md:h-1.5" />
+                            <p
+                              className={`max-w-xs sm:max-w-sm md:max-w-md truncate ${
+                                !isExpanded ? "line-clamp-2" : ""
+                              }`}
+                            >
+                              {achievement}
+                            </p>
+                          </li>
                         ))}
-                      </ul>
+                      </motion.ul>
                     </div>
                   </motion.div>
                 ))}

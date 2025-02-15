@@ -23,7 +23,7 @@ const Hero = () => {
       id="home"
       className="min-h-screen flex items-center justify-center py-20 px-6"
     >
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center mt-6 md:mt-0">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -100,7 +100,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7 }}
-          className="relative w-full h-[500px] flex items-center justify-center overflow-hidden"
+          className="relative w-full h-[500px] flex items-center justify-center overflow-hidden md:h-[600px]"
         >
           {/* Background Gradient Orbs */}
           <div className="absolute inset-0">

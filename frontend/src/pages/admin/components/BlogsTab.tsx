@@ -1,49 +1,49 @@
-// import { useState } from "react";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { z } from "zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import FormInput from "./elements/FormInput";
 import FormTextArea from "./elements/FormTextArea";
 // import FileUpload from "./elements/FileUpload";
 import ActionButton from "./elements/ActionButton";
-// import DataTable from "./elements/DataTable";
+import DataTable from "./elements/DataTable";
 
-// const blogSchema = z.object({
-//   title: z.string().min(1, "Title is required"),
-//   summary: z.string().min(1, "Summary is required"),
-//   content: z.string().min(1, "Content is required"),
-//   tags: z.string().min(1, "Tags are required"),
-// });
+const blogSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  summary: z.string().min(1, "Summary is required"),
+  content: z.string().min(1, "Content is required"),
+  tags: z.string().min(1, "Tags are required"),
+});
 
-// type BlogFormData = z.infer<typeof blogSchema>;
-const register = (name: string) => console.log(name);
+type BlogFormData = z.infer<typeof blogSchema>;
+// const register = (name: string) => console.log(name);
 
 const BlogsTab = () => {
-  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   reset,
-  // } = useForm<BlogFormData>({
-  //   resolver: zodResolver(blogSchema),
-  // });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<BlogFormData>({
+    resolver: zodResolver(blogSchema),
+  });
 
-  // const onSubmit = async (data: BlogFormData) => {
-  //   setIsSubmitting(true);
-  //   try {
-  //     console.log("Form data:", data);
-  //     console.log("Featured image:", selectedImage);
-  //     reset();
-  //     setSelectedImage(null);
-  //   } catch (error) {
-  //     console.error("Error submitting blog post:", error);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
+  const onSubmit = async (data: BlogFormData) => {
+    setIsSubmitting(true);
+    try {
+      console.log("Form data:", data);
+      console.log("Featured image:", selectedImage);
+      reset();
+      setSelectedImage(null);
+    } catch (error) {
+      console.error("Error submitting blog post:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const mockPosts = [
     {
@@ -82,7 +82,7 @@ const BlogsTab = () => {
               label="Blog Title"
               name="title"
               register={register}
-              // error={errors.title?.message}
+              error={errors.title?.message}
               required
             />
 
@@ -90,7 +90,7 @@ const BlogsTab = () => {
               label="Summary"
               name="summary"
               register={register}
-              // error={errors.summary?.message}
+              error={errors.summary?.message}
               required
             />
 
@@ -98,7 +98,7 @@ const BlogsTab = () => {
               label="Content"
               name="content"
               register={register}
-              // error={errors.content?.message}
+              error={errors.content?.message}
               required
               rows={8}
             />
@@ -107,7 +107,7 @@ const BlogsTab = () => {
               label="Tags (comma separated)"
               name="tags"
               register={register}
-              // error={errors.tags?.message}
+              error={errors.tags?.message}
               required
             />
 
@@ -140,13 +140,13 @@ const BlogsTab = () => {
         <h3 className="text-xl font-semibold dark:text-white mb-4">
           Blog Posts
         </h3>
-        {/* <DataTable
+        <DataTable
           columns={columns}
           data={mockPosts}
           onEdit={(item) => console.log("Edit:", item)}
           onDelete={(item) => console.log("Delete:", item)}
           onView={(item) => console.log("View:", item)}
-        /> */}
+        />
       </div>
     </div>
   );

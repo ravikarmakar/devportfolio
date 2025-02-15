@@ -4,6 +4,6 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3001, // Change to an unused port
+    port: 3002, // Change to an unused port
   },
 });
