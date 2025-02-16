@@ -18,7 +18,7 @@ if (
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET ? "Present" : "Missing",
+  api_secret: process.env.CLOUDINARY_API_SECRET, // Corrected
 });
 
 export const uploadOnCloudinary = async (localFilePath) => {
@@ -29,25 +29,28 @@ export const uploadOnCloudinary = async (localFilePath) => {
 
     // Check if file exists
     if (!fs.existsSync(localFilePath)) {
-      throw new Error(`File not found at path: ${localFilePath}`);
+      throw new Error(`File not found: ${localFilePath}`);
     }
 
     console.log("Uploading file:", localFilePath);
 
     const result = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "raw",
-      format: "pdf",
-      flags: "attachment"
+      resource_type: "auto",
+      use_filename: true,
+      unique_filename: false,
+      folder: "uploads",
     });
 
-    console.log("Cloudinary upload success:", result);
+    console.log("Cloudinary upload success:", result.secure_url);
 
-    // Optional: Delete local file after upload
-    fs.unlinkSync(localFilePath);
+    // Delete local file after successful upload
+    fs.unlink(localFilePath, (err) => {
+      if (err) console.error("Failed to delete local file:", err);
+    });
 
     return result.secure_url;
   } catch (error) {
-    console.error("Cloudinary upload error:", error.response || error);
+    console.error("Cloudinary upload error:", error.message || error);
     return null;
   }
 };

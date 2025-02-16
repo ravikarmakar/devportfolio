@@ -48,7 +48,7 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
         formData.append("image", projectData.image);
       }
 
-      await axiosInstance.post("/admin/project", formData, {
+      await axiosInstance.post("/projects/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

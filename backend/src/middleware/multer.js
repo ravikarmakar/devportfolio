@@ -1,52 +1,45 @@
-// import multer from "multer";
-// import path from "path";
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./public/temp");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   },
-// });
-
-// export const upload = multer({
-//   storage: storage,
-//   limits: {
-//     fieldSize: 10 * 1024 * 1024, // Adjust size as needed
-//   },
-// });
-
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
-// Ensure compatibility with ES module for resolving __dirname
+// Ensure __dirname compatibility
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Ensure upload directory exists
+const uploadDir = path.join(__dirname, "public/temp");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "public/temp")); // Safely resolve the path
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext); // Secure filename
+    const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, "_"); // Prevent unsafe characters
+    cb(null, safeName.split(".")[0] + "-" + uniqueSuffix + ext);
   },
 });
 
+// File filter for allowed types
+const fileFilter = (req, file, cb) => {
+  const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];
+  if (!allowedMimeTypes.includes(file.mimetype)) {
+    req.fileValidationError =
+      "Invalid file type. Only JPEG, PNG, and PDF are allowed.";
+    return cb(null, false);
+  }
+  cb(null, true);
+};
+
+// Multer upload instance
 export const upload = multer({
   storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10 MB
-  },
-  fileFilter: (req, file, cb) => {
-    const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];
-    if (allowedMimeTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only JPEG, PNG, and PDF are allowed."));
-    }
-  },
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: fileFilter,
 });

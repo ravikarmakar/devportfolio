@@ -170,12 +170,9 @@ const ProjectsTab = () => {
     }
 
     setFile(selectedFile);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, image: reader.result as string }));
-      setError(null);
-    };
-    reader.readAsDataURL(selectedFile);
+
+    setFormData((prev) => ({ ...prev, image: selectedFile }));
+    setError(null);
   };
 
   const handleImageRemove = () => {
@@ -189,6 +186,8 @@ const ProjectsTab = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    console.log(formData);
 
     try {
       if (action === "create") {
@@ -355,8 +354,6 @@ const ProjectsTab = () => {
                 }
               />
             </div>
-
-            {/*  */}
           </form>
         </div>
       </div>
