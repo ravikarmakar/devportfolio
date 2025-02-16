@@ -2,11 +2,11 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
-  FileText,
+  // FileText,
   Briefcase,
   Wrench,
   Mail,
-  Settings,
+  // Settings,
   LogOut,
   User,
   Menu,
@@ -30,14 +30,14 @@ const AdminLayout = () => {
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
     { path: "/admin/profile", icon: <User size={20} />, label: "Profile" },
-    { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
+    // { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
     { path: "/admin/messages", icon: <Mail size={20} />, label: "Messages" },
 
-    {
-      path: "/admin/settings",
-      icon: <Settings size={20} />,
-      label: "Settings",
-    },
+    // {
+    //   path: "/admin/settings",
+    //   icon: <Settings size={20} />,
+    //   label: "Settings",
+    // },
   ];
 
   const handleLogout = async () => {

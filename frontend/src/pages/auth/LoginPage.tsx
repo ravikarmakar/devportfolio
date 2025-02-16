@@ -34,12 +34,14 @@ const LoginPage = () => {
       setIsLoading(true);
       setError("");
 
-      await axiosInstance.post("/auth/login", formData, {
+      const res = await axiosInstance.post("/auth/login", formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      localStorage.setItem("user", JSON.stringify(res.data));
 
       toast.success("Login successfully");
       navigate("/admin");
