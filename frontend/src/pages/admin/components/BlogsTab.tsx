@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import FormInput from "./elements/FormInput";
@@ -7,6 +7,16 @@ import FormTextArea from "./elements/FormTextArea";
 // import FileUpload from "./elements/FileUpload";
 import ActionButton from "./elements/ActionButton";
 import DataTable from "./elements/DataTable";
+
+export interface FormInputProps {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  error?: string | null;
+  register?: UseFormRegister<any>; // Or specify your form type instead of any
+  required?: boolean;
+}
 
 const blogSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -16,7 +26,6 @@ const blogSchema = z.object({
 });
 
 type BlogFormData = z.infer<typeof blogSchema>;
-// const register = (name: string) => console.log(name);
 
 const BlogsTab = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);

@@ -16,8 +16,6 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({ user }) => {
       return;
     }
 
-    console.log("Downloading from URL:", resumeUrl); // Debugging log
-
     try {
       const link = document.createElement("a");
       link.href = resumeUrl;

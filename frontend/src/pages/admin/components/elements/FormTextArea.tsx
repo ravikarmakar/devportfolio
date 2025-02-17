@@ -7,6 +7,7 @@ interface FormTextAreaProps {
   placeholder?: string;
   error?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  register?: any;
   required?: boolean;
   rows?: number;
 }

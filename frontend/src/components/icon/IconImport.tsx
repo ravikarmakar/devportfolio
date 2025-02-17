@@ -14,8 +14,6 @@ const DynamicIcon: React.FC<DynamicIconProps> = ({
 }) => {
   const IconComponent = icons[iconName as keyof typeof icons] as LucideIcon;
 
-  console.log(IconComponent);
-
   if (!IconComponent) {
     return (
       <div

@@ -60,10 +60,7 @@ const MessagesTab = () => {
       if (message && !message.read) {
         try {
           // Call markAsRead from Zustand store to update backend
-          const updatedMessage = await markAsRead(_id);
-          if (updatedMessage) {
-            console.log("Message marked as read:", updatedMessage);
-          }
+          await markAsRead(_id);
         } catch (error) {
           console.error("Error marking message as read:", error);
         }

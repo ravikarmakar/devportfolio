@@ -157,7 +157,6 @@ const ProfileTab = () => {
       return;
     }
     try {
-      console.log(formData);
       await updateUser(formData);
 
       setFormData((prev) => ({

@@ -207,8 +207,6 @@ const SkillsTab: React.FC = () => {
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(categoryData);
-
     if (action === "update") {
       await updateCategory(categoryData._id!, categoryData);
     } else {
@@ -221,8 +219,6 @@ const SkillsTab: React.FC = () => {
 
   const handleSkillSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log(skillData);
 
     if (action === "update") {
       await updateSkill(skillData._id!, skillData);

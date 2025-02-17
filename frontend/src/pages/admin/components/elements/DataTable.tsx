@@ -20,7 +20,6 @@ const DataTable = ({
   onDelete,
   onView,
 }: DataTableProps) => {
-  // console.log(SkillData);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
