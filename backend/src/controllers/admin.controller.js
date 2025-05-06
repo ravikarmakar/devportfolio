@@ -4,7 +4,6 @@ import { Project } from "../models/project.model.js";
 import mongoose from "mongoose";
 
 import { uploadOnCloudinary } from "../config/cloudinary.js";
-import e from "express";
 
 export const getDashboard = (req, res) => {
   res.json({ message: "Welcome to admin dashboard" });

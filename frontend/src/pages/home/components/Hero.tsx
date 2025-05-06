@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
-import { GithubIcon, Linkedin, Download } from "lucide-react";
+import { GithubIcon, Linkedin, Download, ArrowRight, Mail } from "lucide-react";
 import { useEffect } from "react";
 import { useUserStore } from "../../../store/useUserStore";
-import FloatingParticles from "../../../components/elements/FloatingParticles";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { Link } from "react-router-dom";
 
@@ -21,74 +20,123 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center py-20 px-6"
+      className="relative min-h-screen flex items-center justify-center py-10 md:py-20 px-4 md:px-6 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center mt-6 md:mt-0">
+      {/* Background Elements */}
+      <div className="absolute inset-0 -z-10">
+        {/* Gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 dark:to-accent/10" />
+
+        {/* Abstract shapes */}
+        <div className="absolute top-20 right-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMEJDRDQxMCIgZD0iTTM2IDM0aDR2MWgtNHoiLz48cGF0aCBkPSJNMCAwaDYwdjYwSDB6Ii8+PC9nPjwvc3ZnPg==')] opacity-10" />
+      </div>
+
+      {/* <FloatingParticles count={40} /> */}
+
+      <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-5 gap-8 items-center">
+        {/* Content Column - Takes 3/5 on large screens */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
+          className="lg:col-span-3 z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h1 className="text-4xl md:text-6xl font-bold font-roboto mb-4 dark:text-textLight text-gray-900">
-            Hi, I'm <br />
-            <span className="text-accent">{user?.name || "Ravi Karmakar"}</span>
-          </h1>
-          <div className="text-xl md:text-2xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-600 font-bold gradient-text">
-            <TypeAnimation
-              sequence={[
-                "Full Stack Developer",
-                2000,
-                "MERN Stack Expert",
-                2000,
-                "UI/UX Enthusiast",
-                2000,
-              ]}
-              wrapper="span"
-              speed={50}
-              repeat={Infinity}
-            />
-          </div>
-          <p className="dark:text-textLight/70 text-gray-600 mb-8 text-lg">
-            {user?.bio}
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary flex items-center gap-2"
+          <div className="space-y-6 max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-block px-4 py-1 rounded-full bg-accent/10 dark:bg-accent/20 border border-accent/20 text-accent font-medium text-sm"
             >
-              <Download size={20} />
-              Download CV
-            </motion.button>
-            <div className="flex gap-4">
+              Full Stack Developer
+            </motion.div>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-roboto leading-tight dark:text-textLight text-gray-900">
+              Hi, I'm <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-600">
+                {user?.name || "Ravi Karmakar"}
+              </span>
+            </h1>
+
+            <div className="text-xl md:text-2xl font-bold text-gray-700 dark:text-textLight/80">
+              I'm a{" "}
+              <span className="text-accent">
+                <TypeAnimation
+                  sequence={[
+                    "Full Stack Developer",
+                    2000,
+                    "MERN Stack Expert",
+                    2000,
+                    "UI/UX Enthusiast",
+                    2000,
+                  ]}
+                  wrapper="span"
+                  speed={50}
+                  repeat={Infinity}
+                />
+              </span>
+            </div>
+
+            <p className="dark:text-textLight/70 text-gray-600 text-lg leading-relaxed">
+              {user?.bio ||
+                "Passionate about creating elegant, efficient, and user-friendly web applications that solve real-world problems."}
+            </p>
+
+            <div className="flex flex-wrap gap-4 pt-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary flex items-center gap-2 shadow-lg shadow-accent/20"
+              >
+                <Download size={18} />
+                Download CV
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-white dark:bg-secondary/30 text-gray-800 dark:text-textLight font-semibold rounded-lg 
+                border border-gray-200 dark:border-secondary/50 flex items-center gap-2 hover:shadow-lg transition-all duration-300"
+              >
+                <Mail size={18} />
+                Contact Me
+                <ArrowRight size={16} className="ml-1" />
+              </motion.button>
+            </div>
+
+            <div className="flex items-center gap-6 pt-4">
               <motion.a
                 href="https://github.com/ravikarmakar"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="p-2 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors"
+                whileHover={{ scale: 1.1, y: -3 }}
+                className="p-3 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors shadow-md"
               >
-                <GithubIcon size={24} />
+                <GithubIcon size={22} />
               </motion.a>
               <motion.a
                 href="https://linkedin.com/feed/"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="p-2 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors"
+                whileHover={{ scale: 1.1, y: -3 }}
+                className="p-3 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors shadow-md"
               >
-                <Linkedin size={24} />
+                <Linkedin size={22} />
               </motion.a>
 
               <Link to="/profile">
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="relative group cursor-pointer"
+                  whileHover={{ scale: 1.05, y: -3 }}
+                  className="relative group cursor-pointer md:hidden"
                 >
                   <img
                     src={user?.profileImageUrl}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full border-2 border-accent object-cover md:hidden"
+                    className="w-10 h-10 rounded-full border-2 border-accent object-cover shadow-md"
                   />
                 </motion.div>
               </Link>
@@ -96,87 +144,281 @@ const Hero = () => {
           </div>
         </motion.div>
 
+        {/* Visual Column - Takes 2/5 on large screens */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7 }}
-          className="relative w-full h-[500px] flex items-center justify-center overflow-hidden md:h-[600px]"
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="lg:col-span-2 relative w-full h-[400px] sm:h-[450px] md:h-[500px] flex items-center justify-center"
         >
-          {/* Background Gradient Orbs */}
-          <div className="absolute inset-0">
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/20 rounded-full blur-xl animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-500/20 rounded-full blur-xl animate-pulse animation-delay-2000" />
+          <div className="relative w-full h-full">
+            {/* 3D Layered Effect */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Outer Circle with Gradient Border */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                className="absolute w-[90%] h-[90%] rounded-full border-[1px] border-accent/30 flex items-center justify-center"
+              />
+
+              {/* Middle Circle with Dash Pattern */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                className="absolute w-[70%] h-[70%] rounded-full border-[1px] border-dashed border-blue-400/40 flex items-center justify-center"
+              />
+
+              {/* Inner Circle with Glow */}
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute w-[50%] h-[50%] rounded-full border-[2px] border-accent/50 flex items-center justify-center"
+              >
+                <div className="absolute inset-0 bg-accent/5 rounded-full blur-md" />
+              </motion.div>
+
+              {/* Central Geometric Shape */}
+              <motion.div
+                animate={{
+                  rotate: 360,
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className="relative w-[40%] h-[40%]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-blue-500/20 rounded-lg transform rotate-45 backdrop-blur-sm" />
+                <div className="absolute inset-[15%] bg-gradient-to-tr from-accent/30 to-blue-500/30 rounded-lg transform -rotate-45 backdrop-blur-sm" />
+
+                {/* Diamond Design in Center */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                  className="absolute inset-[20%] flex items-center justify-center"
+                >
+                  {/* Diamond Shape */}
+                  <div className="relative w-full h-full">
+                    {/* Main Diamond */}
+                    <motion.div
+                      animate={{ rotate: [0, 180, 360], scale: [1, 1.1, 1] }}
+                      transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="absolute inset-0 bg-gradient-to-tr from-accent via-blue-400 to-accent/50 rounded-sm transform rotate-45 shadow-lg"
+                      style={{
+                        clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+                      }}
+                    />
+
+                    {/* Inner Diamond with Glow */}
+                    <motion.div
+                      animate={{
+                        rotate: [180, 0, 180],
+                        scale: [0.7, 0.8, 0.7],
+                      }}
+                      transition={{
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="absolute inset-[15%] bg-white dark:bg-secondary/10 backdrop-blur-md rounded-sm transform rotate-45 shadow-inner"
+                      style={{
+                        clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+                      }}
+                    >
+                      {/* Shimmering Effect */}
+                      <motion.div
+                        animate={{
+                          opacity: [0.3, 0.7, 0.3],
+                          background: [
+                            "linear-gradient(45deg, rgba(0,188,212,0.3) 0%, rgba(238,238,238,0.7) 50%, rgba(0,188,212,0.3) 100%)",
+                            "linear-gradient(45deg, rgba(238,238,238,0.7) 0%, rgba(0,188,212,0.3) 50%, rgba(238,238,238,0.7) 100%)",
+                            "linear-gradient(45deg, rgba(0,188,212,0.3) 0%, rgba(238,238,238,0.7) 50%, rgba(0,188,212,0.3) 100%)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                        className="absolute inset-0"
+                      />
+                    </motion.div>
+
+                    {/* Center Dot */}
+                    <motion.div
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="absolute inset-[42%] bg-accent rounded-full shadow-md z-10"
+                    />
+
+                    {/* Orbiting Small Diamonds */}
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="absolute inset-0"
+                    >
+                      <motion.div
+                        className="absolute w-[15%] h-[15%] bg-blue-400 rounded-sm transform rotate-45 top-0 left-[42.5%]"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    </motion.div>
+
+                    <motion.div
+                      animate={{ rotate: -360 }}
+                      transition={{
+                        duration: 12,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="absolute inset-0"
+                    >
+                      <motion.div
+                        className="absolute w-[12%] h-[12%] bg-accent/80 rounded-sm transform rotate-45 bottom-0 left-[44%]"
+                        animate={{ scale: [1, 1.3, 1] }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 0.5,
+                        }}
+                      />
+                    </motion.div>
+
+                    {/* Light Rays */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      {[...Array(8)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute top-1/2 left-1/2 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-accent/50 to-transparent"
+                          style={{
+                            transformOrigin: "center",
+                            transform: `translate(-50%, -50%) rotate(${
+                              i * 45
+                            }deg)`,
+                          }}
+                          animate={{ opacity: [0.3, 0.7, 0.3] }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: i * 0.2,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Floating Tech Icons */}
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-[15%] left-[10%] w-12 h-12 bg-white dark:bg-secondary/30 rounded-lg shadow-lg flex items-center justify-center"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                alt="React"
+                className="w-8 h-8"
+              />
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              className="absolute top-[25%] right-[15%] w-12 h-12 bg-white dark:bg-secondary/30 rounded-lg shadow-lg flex items-center justify-center"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+                alt="Node.js"
+                className="w-8 h-8"
+              />
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 2,
+              }}
+              className="absolute bottom-[20%] left-[20%] w-12 h-12 bg-white dark:bg-secondary/30 rounded-lg shadow-lg flex items-center justify-center"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
+                alt="MongoDB"
+                className="w-8 h-8"
+              />
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.5,
+              }}
+              className="absolute bottom-[15%] right-[10%] w-12 h-12 bg-white dark:bg-secondary/30 rounded-lg shadow-lg flex items-center justify-center"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+                alt="TypeScript"
+                className="w-8 h-8"
+              />
+            </motion.div>
           </div>
-
-          {/* Original Geometric Shapes */}
-          <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <div className="relative w-64 h-64">
-              <div className="absolute inset-0 border-2 border-accent/30 rounded-lg transform rotate-45" />
-              <div className="absolute inset-0 border-2 border-accent/20 rounded-lg transform -rotate-45 animate-pulse" />
-              <div className="absolute inset-[25%] border-2 border-accent/40 rounded-full animate-pulse" />
-            </div>
-          </motion.div>
-
-          {/* Extra Geometric Shape with Glow Effect */}
-          <motion.div
-            animate={{
-              rotate: -360,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <div className="relative w-48 h-48">
-              <div className="absolute inset-0 border-[3px] border-blue-400/30 rounded-full transform rotate-45 blur-lg animate-pulse" />
-              <div className="absolute inset-0 border-[2px] border-pink-400/50 rounded-lg transform -rotate-45 animate-pulse" />
-              {/* <div className="absolute inset-[20%] bg-gradient-to-r from-blue-400 via-pink-400 to-purple-500 rounded-full blur-lg animate-spin-slow" /> */}
-            </div>
-          </motion.div>
-
-          {/* New Triangle Shape with Continuous Rotation */}
-          <motion.div
-            animate={{
-              rotate: 360,
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          >
-            {/* Triangle Shape */}
-            <div className="relative w-40 h-40">
-              <div
-                className="absolute inset-0 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent 
-        border-b-[70px] border-b-blue-400 transform rotate-60 blur-md shadow-lg"
-              />
-              <div
-                className="absolute inset-0 w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent 
-        border-b-[70px] border-b-pink-400 transform -rotate-60 blur-md shadow-lg animate-pulse"
-              />
-            </div>
-          </motion.div>
-
-          {/* Floating Particles */}
-          <FloatingParticles count={30} />
         </motion.div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="text-accent/80 dark:text-accent/70 text-sm font-medium mb-2">
+          Scroll Down
+        </div>
+        <div className="w-6 h-10 border-2 border-accent/50 rounded-full flex justify-center pt-2">
+          <motion.div
+            className="w-1.5 h-1.5 bg-accent rounded-full"
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 };

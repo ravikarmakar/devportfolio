@@ -35,6 +35,8 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    console.log(password);
+
     if (!username || !password) {
       return res.status(400).json({ message: "Please fill all the fields" });
     }

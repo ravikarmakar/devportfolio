@@ -1,5 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import projectRoutes from "./routes/project.route.js";
@@ -11,17 +13,18 @@ import messageRoute from "./routes/message.route.js";
 import morgan from "morgan";
 import { connectDB } from "./config/db.js";
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: "http://localhost:3002",
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "develpoment"
+      ? process.env.DEVELOPEMENT_PORTFOLIO_LINK
+      : process.env.PRODUCTION_PORTFOLIO_LINK,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(morgan("dev"));
 app.use(cookieParser());

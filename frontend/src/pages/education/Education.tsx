@@ -31,10 +31,6 @@ const Education = () => {
     threshold: 0.1,
   });
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   const formalEducation = {
     degree: "B.Sc. Physics (Honors)",
     period: "2020 - 2023",

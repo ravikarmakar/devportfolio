@@ -31,9 +31,15 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="text-2xl font-bold text-accent font-poppins"
+          className="text-2xl h-12 w-12 md:h-14 md:w-14 font-bold text-accent font-poppins"
         >
-          <Link to="/">DevPortfolio</Link>
+          <Link to="/">
+            <img
+              src="/logo.png"
+              alt="DevPortfolio"
+              className="h-full w-full object-cover"
+            />
+          </Link>
         </motion.div>
 
         {/* Desktop Menu */}
