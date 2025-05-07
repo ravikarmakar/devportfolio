@@ -1,5 +1,5 @@
-import Navbar from "./Navbar";
 import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 interface MainLayoutTypes {
   children: React.ReactNode;
@@ -20,6 +20,7 @@ const MainLayout: React.FC<MainLayoutTypes> = ({
     >
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
       {children}
+
       <Footer />
     </div>
   );

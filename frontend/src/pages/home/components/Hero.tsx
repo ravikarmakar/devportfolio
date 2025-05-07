@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
-import { GithubIcon, Linkedin, Download, ArrowRight, Mail } from "lucide-react";
+import { GithubIcon, Linkedin } from "lucide-react";
 import { useEffect } from "react";
 import { useUserStore } from "../../../store/useUserStore";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { Link } from "react-router-dom";
+import { TypewriterText } from "../../../components/elements/TypeWriter";
 
 const Hero = () => {
   const { user, fetchUserData, isLoading } = useUserStore();
@@ -20,23 +20,8 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center py-10 md:py-20 px-4 md:px-6 overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center py-20 px-4 sm:px-20 lg:px-8 overflow-hidden"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 dark:to-accent/10" />
-
-        {/* Abstract shapes */}
-        <div className="absolute top-20 right-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
-
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGZpbGw9IiMwMEJDRDQxMCIgZD0iTTM2IDM0aDR2MWgtNHoiLz48cGF0aCBkPSJNMCAwaDYwdjYwSDB6Ii8+PC9nPjwvc3ZnPg==')] opacity-10" />
-      </div>
-
-      {/* <FloatingParticles count={40} /> */}
-
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-5 gap-8 items-center">
         {/* Content Column - Takes 3/5 on large screens */}
         <motion.div
@@ -45,38 +30,48 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <div className="space-y-6 max-w-2xl">
+          <div className="space-y-4 max-w-2xl text-center md:text-left">
+            {/* Role Status */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-block px-4 py-1 rounded-full bg-accent/10 dark:bg-accent/20 border border-accent/20 text-accent font-medium text-sm"
+              className="inline-block px-4 py-1 rounded-full bg-blue-400/10 dark:bg-blue-800/30 border border-blue-500/20 text-blue-600 dark:text-blue-300 font-medium text-sm"
             >
               Full Stack Developer
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-roboto leading-tight dark:text-textLight text-gray-900">
-              Hi, I'm <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-600">
-                {user?.name || "Ravi Karmakar"}
+            {/* Name intro */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="text-xs md:text-lg font-semibold tracking-widest text-blue-400 uppercase"
+            >
+              Hello, I'm
+            </motion.div>
+
+            {/* Main name */}
+            <motion.h1
+              className="mb-6 text-4xl font-bold text-white md:text-6xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, delay: 0.4 }}
+            >
+              <span className="font-extrabold bg-clip-text uppercase text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+                {user?.name || "RAVI KARMAKAR"}
               </span>
-            </h1>
+            </motion.h1>
 
             <div className="text-xl md:text-2xl font-bold text-gray-700 dark:text-textLight/80">
               I'm a{" "}
-              <span className="text-accent">
-                <TypeAnimation
-                  sequence={[
-                    "Full Stack Developer",
-                    2000,
-                    "MERN Stack Expert",
-                    2000,
-                    "UI/UX Enthusiast",
-                    2000,
+              <span className="text-accent inline">
+                <TypewriterText
+                  texts={[
+                    "Frontend Developer",
+                    "UI/UX Designer",
+                    "Creative Thinker",
                   ]}
-                  wrapper="span"
-                  speed={50}
-                  repeat={Infinity}
                 />
               </span>
             </div>
@@ -86,35 +81,39 @@ const Hero = () => {
                 "Passionate about creating elegant, efficient, and user-friendly web applications that solve real-world problems."}
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary flex items-center gap-2 shadow-lg shadow-accent/20"
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+              <motion.div
+                className="flex flex-wrap justify-center md:justify-start gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1 }}
               >
-                <Download size={18} />
-                Download CV
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-3 bg-white dark:bg-secondary/30 text-gray-800 dark:text-textLight font-semibold rounded-lg 
-                border border-gray-200 dark:border-secondary/50 flex items-center gap-2 hover:shadow-lg transition-all duration-300"
-              >
-                <Mail size={18} />
-                Contact Me
-                <ArrowRight size={16} className="ml-1" />
-              </motion.button>
+                <motion.button
+                  className="px-8 py-3 font-semibold text-white transition-all border-2 rounded-full border-blue-500 bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View Projects
+                </motion.button>
+                <motion.button
+                  className="px-8 py-3 font-semibold text-white transition-all bg-transparent border-2 rounded-full border-blue-500 hover:bg-blue-500/10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Contact Me
+                </motion.button>
+              </motion.div>
             </div>
 
-            <div className="flex items-center gap-6 pt-4">
+            {/* Quick Links */}
+            <div className="flex items-center justify-center md:justify-start gap-6 pt-4">
               <motion.a
                 href="https://github.com/ravikarmakar"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -3 }}
-                className="p-3 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors shadow-md"
+                className="p-3 dark:bg-blue-800/20 bg-gray-100 rounded-full dark:text-blue-400 text-primary hover:bg-gray-200 dark:hover:bg-blue-800/30 transition-colors shadow-md"
               >
                 <GithubIcon size={22} />
               </motion.a>
@@ -123,7 +122,7 @@ const Hero = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -3 }}
-                className="p-3 dark:bg-secondary/20 bg-gray-100 rounded-full dark:text-accent text-primary hover:bg-gray-200 dark:hover:bg-secondary/30 transition-colors shadow-md"
+                className="p-3 dark:bg-blue-800/20 bg-gray-100 rounded-full dark:text-blue-400 text-primary hover:bg-gray-200 dark:hover:bg-blue-800/30 transition-colors shadow-md"
               >
                 <Linkedin size={22} />
               </motion.a>
@@ -136,7 +135,7 @@ const Hero = () => {
                   <img
                     src={user?.profileImageUrl}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full border-2 border-accent object-cover shadow-md"
+                    className="w-10 h-10 rounded-full border-2 border-blue-500 object-cover shadow-md"
                   />
                 </motion.div>
               </Link>
@@ -400,24 +399,75 @@ const Hero = () => {
             </motion.div>
           </div>
         </motion.div>
+
+        {/* Floating tech badges */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[
+            "React",
+            "TypeScript",
+            "Framer Motion",
+            "Tailwind CSS",
+            "Next.js",
+          ].map((tech, index) => (
+            <motion.div
+              key={tech}
+              className="absolute px-3 py-1 text-xs font-medium rounded-full bg-blue-900/30 text-blue-300 border border-blue-500/30"
+              initial={{
+                x: Math.random() * window.innerWidth * 0.8,
+                y: Math.random() * window.innerHeight * 0.8,
+                opacity: 0,
+              }}
+              animate={{
+                x: [
+                  Math.random() * window.innerWidth * 0.8,
+                  Math.random() * window.innerWidth * 0.8,
+                  Math.random() * window.innerWidth * 0.8,
+                ],
+                y: [
+                  Math.random() * window.innerHeight * 0.8,
+                  Math.random() * window.innerHeight * 0.8,
+                  Math.random() * window.innerHeight * 0.8,
+                ],
+                opacity: 0.7,
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 20 + index * 5,
+                repeat: Infinity,
+                delay: index * 2,
+              }}
+            >
+              {tech}
+            </motion.div>
+          ))}
+        </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
       >
-        <div className="text-accent/80 dark:text-accent/70 text-sm font-medium mb-2">
-          Scroll Down
-        </div>
-        <div className="w-6 h-10 border-2 border-accent/50 rounded-full flex justify-center pt-2">
-          <motion.div
-            className="w-1.5 h-1.5 bg-accent rounded-full"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
+        <motion.div
+          className="flex flex-col items-center cursor-pointer mt-10"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <p className="mb-2 text-sm text-blue-400">Scroll Down</p>
+          <svg
+            className="w-6 h-6 text-blue-400"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </motion.div>
       </motion.div>
     </section>
   );
