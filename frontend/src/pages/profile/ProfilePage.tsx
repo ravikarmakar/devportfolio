@@ -3,22 +3,13 @@ import ProfileHeader from "./components/ProfileHeader";
 import AboutSection from "./components/AboutSection";
 import InterestsSection from "./components/InterestsSection";
 import ProfessionalSummary from "./components/ProfessionalSummary";
-import { useUserStore } from "../../store/useUserStore";
-import { useEffect } from "react";
 import GoalsSection from "./components/GoalsSection";
 import EducationSection from "./components/EducationSection";
 import ProfileHeaderLoading from "./components/skeletons/ProfileHeaderLoading";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const Profile = () => {
-  const { fetchUserData, user, isLoading } = useUserStore();
-
-  useEffect(() => {
-    if (!user) {
-      fetchUserData();
-    }
-  }, [fetchUserData, user]);
-
-  // const isLoading = true;
+  const { user, isLoading } = useAuthStore();
 
   return (
     <section className="py-20 px-6">
@@ -29,9 +20,13 @@ const Profile = () => {
           transition={{ duration: 0.5 }}
           className="space-y-12"
         >
-          {isLoading ? <ProfileHeaderLoading /> : <ProfileHeader user={user} />}
-          <ProfessionalSummary user={user} />
-          <AboutSection user={user} />
+          {isLoading ? (
+            <ProfileHeaderLoading />
+          ) : (
+            user && <ProfileHeader user={user} />
+          )}
+          {user && <ProfessionalSummary user={user} />}
+          {user && <AboutSection user={user} />}
           <EducationSection />
           <InterestsSection />
           <GoalsSection />

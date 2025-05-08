@@ -23,13 +23,13 @@ const AdminLayout = () => {
 
   const menuItems = [
     { path: "/admin", icon: <LayoutDashboard size={20} />, label: "Dashboard" },
+    { path: "/admin/profile", icon: <User size={20} />, label: "Profile View" },
     {
       path: "/admin/projects",
       icon: <Briefcase size={20} />,
       label: "Projects",
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
-    { path: "/admin/profile", icon: <User size={20} />, label: "Profile" },
     { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
     { path: "/admin/messages", icon: <Mail size={20} />, label: "Messages" },
 
@@ -132,7 +132,7 @@ const AdminLayout = () => {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden">
+      <main className="flex-1 overflow-x-hidden text-white">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

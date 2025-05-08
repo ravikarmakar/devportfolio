@@ -26,15 +26,21 @@ const authSchema = new mongoose.Schema(
       default: "USER",
     },
     location: { type: String, default: "Bengaluru" },
-    bio: { type: String, trim: true },
+    bio: { type: String, trim: true, default: "My Bio" },
+    techRole: { type: String, default: "Full Stack Developer" },
+    experience: { type: Number, default: 0 },
+    phone: { type: String, default: "+91 3983248920" },
+    imagePublicId: { type: String },
+    resumePublicId: { type: String },
+    resumeUrl: { type: String, trim: true },
     imageUrl: {
       type: String,
       trim: true,
       default:
         "https://res.cloudinary.com/denu688jm/image/upload/v1734332257/j80kxp5noo7gxva3hlzw.png",
     },
-    phone: { type: String, default: "+91 3983248920" },
   },
+
   {
     timestamps: true,
   }

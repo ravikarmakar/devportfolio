@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
-import { User } from "../../../types";
+import { User } from "../../../store/useAuthStore";
 import { Link } from "react-router-dom";
 import {
   Mail,
@@ -10,14 +10,9 @@ import {
   Sparkles,
   ShieldOff,
 } from "lucide-react";
-import { DownloadButton } from "../../../components/ReasumeButton";
 import FloatingParticles from "../../../components/elements/FloatingParticles";
 
-interface ProfileHeaderProps {
-  user: User | null; // null agar user data abhi fetch nahi hua
-}
-
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
+const ProfileHeader = ({ user }: { user: User }) => {
   return (
     <div className="min-h-[80vh] flex items-center">
       <div className="w-full grid md:grid-cols-2 gap-12 items-center">
@@ -40,9 +35,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
 
           <h1 className="text-4xl md:text-6xl font-bold mb-4 dark:text-textLight text-gray-900">
             here,
-            <span className="text-accent block mt-2">
-              {user?.name || "Ravi Karmakar"}
-            </span>
+            <span className="text-accent block mt-2">Ravi Karmakar</span>
           </h1>
 
           <div className="text-xl md:text-2xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-500 font-bold h-[40px]">
@@ -89,7 +82,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
               <Download className="w-5 h-5" />
               Download CV
             </motion.button> */}
-            <DownloadButton user={user} />
+            {/* <DownloadButton user={user} /> */}
           </div>
 
           <div className="mt-8 flex gap-4">
@@ -157,7 +150,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
           >
             <div className="relative w-64 h-64">
               <img
-                src={user?.profileImageUrl}
+                src={user?.imageUrl}
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover border-4 border-accent shadow-xl"
               />

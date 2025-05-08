@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User } from "../../../types";
+import { User } from "../../../store/useAuthStore";
 import DynamicIcon from "../../../components/icon/IconImport";
 
 interface ProfileAboutProps {
@@ -24,7 +24,7 @@ const AboutSection: React.FC<ProfileAboutProps> = ({ user }) => {
       <h2 className="text-2xl font-bold mb-6 dark:text-white">About Me</h2>
       <div className="bg-white dark:bg-secondary/20 rounded-xl p-6 backdrop-blur-sm">
         <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-          {user?.aboutMe}
+          {user?.bio}
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

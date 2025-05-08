@@ -9,6 +9,11 @@ export interface User {
   password: string;
   role?: string;
   imageUrl: string;
+  phone: string;
+  bio: string;
+  techRole: string;
+  experience: number;
+  location: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -22,6 +27,7 @@ interface AuthStoreState {
   logout: () => Promise<void>;
   fetchUserData: () => Promise<void>;
   checkAuth: () => Promise<void>;
+  updateProfile: (profileData: FormData) => Promise<User | null>;
 }
 
 export const useAuthStore = create<AuthStoreState>()(
@@ -59,7 +65,6 @@ export const useAuthStore = create<AuthStoreState>()(
           return false;
         }
       },
-
       logout: async () => {
         try {
           set({ isLoading: true, error: null });
@@ -69,7 +74,6 @@ export const useAuthStore = create<AuthStoreState>()(
           set({ error: "Failed to Admin logout", isLoading: false });
         }
       },
-
       fetchUserData: async () => {
         set({ isLoading: true, error: null });
         try {
@@ -77,6 +81,20 @@ export const useAuthStore = create<AuthStoreState>()(
           set({ user: response.data[0], isLoading: false });
         } catch (error) {
           set({ error: "Failed to fetch user data", isLoading: false });
+        }
+      },
+      updateProfile: async (profileData) => {
+        set({ isLoading: true, error: null });
+        try {
+          const response = await axiosInstance.put(
+            "/auth/update-profile",
+            profileData
+          );
+          set({ isLoading: false });
+          return response.data.user;
+        } catch (error) {
+          set({ error: "Failed to update user data", isLoading: false });
+          return null;
         }
       },
     }),

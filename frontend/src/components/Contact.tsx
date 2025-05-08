@@ -4,13 +4,13 @@ import { useInView } from "react-intersection-observer";
 import { Mail, Phone, MapPin, Send, BookOpen } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-import { useUserStore } from "../store/useUserStore";
 import { useContactStore } from "../store/useContectStore";
 
 // Components
 import FormInput from "../pages/admin/components/elements/FormInput";
 import FormTextArea from "../pages/admin/components/elements/FormTextArea";
 import ActionButton from "../pages/admin/components/elements/ActionButton";
+import { useAuthStore } from "../store/useAuthStore";
 
 interface contactFormData {
   name: string;
@@ -26,7 +26,7 @@ const Contact = () => {
     threshold: 0.1,
   });
 
-  const { user } = useUserStore();
+  const { user } = useAuthStore();
   const { sendMessage, isLoading, error } = useContactStore();
 
   const [formData, setFormData] = useState<contactFormData>({
@@ -117,7 +117,7 @@ const Contact = () => {
                     href="tel:+1234567890"
                     className="text-textLight/70 hover:text-accent"
                   >
-                    {`+91 ${user?.mobileNumber}`}
+                    {`+91 ${user?.phone}`}
                   </a>
                 </div>
               </div>
@@ -125,7 +125,7 @@ const Contact = () => {
                 <MapPin className="text-accent mr-4" size={24} />
                 <div>
                   <p className="font-medium">Location</p>
-                  <p className="text-textLight/70">{user?.currLocation}</p>
+                  <p className="text-textLight/70">{user?.location}</p>
                 </div>
               </div>
             </div>

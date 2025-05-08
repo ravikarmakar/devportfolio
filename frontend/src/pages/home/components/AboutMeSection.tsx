@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Code, User, Calendar, MapPin, Award } from "lucide-react";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 interface AboutMeProps {
   name?: string;
@@ -15,9 +16,7 @@ interface AboutMeProps {
 
 const AboutMeSection: React.FC<AboutMeProps> = ({
   name = "Ravi Karmakar",
-  title = "Full Stack Developer",
   location = "Bengaluru, KA",
-  experience = 1,
   bio = "Full Stack Developer passionate about building clean, responsive, and scalable web applications. Skilled in both frontend and backend with a focus on creating smooth user experiences and solving real-world problems with efficient code.",
   skills = [
     "React",
@@ -35,8 +34,9 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
     "Open Source",
     "Creative Coding",
   ],
-  imageUrl = "https://img.freepik.com/premium-photo/young-man-isolated-blue_1368-124991.jpg?semt=ais_hybrid&w=740",
 }) => {
+  const { user } = useAuthStore();
+
   // Refs for scroll animations
   const containerRef = useRef<HTMLDivElement>(null);
   const bioRef = useRef<HTMLDivElement>(null);
@@ -238,7 +238,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={imageUrl}
+                    src={user?.imageUrl}
                     alt={name}
                     className="w-full h-auto max-w-md object-cover"
                   />
@@ -256,7 +256,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
                       whileInView="visible"
                       viewport={{ once: true }}
                     >
-                      {name}
+                      Ravi Karmakar
                     </motion.h3>
                     <motion.p
                       className="text-blue-200 text-lg"
@@ -266,7 +266,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
                       viewport={{ once: true }}
                       transition={{ delay: 0.2 }}
                     >
-                      {title}
+                      {user?.techRole}
                     </motion.p>
                   </motion.div>
                 </div>
@@ -280,7 +280,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
                   {[
                     {
                       icon: <Calendar size={18} />,
-                      text: `${experience}+ Yrs Exp`,
+                      text: `${user?.experience}+ Yrs Exp`,
                     },
                     { icon: <MapPin size={18} />, text: location },
                     { icon: <Award size={18} />, text: "Award Winner" },

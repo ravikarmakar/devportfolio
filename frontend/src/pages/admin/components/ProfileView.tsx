@@ -22,7 +22,7 @@ interface ProfileFormData {
   resumeFile?: string | null;
 }
 
-const ProfileTab = () => {
+const ProfileView = () => {
   const { fetchUserData, user, isLoading, updateUser } = useUserStore();
 
   const [formData, setFormData] = useState<ProfileFormData>({
@@ -365,4 +365,4 @@ const ProfileTab = () => {
   );
 };
 
-export default ProfileTab;
+export default ProfileView;
