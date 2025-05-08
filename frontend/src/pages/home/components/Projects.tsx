@@ -127,7 +127,7 @@ export default function Projects() {
         {/* Header with animated title */}
         <div className="mb-16 relative text-center">
           <motion.h2
-            className="text-4xl md:text-5xl font-bold"
+            className="text-4xl md:text-5xl font-bold text-gray-200 mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.8 }}
@@ -138,7 +138,7 @@ export default function Projects() {
 
           {/* Animated underline */}
           <motion.div
-            className="h-1 w-40 bg-gradient-to-r from-blue-500 to-cyan-400 mx-auto mt-4"
+            className="h-1 w-40 bg-gradient-to-r from-blue-500 to-blue-400 mx-auto mt-4"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 160, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}

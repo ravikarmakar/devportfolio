@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 // Components
 import LoadingScreen from "./components/LoadingScreen";
 import NotFound from "./components/NotFound";
-import { ProtectedAdminRoute } from "./pages/auth/ProtectAdmin";
+import ProtectedAdminRoute from "./pages/auth/ProtectAdmin";
 import MainLayout from "./components/MainLayout";
 
 // Lazy-Loaded Admin Pages

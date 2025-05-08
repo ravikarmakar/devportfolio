@@ -18,7 +18,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
   title = "Full Stack Developer",
   location = "Bengaluru, KA",
   experience = 1,
-  bio = "Passionate frontend developer with a strong focus on creating intuitive, accessible, and beautiful user interfaces. I combine technical expertise with creative problem-solving to build exceptional digital experiences.",
+  bio = "Full Stack Developer passionate about building clean, responsive, and scalable web applications. Skilled in both frontend and backend with a focus on creating smooth user experiences and solving real-world problems with efficient code.",
   skills = [
     "React",
     "TypeScript",
@@ -187,17 +187,7 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            About{" "}
-            <span className="text-blue-600 relative">
-              Me
-              {/* <motion.span
-                className="absolute bottom-0 left-0 h-2 bg-blue-400 w-full rounded-md -z-10"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-              /> */}
-            </span>
+            About <span className="text-blue-600 relative">Me</span>
           </motion.h2>
           <motion.div
             className="w-24 h-1 bg-blue-500 mx-auto mb-6 rounded"

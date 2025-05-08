@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Admin Schema
 const authSchema = new mongoose.Schema(
   {
     username: {
@@ -24,8 +23,17 @@ const authSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "admin",
+      default: "USER",
     },
+    location: { type: String, default: "Bengaluru" },
+    bio: { type: String, trim: true },
+    imageUrl: {
+      type: String,
+      trim: true,
+      default:
+        "https://res.cloudinary.com/denu688jm/image/upload/v1734332257/j80kxp5noo7gxva3hlzw.png",
+    },
+    phone: { type: String, default: "+91 3983248920" },
   },
   {
     timestamps: true,

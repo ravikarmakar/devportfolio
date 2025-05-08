@@ -68,13 +68,3 @@ export interface Message {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface AuthUser {
-  _id: string;
-  username: string;
-  email: string;
-  password: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}

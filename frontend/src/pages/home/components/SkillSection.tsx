@@ -38,7 +38,7 @@ export default function SkillSection() {
       <div className="max-w-6xl w-full">
         <div className="mb-16">
           <motion.h2
-            className="text-2xl lg:text-5xl font-bold mb-6 text-center"
+            className="text-4xl md:text-5xl text-center font-bold text-gray-200 mb-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}

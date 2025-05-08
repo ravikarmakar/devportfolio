@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { GithubIcon, Linkedin } from "lucide-react";
-import { useEffect } from "react";
-import { useUserStore } from "../../../store/useUserStore";
+import { useEffect, useRef } from "react";
 import LoadingSkeleton from "./LoadingSkeleton";
 import { Link } from "react-router-dom";
 import { TypewriterText } from "../../../components/elements/TypeWriter";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const Hero = () => {
-  const { user, fetchUserData, isLoading } = useUserStore();
+  const { user, fetchUserData, isLoading } = useAuthStore();
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    if (!hasFetched.current) {
+      fetchUserData();
+      hasFetched.current = true;
+    }
+  }, []);
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -59,7 +63,7 @@ const Hero = () => {
               transition={{ duration: 1.2, delay: 0.4 }}
             >
               <span className="font-extrabold bg-clip-text uppercase text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-                {user?.name || "RAVI KARMAKAR"}
+                RAVI KARMAKAR
               </span>
             </motion.h1>
 
@@ -77,8 +81,9 @@ const Hero = () => {
             </div>
 
             <p className="dark:text-textLight/70 text-gray-600 text-lg leading-relaxed">
-              {user?.bio ||
-                "Passionate about creating elegant, efficient, and user-friendly web applications that solve real-world problems."}
+              Crafting beautiful web experiences with modern technologies.
+              Specialized in building full-stack applications with the MERN
+              stack.
             </p>
 
             {/* CTA Buttons */}
@@ -133,7 +138,7 @@ const Hero = () => {
                   className="relative group cursor-pointer md:hidden"
                 >
                   <img
-                    src={user?.profileImageUrl}
+                    src={user?.imageUrl}
                     alt="Profile"
                     className="w-10 h-10 rounded-full border-2 border-blue-500 object-cover shadow-md"
                   />

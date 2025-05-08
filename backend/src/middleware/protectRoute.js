@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { AuthUser } from "../models/auth.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
@@ -17,14 +16,7 @@ export const protectRoute = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 
-    const authUser = await AuthUser.findById(decoded.authUserId).select(
-      "-password"
-    );
-    if (!authUser) {
-      return res.status(401).json({ message: "Unauthorized: User not found" });
-    }
-
-    req.authUser = authUser; // Attach user data to request
+    req.user = { userId: decoded.authUserId, role: decoded.role };
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
@@ -32,5 +24,16 @@ export const protectRoute = async (req, res, next) => {
     }
     console.error("Error in protectRoute middleware:", error.message);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const isAdmin = (req, res, next) => {
+  if (req.user && req.user?.role === "ADMIN") {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      error: "Access denied for this resource! Only admin can access",
+    });
   }
 };

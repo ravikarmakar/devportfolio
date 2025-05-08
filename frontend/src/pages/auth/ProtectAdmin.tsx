@@ -1,83 +1,25 @@
-// import { useState, useEffect } from "react";
-// import { axiosInstance } from "../../lib/axios";
-// import { Outlet, Navigate } from "react-router-dom";
-// import LoadingScreen from "../../components/LoadingScreen";
-
-// export const ProtectedAdminRoute = () => {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     const checkAuth = async () => {
-//       try {
-//         const response = await axiosInstance.get("/auth/user", {
-//           withCredentials: true, // Ensures cookies are sent
-//         });
-
-//         if (response.data.role === "admin") {
-//           setIsAuthenticated(true);
-//         } else {
-//           setIsAuthenticated(false);
-//         }
-//       } catch (error: any) {
-//         console.error("Authentication check failed:", error.message);
-//         setIsAuthenticated(false);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-
-//     checkAuth();
-//   }, []);
-
-//   if (isLoading) {
-//     return <LoadingScreen key="loading" />;
-//   }
-
-//   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
-// };
-
-import { ReactNode, useState, useEffect } from "react";
-import { axiosInstance } from "../../lib/axios";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import LoadingScreen from "../../components/LoadingScreen";
+import { useAuthStore } from "../../store/useAuthStore";
 
-interface ProtectedAdminRouteProps {
-  children?: ReactNode;
-}
-
-export const ProtectedAdminRoute = ({ children }: ProtectedAdminRouteProps) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    isLoading: true,
-  });
+const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { authUser, checkAuth } = useAuthStore();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axiosInstance.get("/auth/user", {
-          withCredentials: true,
-        });
-        setAuthState({
-          isAuthenticated: response.data.role === "admin",
-          isLoading: false,
-        });
-      } catch (error: any) {
-        console.error("Authentication check failed:", error.message);
-        setAuthState({ isAuthenticated: false, isLoading: false });
-      }
-    };
+    if (!authUser) {
+      checkAuth();
+    }
+  }, [authUser, checkAuth]);
 
-    checkAuth();
-  }, []);
-
-  if (authState.isLoading) {
-    return <LoadingScreen key="loading" />;
+  if (!authUser) {
+    return <Navigate to="/login" replace />;
   }
 
-  return authState.isAuthenticated ? (
-    children ?? null
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  if (authUser?.role !== "ADMIN") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
 };
+
+export default ProtectedAdminRoute;

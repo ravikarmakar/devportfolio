@@ -32,11 +32,11 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Routes
+app.use("/api/auth", authRoute);
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/skills", skillsRoutes);
 app.use("/api/message", messageRoute);
-app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
 
 app.listen(PORT, () => {
