@@ -221,7 +221,7 @@ function TimelineItem({
                 transition={{ duration: 0.3 }}
                 className="overflow-hidden"
               >
-                <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent my-4" />
+                <div className="h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent my-4" />
                 <p className="text-gray-300 text-sm">{item.description}</p>
               </motion.div>
             )}

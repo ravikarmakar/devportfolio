@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Spinner from "../../../components/icon/Spinner";
 import FormField from "../../../components/ui/FormField";
+import { contactMethods } from "../../../lib/Context";
 
 export default function ContactSection() {
   const containerRef = useRef(null);
@@ -53,30 +54,6 @@ export default function ContactSection() {
 
     console.log(formState);
   };
-
-  const contactMethods = [
-    {
-      icon: "✉️",
-      title: "Email",
-      value: "ravikarmkar94475@gmail.com",
-      link: "mailto:hello@yourname.com",
-      color: "from-blue-500 to-cyan-400",
-    },
-    {
-      icon: "📱",
-      title: "Phone",
-      value: "+91 6200091078",
-      link: "tel:+15551234567",
-      color: "from-purple-500 to-pink-400",
-    },
-    {
-      icon: "📍",
-      title: "Location",
-      value: "Bengaluru",
-      link: null,
-      color: "from-amber-500 to-orange-400",
-    },
-  ];
 
   return (
     <div ref={containerRef} className="min-h-screen py-20 px-6">
@@ -283,5 +260,3 @@ export default function ContactSection() {
     </div>
   );
 }
-
-// Form field component with animations

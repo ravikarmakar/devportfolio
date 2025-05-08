@@ -1,3 +1,27 @@
+export const contactMethods = [
+  {
+    icon: "✉️",
+    title: "Email",
+    value: "ravikarmkar94475@gmail.com",
+    link: "mailto:hello@yourname.com",
+    color: "from-blue-500 to-cyan-400",
+  },
+  {
+    icon: "📱",
+    title: "Phone",
+    value: "+91 6200091078",
+    link: "tel:+15551234567",
+    color: "from-purple-500 to-pink-400",
+  },
+  {
+    icon: "📍",
+    title: "Location",
+    value: "Bengaluru",
+    link: null,
+    color: "from-amber-500 to-orange-400",
+  },
+];
+
 export const skills = [
   {
     category: "Frontend",
@@ -120,149 +144,84 @@ export const education = [
   },
 ];
 
-// export const projects = [
-//   {
-//     id: 1,
-//     title: "E-Commerce Platform",
-//     category: "web",
-//     image: "https://i.ytimg.com/vi/TwYKwaEjJd4/maxresdefault.jpg",
-//     tags: ["React", "Node.js", "MongoDB"],
-//     description:
-//       "A full-stack e-commerce platform with user authentication, product management, and payment processing.",
-//     link: "#",
-//     featured: true,
-//     color: "from-blue-500 to-cyan-400",
-//   },
-//   {
-//     id: 2,
-//     title: "Travel Companion App",
-//     category: "mobile",
-//     image: "/api/placeholder/600/400",
-//     tags: ["React Native", "Firebase", "Maps API"],
-//     description:
-//       "A mobile application that helps travelers plan trips, discover local attractions, and navigate new cities.",
-//     link: "#",
-//     featured: true,
-//     color: "from-purple-500 to-pink-400",
-//   },
-//   {
-//     id: 3,
-//     title: "Dashboard UI Kit",
-//     category: "design",
-//     image: "/api/placeholder/600/400",
-//     tags: ["Figma", "UI Design", "Design System"],
-//     description:
-//       "A comprehensive UI kit for creating modern admin dashboards with over 200 components.",
-//     link: "#",
-//     color: "from-amber-500 to-orange-400",
-//   },
-//   {
-//     id: 4,
-//     title: "Social Media Analytics",
-//     category: "web",
-//     image: "/api/placeholder/600/400",
-//     tags: ["TypeScript", "D3.js", "Express"],
-//     description:
-//       "A web application for analyzing and visualizing social media engagement and audience metrics.",
-//     link: "#",
-//     color: "from-emerald-500 to-green-400",
-//   },
-//   {
-//     id: 5,
-//     title: "Fitness Tracker",
-//     category: "mobile",
-//     image: "/api/placeholder/600/400",
-//     tags: ["Flutter", "Firebase", "Health API"],
-//     description:
-//       "A cross-platform mobile app for tracking workouts, nutrition, and progress towards fitness goals.",
-//     link: "#",
-//     color: "from-rose-500 to-red-400",
-//   },
-//   {
-//     id: 6,
-//     title: "Portfolio Template",
-//     category: "design",
-//     image: "/api/placeholder/600/400",
-//     tags: ["Tailwind CSS", "Framer Motion", "React"],
-//     description:
-//       "A customizable portfolio template for developers and designers to showcase their work.",
-//     link: "#",
-//     color: "from-indigo-500 to-blue-400",
-//   },
-// ];
-
 export const projects = [
   {
     id: 1,
     title: "E-Commerce Platform",
-    category: "web",
+    category: "AI & Machine Learning",
     image: "https://i.ytimg.com/vi/7E6um7NGmeE/maxresdefault.jpg",
-    tags: ["React", "Node.js", "MongoDB", "Stripe"],
+    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
     description:
       "A full-stack e-commerce application built using the MERN stack. Features include user authentication, product management, shopping cart functionality, and payment integration with Stripe and Razorpay.",
-    link: "https://github.com/arjuntheprogrammer/E-COMMERCE-ReactJS-NodeJS-MongoDB",
-    featured: true,
-    color: "from-blue-500 to-cyan-400",
+    link: "https://github.com",
+    sourceLink: "https://github.com/e-commerce-platform",
+    details:
+      "This E-Commerce platform offers a seamless shopping experience built on the MERN stack. It includes features like user authentication, product listings, category filtering, cart management, and secure payments via Stripe and Razorpay. Admin users can manage products, track orders, and update inventory in real-time. The application also supports responsive design for mobile devices and integrates RESTful APIs for efficient client-server communication.",
   },
   {
     id: 2,
     title: "Real-Time Chat Application",
     category: "web",
     image: "https://i.ytimg.com/vi/otaQKODEUFs/maxresdefault.jpg",
-    tags: ["React", "Node.js", "Socket.io", "MongoDB"],
+    technologies: ["React", "Solidity", "Ethereum", "Web3.js"],
     description:
       "A real-time chat application utilizing Socket.io for instant messaging. Includes features like user authentication, chat rooms, typing indicators, and message persistence using MongoDB.",
     link: "https://github.com/novuhq/chat-app",
-    featured: true,
-    color: "from-purple-500 to-pink-400",
+    sourceLink: "https://github.com/real-time-chat-app",
+    details:
+      "This real-time chat application provides seamless messaging using Socket.io for low-latency communication between users. Built with React for a responsive frontend and Node.js backend, it features secure user authentication, persistent chat history using MongoDB, typing indicators, and room-based conversations. It also explores blockchain integration through Web3.js and Solidity, enabling potential decentralized chat features and secure user verification on the Ethereum network. The app supports multiple chat rooms and is optimized for both desktop and mobile devices.",
   },
   {
     id: 3,
     title: "Spotify Clone",
-    category: "web",
+    category: "Blockchain",
     image: "https://i.ytimg.com/vi/amFYvQK4huo/maxresdefault.jpg",
-    tags: ["React", "Tailwind CSS", "Spotify API"],
+    technologies: ["React", "Solidity", "Ethereum", "Web3.js"],
     description:
       "A Spotify clone built with React and Tailwind CSS, integrating the Spotify Web API for music playback, playlist management, and user authentication.",
-    link: "https://github.com/furkananter/spotify-clone",
-    featured: true,
-    color: "from-green-500 to-emerald-400",
+    link: "https://github.com",
+    sourceLink: "https://github.com/spotify-clone",
+    details:
+      "This Spotify clone delivers a sleek and responsive music streaming experience using React and Tailwind CSS. It features playlist creation, real-time music playback using the Spotify Web API, and secure user authentication. While primarily a frontend-focused application, it explores Web3 integration through Web3.js and Solidity, enabling potential blockchain-based features like music ownership verification, token-based access, or artist tipping. This project demonstrates how modern web technologies and decentralized principles can be combined for future-ready media platforms.",
   },
   {
     id: 4,
     title: "Gaming Hub",
-    category: "web",
+    category: "Augmented Reality",
     image:
       "https://t3.ftcdn.net/jpg/02/85/90/44/360_F_285904463_52tKiXp592qUhmg24eS3f4k1kGQSji3f.jpg",
-    tags: ["React", "Chakra UI", "API Integration"],
+    technologies: ["React", "Chakra UI", "API Integration"],
     description:
       "A gaming hub application that allows users to browse and search for games by genre, platform, and release date. Built with React.",
-    link: "https://github.com/MdAbbas110/game-hub-react",
-    featured: true,
-    color: "from-red-500 to-orange-400",
+    link: "https://github.com",
+    sourceLink: "https://github.com/gaming-hub",
+    details:
+      "Gaming Hub is a dynamic web application designed for gamers to discover and explore a wide range of video games. It features category-wise browsing, search filters by genre, platform, and release date, and live data fetched via third-party game APIs. The frontend is built using React and styled with Chakra UI for a responsive and accessible design. This project showcases efficient API integration, state management, and modern UI practices for delivering an engaging gaming discovery experience.",
   },
   {
     id: 5,
     title: "Developer Portfolio",
-    category: "web",
+    category: "Cybersecurity",
     image: "https://i.ytimg.com/vi/ifOJ0R5UQOc/maxresdefault.jpg",
-    tags: ["React", "Tailwind CSS", "Framer Motion"],
+    technologies: ["React", "Tailwind CSS", "Framer Motion"],
     description:
       "A personal developer portfolio showcasing projects, skills, and contact information. Built with React, styled using Tailwind CSS, and enhanced with animations from Framer Motion.",
-    link: "https://github.com/realstoman/react-tailwindcss-portfolio",
-    featured: true,
-    color: "from-indigo-500 to-blue-400",
+    link: "https://github.com",
+    sourceLink: "https://github.com/developer-portfolio",
+    details:
+      "This Developer Portfolio is a modern and responsive personal website crafted using React and styled with Tailwind CSS. It features smooth animations powered by Framer Motion to enhance user experience. The portfolio includes sections for project showcases, technical skills, an about section, and contact details. Designed with a focus on clean UI and accessibility, it effectively represents a developer’s professional presence and personal brand online.",
   },
   // {
   //   id: 6,
-  //   title: "My Personal Project",
-  //   category: "web",
+  //   title: "Smart City Platform",
+  //   category: "IoT",
   //   image: "https://via.placeholder.com/600x400.png?text=My+Project",
-  //   tags: ["React", "Node.js", "Express", "MongoDB"],
+  //   technologies: ["Python", "MQTT", "React", "MongoDB"],
   //   description:
-  //     "A personal project demonstrating full-stack development skills, including user authentication, CRUD operations, and responsive design.",
-  //   link: "#",
-  //   featured: false,
-  //   color: "from-gray-500 to-gray-400",
+  //     "IoT platform that integrates various smart city sensors and provides actionable insights.",
+  //   link: "https://github.com",
+  //   sourceLink: "https://github.com/smart-city-platform",
+  //   details:
+  //     "This comprehensive platform connects and manages thousands of IoT sensors distributed throughout urban environments. Using MQTT for lightweight, reliable communications, the system collects data from traffic sensors, environmental monitors, and utility meters. The Python backend processes this data in real-time, storing results in MongoDB for flexible querying. The React frontend presents city managers with intuitive dashboards and alerts, transforming raw data into actionable insights.",
   // },
 ];
