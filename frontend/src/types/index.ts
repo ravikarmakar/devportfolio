@@ -1,20 +1,3 @@
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  bio: string;
-  profileImageUrl: string;
-  // socialLinks: Object;
-  currLocation: string;
-  mobileNumber: string;
-  resumeUrl: string;
-  profileSummery: string;
-  websiteUrl: string;
-  aboutMe: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Project {
   _id: string;
   title: string;

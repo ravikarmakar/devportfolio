@@ -1,24 +1,39 @@
 import { create } from "zustand";
-import { Project } from "../types";
 import { axiosInstance } from "../lib/axios";
-import toast from "react-hot-toast";
+
+export interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  technologies: string[];
+  category: string;
+  details: string;
+  liveLink: string;
+  sourceLink: string;
+  isFeatured: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface ProjectStoreState {
   projects: Project[];
   isLoading: boolean;
   error: string | null;
-  fetchProjects: () => Promise<void>;
-  createProject: (projectData: any) => Promise<void>;
-  deleteProject: (id: string) => Promise<void>;
-  updateProject: (id: string, updatedData: any) => Promise<void>;
+  fetchAllProjects: () => Promise<void>;
+  createProject: (projectData: FormData) => Promise<Project | null>;
+  deleteProject: (id: string) => Promise<boolean>;
+  fetchProjectDetails: (id: string) => Promise<Project | null>;
+  updateProject: (id: string, projectData: FormData) => Promise<Project | null>;
+  fetchFeaturedProjects: () => Promise<void>;
 }
 
-export const useProjectStore = create<ProjectStoreState>((set, get) => ({
+export const useProjectStore = create<ProjectStoreState>((set) => ({
   projects: [],
   isLoading: false,
   error: null,
 
-  fetchProjects: async () => {
+  fetchAllProjects: async () => {
     set({ isLoading: true, error: null });
     try {
       const response = await axiosInstance.get("/projects");
@@ -27,94 +42,57 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
       set({ error: "Failed to fetch projects", isLoading: false });
     }
   },
-
   createProject: async (projectData) => {
     set({ isLoading: true, error: null });
-
     try {
-      const formData = new FormData();
-      formData.append("title", projectData.title);
-      projectData.technologies.forEach((tech: string) => {
-        formData.append("technologies[]", tech);
-      });
-      projectData.tags.forEach((tag: string) => {
-        formData.append("tags[]", tag);
-      });
-      formData.append("links", JSON.stringify(projectData.links));
-      formData.append("priority", projectData.priority);
-      formData.append("status", projectData.status);
-      formData.append("description", projectData.description);
-      if (projectData.image) {
-        formData.append("image", projectData.image);
-      }
-
-      await axiosInstance.post("/projects/create", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      toast.success("Project added successfully");
-      await get().fetchProjects();
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to add project";
-      set({ error: errorMessage });
-      toast.error(errorMessage);
-    } finally {
-      set({ isLoading: false });
+      const response = await axiosInstance.post(
+        "/projects/create",
+        projectData
+      );
+      return response.data.project;
+    } catch (error) {
+      set({ error: "Error in creating projects", isLoading: false });
+      return null;
     }
   },
-
   deleteProject: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
-      await axiosInstance.delete(`/admin/project/${id}`);
-      toast.success("Project deleted successfully");
-
-      await get().fetchProjects();
+      await axiosInstance.delete(`/projects/${id}`);
+      return true;
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to delete project";
-      set({ error: errorMessage });
-      toast.error(errorMessage);
-    } finally {
-      set({ isLoading: false });
+      set({ error: "Failed to delete project", isLoading: false });
+      return false;
     }
   },
-
-  updateProject: async (id: string, updatedData: any) => {
+  updateProject: async (id: string, projectData: any) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axiosInstance.put(
-        `/admin/project/${id}`,
-        updatedData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success("Project updated successfully");
-        await get().fetchProjects();
-      }
-
-      // Optionally, you can use the response to update local state or trigger additional actions
-      // For example: set({ projects: response.data.data });
-    } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to update project";
-
-      set({ error: errorMessage });
-      toast.error(errorMessage);
-    } finally {
+      const response = await axiosInstance.put(`/projects/${id}`, projectData);
+      return response.data;
+    } catch (error) {
+      set({ error: "Failed to update project", isLoading: false });
+      return null;
+    }
+  },
+  fetchProjectDetails: async (id: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get(`/projects/${id}`);
       set({ isLoading: false });
+      return response.data;
+    } catch (error) {
+      set({ error: "Failed to fetct project details", isLoading: false });
+      return null;
+    }
+  },
+  fetchFeaturedProjects: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get("/projects/featured-projects");
+      set({ projects: response.data.project, isLoading: false });
+    } catch (error) {
+      set({ error: "Failed to fetch featured project", isLoading: false });
     }
   },
 }));

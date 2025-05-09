@@ -7,6 +7,7 @@ import {
   ExternalLink,
   ChevronRight,
   Github,
+  X,
 } from "lucide-react";
 import {
   motion,
@@ -15,13 +16,23 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import { projects } from "../../../lib/Context";
+import { useProjectStore } from "../../../store/useProjectStore";
 
 export default function Projects() {
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const containerRef = useRef(null);
   const controls = useAnimation();
+  const hasFetched = useRef(false);
+
+  const { fetchFeaturedProjects, projects } = useProjectStore();
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      fetchFeaturedProjects();
+      hasFetched.current = true;
+    }
+  }, []);
 
   useEffect(() => {
     controls.start("visible");
@@ -57,34 +68,6 @@ export default function Projects() {
         duration: 0.5,
       },
     },
-  };
-
-  // Handle card tilt effect
-  interface MouseMoveEvent extends React.MouseEvent<HTMLDivElement> {
-    currentTarget: HTMLDivElement;
-  }
-
-  const handleMouseMove = (event: MouseMoveEvent, id: number | null): void => {
-    if (containerRef.current && id === selectedProject) {
-      const { clientX, clientY } = event;
-      const { left, top, width, height } =
-        event.currentTarget.getBoundingClientRect();
-      const xValue = clientX - left;
-      const yValue = clientY - top;
-
-      // Convert to a value between -20 and 20
-      const newX = (xValue / width - 0.5) * 20;
-      const newY = (yValue / height - 0.5) * -20;
-
-      x.set(newX);
-      y.set(newY);
-    }
-  };
-
-  // Reset the tilt when mouse leaves
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
   };
 
   // Transform values for 3D rotation
@@ -195,7 +178,7 @@ export default function Projects() {
           >
             {projects.map((project) => (
               <motion.div
-                key={project.id}
+                key={project?._id}
                 className="relative group"
                 variants={gridItemVariants}
                 whileHover={{
@@ -207,8 +190,8 @@ export default function Projects() {
                   {/* Project image */}
                   <div className="overflow-hidden relative h-48">
                     <motion.img
-                      src={project.image}
-                      alt={project.title}
+                      src={project?.imageUrl}
+                      alt={project?.title}
                       className="w-full h-full object-cover"
                       initial={{ scale: 1 }}
                       whileHover={{ scale: 1.08 }}
@@ -250,7 +233,7 @@ export default function Projects() {
                       <motion.button
                         className="text-sm text-gray-200 hover:text-blue-300 flex items-center"
                         whileHover={{ x: 5 }}
-                        onClick={() => setSelectedProject(project.id)}
+                        onClick={() => setSelectedProject(project._id)}
                       >
                         Explore Details
                         <ArrowRight className="h-4 w-4 ml-1" />
@@ -258,7 +241,7 @@ export default function Projects() {
 
                       <div className="flex gap-2">
                         <a
-                          href={project.link}
+                          href={project?.liveLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-400 hover:text-blue-400"
@@ -289,7 +272,7 @@ export default function Projects() {
             <div className="flex flex-col items-center">
               {projects.map((project) => (
                 <motion.div
-                  key={project.id}
+                  key={project?._id}
                   className="w-full max-w-4xl mb-24 last:mb-0"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -302,7 +285,7 @@ export default function Projects() {
                       whileHover={{ scale: 1.02 }}
                     >
                       <img
-                        src={project.image}
+                        src={project?.imageUrl}
                         alt={project.title}
                         className="w-full h-64 md:h-96 object-cover rounded-xl"
                       />
@@ -345,14 +328,14 @@ export default function Projects() {
                           className="px-6 py-2 bg-blue-600/80 hover:bg-blue-600 text-white rounded-full flex items-center"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => setSelectedProject(project.id)}
+                          onClick={() => setSelectedProject(project?._id)}
                         >
                           View Details
                           <ChevronRight className="h-4 w-4 ml-2" />
                         </motion.button>
 
                         <a
-                          href={project.link}
+                          href={project?.liveLink}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-6 py-2 border border-blue-500/50 text-blue-300 rounded-full hover:bg-blue-900/30 transition-colors duration-300 flex items-center"
@@ -405,17 +388,15 @@ export default function Projects() {
                   perspective: 1000,
                 }}
                 ref={containerRef}
-                onMouseMove={(e) => handleMouseMove(e, selectedProject)}
-                onMouseLeave={handleMouseLeave}
               >
                 {projects
-                  .filter((p) => p.id === selectedProject)
+                  .filter((p) => p._id === selectedProject)
                   .map((project) => (
-                    <div key={project.id} className="relative">
+                    <div key={project?._id} className="relative">
                       {/* Header image */}
                       <div className="relative h-64 md:h-96 overflow-hidden">
                         <img
-                          src={project.image}
+                          src={project?.imageUrl}
                           alt={project.title}
                           className="w-full h-full object-cover"
                         />
@@ -428,20 +409,7 @@ export default function Projects() {
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setSelectedProject(null)}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
+                          <X className="h-6 w-6" />
                         </motion.button>
 
                         {/* Project title overlay */}
@@ -480,7 +448,7 @@ export default function Projects() {
                             Project Overview
                           </h3>
                           <p className="text-blue-100/90 leading-relaxed">
-                            {project.details}
+                            {project?.details}
                           </p>
                         </div>
 
@@ -545,45 +513,23 @@ export default function Projects() {
                         {/* Action button */}
                         <div className="flex justify-center mt-8 gap-5">
                           <a
-                            href={project.link}
+                            href={project?.liveLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-medium flex items-center"
                           >
                             Visit Live Project
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 ml-2"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
+                            <ArrowRight className="h-5 w-5 ml-2" />
                           </a>
 
                           <a
-                            href={project.sourceLink}
+                            href={project?.sourceLink}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-medium flex items-center"
                           >
                             View Source Code
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 ml-2"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
+                            <ArrowRight className="h-5 w-5 ml-2" />
                           </a>
                         </div>
                       </div>

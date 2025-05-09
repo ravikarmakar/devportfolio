@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import { persist } from "zustand/middleware";
 
 export interface User {
-  _id: string;
+  _id?: string;
   username: string;
   email: string;
   password: string;
@@ -47,7 +47,6 @@ export const useAuthStore = create<AuthStoreState>()(
           set({ error: "Failed to checking loggedIn", isLoading: false });
         }
       },
-
       login: async (username, password) => {
         try {
           set({ isLoading: true, error: null });

@@ -1,10 +1,10 @@
 import generateTokenSetCookie from "../lib/utils/generateToken.js";
-import { AuthUser } from "../models/auth.model.js";
+import { User } from "../models/user.model.js";
 import cloudinary from "../config/cloudinary.js";
 import bcrypt from "bcryptjs";
 import fs from "fs";
 
-const cleanupFiles = (imageFile, pdfFile) => {
+export const cleanupFiles = (imageFile, pdfFile) => {
   if (imageFile?.path) {
     try {
       fs.unlinkSync(imageFile.path); // Remove the image file after upload
@@ -33,13 +33,13 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const isExistingEmail = await AuthUser.findOne({ email });
+    const isExistingEmail = await User.findOne({ email });
     if (isExistingEmail) {
       res.status(400).json({ succes: false, message: "Email Alredy Exist" });
       return;
     }
 
-    const user = await AuthUser.create({
+    const user = await User.create({
       username,
       email,
       password: hashedPassword,
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Please fill all the fields" });
     }
 
-    const user = await AuthUser.findOne({ username });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -107,13 +107,13 @@ export const logout = async (req, res) => {
 
 export const getUserData = async (req, res) => {
   try {
-    const user = await AuthUser.find({}).select("-password -role");
+    const user = await User.find({}).select("-password -role");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error in getAuthUser controller:", error.message);
+    console.error("Error in getUser controller:", error.message);
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
@@ -122,7 +122,7 @@ export const getUserData = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    const user = await AuthUser.findById(req.user.userId);
+    const user = await User.findById(req.user.userId);
     if (!user) {
       res.status(404).json({ success: false, messsage: "User not found" });
       return;
@@ -142,7 +142,7 @@ export const updateProfile = async (req, res) => {
     const imageFile = req.files?.image?.[0];
     const pdfFile = req.files?.pdf?.[0];
 
-    const user = await AuthUser.findById(req.user.userId);
+    const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -182,7 +182,7 @@ export const updateProfile = async (req, res) => {
       resumePublicId = pdfUploadResult.public_id;
     }
 
-    const updatedUser = await AuthUser.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.user.userId,
       {
         username,

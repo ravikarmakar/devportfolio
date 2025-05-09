@@ -13,13 +13,14 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { axiosInstance } from "../../lib/axios";
+import { useAuthStore } from "../../store/useAuthStore";
 import toast from "react-hot-toast";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   const menuItems = [
     { path: "/admin", icon: <LayoutDashboard size={20} />, label: "Dashboard" },
@@ -41,21 +42,9 @@ const AdminLayout = () => {
   ];
 
   const handleLogout = async () => {
-    try {
-      // Call the backend logout endpoint
-      const response = await axiosInstance.post(
-        "/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        toast.success("Logout successful");
-        navigate("/profile");
-      }
-    } catch (error: any) {
-      toast.error("Logout failed:", error.message);
-    }
+    await logout();
+    navigate("/");
+    toast.success("Logged out successfully");
   };
 
   const toggleMobileMenu = () => {
