@@ -21,6 +21,7 @@ const ContactSection = lazy(
   () => import("./pages/home/components/ContactSection")
 );
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const ComingSoon = lazy(() => import("./components/ComingSoon"));
 
 function App() {
   // State Management
@@ -55,7 +56,6 @@ function App() {
                 </ProtectedAdminRoute>
               }
             />
-
             {/* Blog Routes */}
             <Route
               path="/blog/*"
@@ -65,8 +65,8 @@ function App() {
                 </MainLayout>
               }
             />
-
             {/* Public Routes */}
+
             <Route
               path="/"
               element={
@@ -75,12 +75,27 @@ function App() {
                 </MainLayout>
               }
             />
-
             <Route
               path="/login"
               element={
                 <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
                   <LoginPage />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+                  <ComingSoon />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/components"
+              element={
+                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+                  <ComingSoon />
                 </MainLayout>
               }
             />
@@ -100,7 +115,6 @@ function App() {
                 </MainLayout>
               }
             />
-
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
           </Routes>

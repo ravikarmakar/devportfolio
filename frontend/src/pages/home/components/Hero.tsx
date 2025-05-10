@@ -2,11 +2,12 @@ import { motion } from "framer-motion";
 import { GithubIcon, Linkedin } from "lucide-react";
 import { useEffect, useRef } from "react";
 import LoadingSkeleton from "./LoadingSkeleton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TypewriterText } from "../../../components/elements/TypeWriter";
 import { useAuthStore } from "../../../store/useAuthStore";
 
 const Hero = () => {
+  const navigate = useNavigate();
   const { user, fetchUserData, isLoading } = useAuthStore();
   const hasFetched = useRef(false);
 
@@ -67,6 +68,7 @@ const Hero = () => {
               </span>
             </motion.h1>
 
+            {/* TypewriterText */}
             <div className="text-xl md:text-2xl font-bold text-gray-700 dark:text-textLight/80">
               I'm a{" "}
               <span className="text-accent inline">
@@ -105,6 +107,7 @@ const Hero = () => {
                   className="px-8 py-3 font-semibold text-white transition-all bg-transparent border-2 rounded-full border-blue-500 hover:bg-blue-500/10"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/contact")}
                 >
                   Contact Me
                 </motion.button>

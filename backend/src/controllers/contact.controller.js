@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import nodemailer from "nodemailer";
 import { Contact } from "../models/Contact.model.js";
 
@@ -16,14 +19,14 @@ export const createContact = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "ravikarmkar94475@gmail.com",
-        pass: "kcpwwkyypnvlaaah", // ✅ use app password without spaces
+        user: process.env.EMAIL,
+        pass: process.env.PASS,
       },
     });
 
     // Send copy to yourself
     const mailOptions = {
-      from: `"Ravi Karmkar" ${email}`, // 👈 apna naam aur email
+      from: `"Ravi Karmkar" ${email}`,
       to: "ravikarmkar94475@gmail.com",
       subject: "New Contact Form Submission",
       html: `

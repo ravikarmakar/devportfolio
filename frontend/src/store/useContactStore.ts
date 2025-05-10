@@ -1,7 +1,19 @@
 import { create } from "zustand";
-import { Message } from "../types";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+
+export interface Message {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  subject: string;
+  starred: boolean;
+  archived: boolean;
+  seenTimestamp: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface FormDataType {
   name: string;
@@ -11,7 +23,7 @@ interface FormDataType {
 }
 
 interface ContactStoreState {
-  messages: Message[] | null;
+  contacts: Message[] | null;
   error: string | null;
   isLoading: boolean;
   createContact: (contactData: FormDataType) => Promise<boolean>;
@@ -21,7 +33,7 @@ interface ContactStoreState {
 }
 
 export const useContactStore = create<ContactStoreState>((set) => ({
-  messages: null,
+  contacts: null,
   error: null,
   isLoading: false,
 
@@ -40,7 +52,7 @@ export const useContactStore = create<ContactStoreState>((set) => ({
   fetchAllMessage: async () => {
     set({ isLoading: true, error: null });
     const response = await axiosInstance("/message");
-    set({ messages: response.data, isLoading: false });
+    set({ contacts: response.data, isLoading: false });
     try {
     } catch (error: any) {
       set({ error: "Failed to fetch message", isLoading: false });

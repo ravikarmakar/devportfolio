@@ -11,7 +11,7 @@ import {
   Send,
   Home,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   darkMode: boolean;
@@ -19,12 +19,13 @@ interface NavbarProps {
 }
 
 const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
-  // const [darkMode, setDarkMode] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-
-  const MotionLink = motion(Link);
 
   // Handle scroll effect
   useEffect(() => {
@@ -61,9 +62,9 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
   // Navigation items
   const navItems = [
     { name: "Home", icon: <Home size={18} />, link: "/" },
-    { name: "Projects", icon: <Code size={18} />, link: "/" },
+    { name: "Projects", icon: <Code size={18} />, link: "/projects" },
     { name: "Blog", icon: <Layers size={18} />, link: "/blog" },
-    { name: "Components", icon: <Layers size={18} />, link: "/" },
+    { name: "Components", icon: <Layers size={18} />, link: "/components" },
     { name: "Contact", icon: <Send size={18} />, link: "/contact" },
   ];
 
@@ -80,7 +81,11 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
     >
       <div className="flex items-center justify-between">
         {/* Logo */}
-        <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
+        <motion.div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+          whileHover={{ scale: 1.05 }}
+        >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500 rounded-full blur-sm"></div>
             <div
@@ -122,20 +127,28 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
               >
-                <MotionLink
-                  to={item.link}
-                  className={`flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium 
-        ${
-          darkMode
-            ? "hover:bg-blue-500/10 hover:text-blue-400"
-            : "hover:bg-blue-500/10 hover:text-blue-600"
-        }`}
+                <motion.button
+                  onClick={() => navigate(item.link)}
+                  className={`flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium ${
+                    isActive(item.link)
+                      ? darkMode
+                        ? "bg-blue-500/20 text-blue-400"
+                        : "bg-blue-500/10 text-blue-600"
+                      : darkMode
+                      ? "text-gray-300"
+                      : "text-gray-700"
+                  } 
+                  ${
+                    darkMode
+                      ? "hover:bg-blue-500/10 hover:text-blue-400"
+                      : "hover:bg-blue-500/10 hover:text-blue-600"
+                  }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {item.icon}
                   {item.name}
-                </MotionLink>
+                </motion.button>
               </motion.li>
             ))}
           </ul>
@@ -295,12 +308,20 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
                 >
                   <Link
                     to={item.link}
-                    className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium 
-          ${
-            darkMode
-              ? "text-gray-300 hover:bg-gray-800 hover:text-blue-400"
-              : "text-gray-900 hover:bg-gray-100 hover:text-blue-600"
-          }`}
+                    className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium ${
+                      isActive(item.link)
+                        ? darkMode
+                          ? "bg-blue-500/20 text-blue-400"
+                          : "bg-blue-500/10 text-blue-600"
+                        : darkMode
+                        ? "text-gray-300"
+                        : "text-gray-700"
+                    }
+                    ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-800 hover:text-blue-400"
+                        : "text-gray-900 hover:bg-gray-100 hover:text-blue-600"
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.icon}

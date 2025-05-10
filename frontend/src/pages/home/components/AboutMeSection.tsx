@@ -52,8 +52,6 @@ const AboutMeSection: React.FC<AboutMeProps> = ({
     offset: ["start end", "end start"],
   });
 
-  console.log(user);
-
   const imageScale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
   const imageOpacity = useTransform(scrollYProgress, [0, 0.2], [0.6, 1]);
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);

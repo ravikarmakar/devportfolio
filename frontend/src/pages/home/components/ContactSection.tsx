@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import Spinner from "../../../components/icon/Spinner";
 import FormField from "../../../components/ui/FormField";
 import { contactMethods } from "../../../lib/Context";
 import { useContactStore } from "../../../store/useContactStore";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 export default function ContactSection() {
   const containerRef = useRef(null);
@@ -172,7 +172,7 @@ export default function ContactSection() {
                 >
                   {isLoading ? (
                     <span className="flex items-center">
-                      <Spinner className="mr-2" />
+                      <Loader2 className="mr-2 animate-spin" />
                       Sending...
                     </span>
                   ) : (

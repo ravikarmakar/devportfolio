@@ -176,7 +176,7 @@ export default function SkillSection() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="py-20 px-4 relative overflow-hidden"
+          className="py-20 px-4 relative"
         >
           {/* Background glow effects */}
           <div className="absolute inset-0 overflow-hidden">
