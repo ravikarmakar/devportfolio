@@ -1,6 +1,6 @@
 import { useBlog } from "../context/BlogContext";
-import BlogCard from "../components/BlogCard";
-import FeaturedPost from "../components/FeaturedPost";
+import BlogCard from "../ux/BlogCard";
+import FeaturedPost from "../ux/FeaturedPost";
 
 const BlogList = () => {
   const { posts, selectedCategory, loading } = useBlog();

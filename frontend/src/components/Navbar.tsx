@@ -62,7 +62,8 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
   const navItems = [
     { name: "Home", icon: <Home size={18} />, link: "/" },
     { name: "Projects", icon: <Code size={18} />, link: "/" },
-    { name: "Skills", icon: <Layers size={18} />, link: "/" },
+    { name: "Blog", icon: <Layers size={18} />, link: "/blog" },
+    { name: "Components", icon: <Layers size={18} />, link: "/" },
     { name: "Contact", icon: <Send size={18} />, link: "/contact" },
   ];
 

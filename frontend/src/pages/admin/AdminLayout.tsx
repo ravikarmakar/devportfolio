@@ -28,7 +28,12 @@ const AdminLayout = () => {
     {
       path: "/admin/projects",
       icon: <Briefcase size={20} />,
-      label: "Projects",
+      label: "Projects List",
+    },
+    {
+      path: "/admin/projects/create",
+      icon: <Briefcase size={20} />,
+      label: "Create Project",
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
     { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },

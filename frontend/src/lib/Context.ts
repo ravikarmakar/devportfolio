@@ -144,84 +144,145 @@ export const education = [
   },
 ];
 
-export const projects = [
+export const mockBlogPosts = [
   {
-    id: 1,
-    title: "E-Commerce Platform",
-    category: "AI & Machine Learning",
-    image: "https://i.ytimg.com/vi/7E6um7NGmeE/maxresdefault.jpg",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-    description:
-      "A full-stack e-commerce application built using the MERN stack. Features include user authentication, product management, shopping cart functionality, and payment integration with Stripe and Razorpay.",
-    link: "https://github.com",
-    sourceLink: "https://github.com/e-commerce-platform",
-    details:
-      "This E-Commerce platform offers a seamless shopping experience built on the MERN stack. It includes features like user authentication, product listings, category filtering, cart management, and secure payments via Stripe and Razorpay. Admin users can manage products, track orders, and update inventory in real-time. The application also supports responsive design for mobile devices and integrates RESTful APIs for efficient client-server communication.",
+    id: "1",
+    title: "My Journey from Physics to Full Stack Development",
+    excerpt:
+      "How I transitioned from studying quantum mechanics to building web applications...",
+    content: `
+      # My Journey from Physics to Full Stack Development
+
+      When I first started my journey in Physics, I never imagined I'd end up becoming a Full Stack Developer. Here's my story...
+
+      ## The Beginning
+      As a Physics student, I was always fascinated by how things worked at their most fundamental level...
+
+      ## The Transition
+      My programming journey began when I needed to analyze data for my physics experiments...
+
+      ## Learning Web Development
+      I started with the basics: HTML, CSS, and JavaScript...
+
+      ## Where I Am Now
+      Today, I work with modern technologies like React, Node.js, and MongoDB...
+    `,
+    category: "Career Journey",
+    tags: ["Career Change", "Web Development", "Learning"],
+    author: {
+      name: "Ravi Karmakar",
+      avatar:
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
+    },
+    coverImage:
+      "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=400&fit=crop",
+    publishedAt: "2024-03-15",
+    readTime: 5,
   },
   {
-    id: 2,
-    title: "Real-Time Chat Application",
-    category: "web",
-    image: "https://i.ytimg.com/vi/otaQKODEUFs/maxresdefault.jpg",
-    technologies: ["React", "Solidity", "Ethereum", "Web3.js"],
-    description:
-      "A real-time chat application utilizing Socket.io for instant messaging. Includes features like user authentication, chat rooms, typing indicators, and message persistence using MongoDB.",
-    link: "https://github.com/novuhq/chat-app",
-    sourceLink: "https://github.com/real-time-chat-app",
-    details:
-      "This real-time chat application provides seamless messaging using Socket.io for low-latency communication between users. Built with React for a responsive frontend and Node.js backend, it features secure user authentication, persistent chat history using MongoDB, typing indicators, and room-based conversations. It also explores blockchain integration through Web3.js and Solidity, enabling potential decentralized chat features and secure user verification on the Ethereum network. The app supports multiple chat rooms and is optimized for both desktop and mobile devices.",
+    id: "2",
+    title: "Building Modern Web Applications with React and TypeScript",
+    excerpt:
+      "A comprehensive guide to creating scalable and type-safe React applications...",
+    content: `
+      # Building Modern Web Applications
+
+      In this post, I'll share my experience and best practices for building modern web applications...
+
+      ## Why TypeScript?
+      TypeScript adds static typing to JavaScript, making our code more reliable...
+
+      ## React Best Practices
+      Let's explore some key principles for building maintainable React applications...
+    `,
+    category: "Technical Guide",
+    tags: ["React", "TypeScript", "Web Development"],
+    author: {
+      name: "Ravi Karmakar",
+      avatar:
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
+    },
+    coverImage:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
+    publishedAt: "2024-03-10",
+    readTime: 8,
   },
   {
-    id: 3,
-    title: "Spotify Clone",
-    category: "Blockchain",
-    image: "https://i.ytimg.com/vi/amFYvQK4huo/maxresdefault.jpg",
-    technologies: ["React", "Solidity", "Ethereum", "Web3.js"],
-    description:
-      "A Spotify clone built with React and Tailwind CSS, integrating the Spotify Web API for music playback, playlist management, and user authentication.",
-    link: "https://github.com",
-    sourceLink: "https://github.com/spotify-clone",
-    details:
-      "This Spotify clone delivers a sleek and responsive music streaming experience using React and Tailwind CSS. It features playlist creation, real-time music playback using the Spotify Web API, and secure user authentication. While primarily a frontend-focused application, it explores Web3 integration through Web3.js and Solidity, enabling potential blockchain-based features like music ownership verification, token-based access, or artist tipping. This project demonstrates how modern web technologies and decentralized principles can be combined for future-ready media platforms.",
+    id: "3",
+    title: "Building Modern Web Applications with React and TypeScript",
+    excerpt:
+      "A comprehensive guide to creating scalable and type-safe React applications...",
+    content: `
+      # Building Modern Web Applications
+
+      In this post, I'll share my experience and best practices for building modern web applications...
+
+      ## Why TypeScript?
+      TypeScript adds static typing to JavaScript, making our code more reliable...
+
+      ## React Best Practices
+      Let's explore some key principles for building maintainable React applications...
+    `,
+    category: "Technical Guide",
+    tags: ["React", "TypeScript", "Web Development"],
+    author: {
+      name: "Ravi Karmakar",
+      avatar:
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
+    },
+    coverImage:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
+    publishedAt: "2024-03-10",
+    readTime: 8,
   },
   {
-    id: 4,
-    title: "Gaming Hub",
-    category: "Augmented Reality",
-    image:
-      "https://t3.ftcdn.net/jpg/02/85/90/44/360_F_285904463_52tKiXp592qUhmg24eS3f4k1kGQSji3f.jpg",
-    technologies: ["React", "Chakra UI", "API Integration"],
+    id: "4",
+    title: "Building Modern Web Applications with React and TypeScript",
+    excerpt:
+      "A comprehensive guide to creating scalable and type-safe React applications...",
+    content: `
+      # Building Modern Web Applications
+
+      In this post, I'll share my experience and best practices for building modern web applications...
+
+      ## Why TypeScript?
+      TypeScript adds static typing to JavaScript, making our code more reliable...
+
+      ## React Best Practices
+      Let's explore some key principles for building maintainable React applications...
+    `,
+    category: "Technical Guide",
+    tags: ["React", "TypeScript", "Web Development"],
+    author: {
+      name: "Ravi Karmakar",
+      avatar:
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop",
+    },
+    coverImage:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
+    publishedAt: "2024-03-10",
+    readTime: 8,
+  },
+];
+
+export const mockResources = [
+  {
+    id: "1",
+    title: "React Documentation",
     description:
-      "A gaming hub application that allows users to browse and search for games by genre, platform, and release date. Built with React.",
-    link: "https://github.com",
-    sourceLink: "https://github.com/gaming-hub",
-    details:
-      "Gaming Hub is a dynamic web application designed for gamers to discover and explore a wide range of video games. It features category-wise browsing, search filters by genre, platform, and release date, and live data fetched via third-party game APIs. The frontend is built using React and styled with Chakra UI for a responsive and accessible design. This project showcases efficient API integration, state management, and modern UI practices for delivering an engaging gaming discovery experience.",
+      "Official React documentation - your best resource for learning React",
+    category: "Frontend",
+    link: "https://react.dev",
+    icon: "https://react.dev/favicon.ico",
+    type: "article",
   },
   {
-    id: 5,
-    title: "Developer Portfolio",
-    category: "Cybersecurity",
-    image: "https://i.ytimg.com/vi/ifOJ0R5UQOc/maxresdefault.jpg",
-    technologies: ["React", "Tailwind CSS", "Framer Motion"],
-    description:
-      "A personal developer portfolio showcasing projects, skills, and contact information. Built with React, styled using Tailwind CSS, and enhanced with animations from Framer Motion.",
-    link: "https://github.com",
-    sourceLink: "https://github.com/developer-portfolio",
-    details:
-      "This Developer Portfolio is a modern and responsive personal website crafted using React and styled with Tailwind CSS. It features smooth animations powered by Framer Motion to enhance user experience. The portfolio includes sections for project showcases, technical skills, an about section, and contact details. Designed with a focus on clean UI and accessibility, it effectively represents a developer’s professional presence and personal brand online.",
+    id: "2",
+    title: "Node.js Crash Course",
+    description: "Complete Node.js tutorial for beginners",
+    category: "Backend",
+    link: "https://nodejs.org",
+    icon: "https://nodejs.org/favicon.ico",
+    type: "course",
   },
-  // {
-  //   id: 6,
-  //   title: "Smart City Platform",
-  //   category: "IoT",
-  //   image: "https://via.placeholder.com/600x400.png?text=My+Project",
-  //   technologies: ["Python", "MQTT", "React", "MongoDB"],
-  //   description:
-  //     "IoT platform that integrates various smart city sensors and provides actionable insights.",
-  //   link: "https://github.com",
-  //   sourceLink: "https://github.com/smart-city-platform",
-  //   details:
-  //     "This comprehensive platform connects and manages thousands of IoT sensors distributed throughout urban environments. Using MQTT for lightweight, reliable communications, the system collects data from traffic sensors, environmental monitors, and utility meters. The Python backend processes this data in real-time, storing results in MongoDB for flexible querying. The React frontend presents city managers with intuitive dashboards and alerts, transforming raw data into actionable insights.",
-  // },
 ];

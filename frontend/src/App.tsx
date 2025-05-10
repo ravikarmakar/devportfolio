@@ -17,7 +17,9 @@ const BlogRoutes = lazy(() => import("./routes/BlogRoutes"));
 // Lazy Loaded Pages
 const Home = lazy(() => import("./pages/home/Home"));
 const ProfilePage = lazy(() => import("./pages/profile/ProfilePage"));
-const Contact = lazy(() => import("./components/Contact"));
+const ContactSection = lazy(
+  () => import("./pages/home/components/ContactSection")
+);
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 
 function App() {
@@ -55,7 +57,14 @@ function App() {
             />
 
             {/* Blog Routes */}
-            <Route path="/blog/*" element={<BlogRoutes />} />
+            <Route
+              path="/blog/*"
+              element={
+                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+                  <BlogRoutes />
+                </MainLayout>
+              }
+            />
 
             {/* Public Routes */}
             <Route
@@ -79,7 +88,7 @@ function App() {
               path="/contact"
               element={
                 <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <Contact />
+                  <ContactSection />
                 </MainLayout>
               }
             />

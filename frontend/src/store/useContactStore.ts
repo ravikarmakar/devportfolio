@@ -3,40 +3,37 @@ import { Message } from "../types";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
+interface FormDataType {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 interface ContactStoreState {
   messages: Message[] | null;
   error: string | null;
   isLoading: boolean;
-  sendMessage: (formData: any) => Promise<void>;
+  createContact: (contactData: FormDataType) => Promise<boolean>;
   fetchAllMessage: () => Promise<void>;
   markAsRead: (id: string) => Promise<Message | null>;
   deleteMessage: (id: string) => Promise<void>;
 }
 
-export const useContactStore = create<ContactStoreState>((set, get) => ({
+export const useContactStore = create<ContactStoreState>((set) => ({
   messages: null,
   error: null,
   isLoading: false,
 
-  sendMessage: async (formData: any) => {
+  createContact: async (contactData) => {
     set({ isLoading: true, error: null });
-
     try {
-      const response = await axiosInstance.post("/message/contact", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 201) {
-        toast.success("Message sent successfully!");
-        await get().fetchAllMessage();
-      }
-    } catch (error: any) {
-      set({ error: "Failed to send message" });
-      toast.error("Failed to send message: " + error.message);
-    } finally {
+      await axiosInstance.post("/contacts/create", contactData);
       set({ isLoading: false });
+      return true;
+    } catch (error) {
+      set({ error: "Failed to send message", isLoading: false });
+      return false;
     }
   },
 

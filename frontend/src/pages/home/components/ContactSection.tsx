@@ -3,10 +3,14 @@ import { motion, useInView } from "framer-motion";
 import Spinner from "../../../components/icon/Spinner";
 import FormField from "../../../components/ui/FormField";
 import { contactMethods } from "../../../lib/Context";
+import { useContactStore } from "../../../store/useContactStore";
+import toast from "react-hot-toast";
 
 export default function ContactSection() {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
+
+  const { createContact, isLoading } = useContactStore();
 
   const [formState, setFormState] = useState({
     name: "",
@@ -16,7 +20,6 @@ export default function ContactSection() {
   });
 
   const [activeField, setActiveField] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (
@@ -29,18 +32,24 @@ export default function ContactSection() {
     });
   };
 
-  interface SubmitEvent extends React.FormEvent<HTMLFormElement> {}
-
-  const handleSubmit = (e: SubmitEvent): void => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    if (
+      !formState.name.trim() ||
+      !formState.email.trim() ||
+      !formState.subject.trim() ||
+      !formState.message.trim()
+    ) {
+      toast.error("Please fill in all fields before submitting.");
+      return;
+    }
+
+    const result = await createContact(formState);
+
+    if (result) {
       setIsSubmitted(true);
 
-      // Reset form after 3 seconds
       setTimeout(() => {
         setIsSubmitted(false);
         setFormState({
@@ -50,9 +59,7 @@ export default function ContactSection() {
           message: "",
         });
       }, 3000);
-    }, 1500);
-
-    console.log(formState);
+    }
   };
 
   return (
@@ -161,9 +168,9 @@ export default function ContactSection() {
                     boxShadow: "0px 5px 15px rgba(99, 102, 241, 0.4)",
                   }}
                   whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
-                  {isSubmitting ? (
+                  {isLoading ? (
                     <span className="flex items-center">
                       <Spinner className="mr-2" />
                       Sending...

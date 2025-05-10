@@ -49,6 +49,7 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
         "/projects/create",
         projectData
       );
+      set({ isLoading: false });
       return response.data.project;
     } catch (error) {
       set({ error: "Error in creating projects", isLoading: false });
@@ -59,6 +60,7 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.delete(`/projects/${id}`);
+      set({ isLoading: false });
       return true;
     } catch (error: any) {
       set({ error: "Failed to delete project", isLoading: false });
@@ -69,6 +71,7 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axiosInstance.put(`/projects/${id}`, projectData);
+      set({ isLoading: false });
       return response.data;
     } catch (error) {
       set({ error: "Failed to update project", isLoading: false });

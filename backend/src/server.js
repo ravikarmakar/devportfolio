@@ -2,15 +2,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { connectDB } from "./config/db.js";
+
 import projectRoutes from "./routes/project.route.js";
+import contactRoute from "./routes/contact.route.js";
 import skillsRoutes from "./routes/skills.route.js";
 import authRoute from "./routes/auth.route.js";
 import adminRoute from "./routes/admin.route.js";
 import messageRoute from "./routes/message.route.js";
-import morgan from "morgan";
-import { connectDB } from "./config/db.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +35,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/projects", projectRoutes);
+app.use("/api/contacts", contactRoute);
 app.use("/api/skills", skillsRoutes);
 app.use("/api/message", messageRoute);
 app.use("/api/admin", adminRoute);
