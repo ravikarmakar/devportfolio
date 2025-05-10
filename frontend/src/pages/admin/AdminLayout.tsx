@@ -11,6 +11,7 @@ import {
   User,
   Menu,
   X,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -36,12 +37,7 @@ const AdminLayout = () => {
       label: "Create Project",
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
-<<<<<<< HEAD
-    { path: "/admin/profile", icon: <User size={20} />, label: "Profile" },
-    // { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
-=======
     { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
->>>>>>> portfolio-v2
     { path: "/admin/messages", icon: <Mail size={20} />, label: "Messages" },
 
     // {

@@ -16,26 +16,9 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-<<<<<<< HEAD
-    try {
-      setIsLoading(true);
-      setError("");
-
-      const res = await axiosInstance.post("/auth/login", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      localStorage.setItem("user", JSON.stringify(res.data));
-
-      toast.success("Login successfully");
-=======
     const result = await login(username, password);
     if (result) {
       toast.success("Admin login successfully");
->>>>>>> portfolio-v2
       navigate("/admin");
     }
 
