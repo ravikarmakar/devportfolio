@@ -1,49 +1,58 @@
 import { create } from "zustand";
-import { Message } from "../types";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
+export interface Message {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  subject: string;
+  starred: boolean;
+  archived: boolean;
+  seenTimestamp: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface FormDataType {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
 interface ContactStoreState {
-  messages: Message[] | null;
+  contacts: Message[] | null;
   error: string | null;
   isLoading: boolean;
-  sendMessage: (formData: any) => Promise<void>;
+  createContact: (contactData: FormDataType) => Promise<boolean>;
   fetchAllMessage: () => Promise<void>;
   markAsRead: (id: string) => Promise<Message | null>;
   deleteMessage: (id: string) => Promise<void>;
 }
 
-export const useContactStore = create<ContactStoreState>((set, get) => ({
-  messages: null,
+export const useContactStore = create<ContactStoreState>((set) => ({
+  contacts: null,
   error: null,
   isLoading: false,
 
-  sendMessage: async (formData: any) => {
+  createContact: async (contactData) => {
     set({ isLoading: true, error: null });
-
     try {
-      const response = await axiosInstance.post("/message/contact", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 201) {
-        toast.success("Message sent successfully!");
-        await get().fetchAllMessage();
-      }
-    } catch (error: any) {
-      set({ error: "Failed to send message" });
-      toast.error("Failed to send message: " + error.message);
-    } finally {
+      await axiosInstance.post("/contacts/create", contactData);
       set({ isLoading: false });
+      return true;
+    } catch (error) {
+      set({ error: "Failed to send message", isLoading: false });
+      return false;
     }
   },
 
   fetchAllMessage: async () => {
     set({ isLoading: true, error: null });
     const response = await axiosInstance("/message");
-    set({ messages: response.data, isLoading: false });
+    set({ contacts: response.data, isLoading: false });
     try {
     } catch (error: any) {
       set({ error: "Failed to fetch message", isLoading: false });

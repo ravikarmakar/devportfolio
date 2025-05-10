@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { BlogPost, ResourceItem } from "../type/blog";
-import { mockBlogPosts, mockResources } from "../data/mockData";
+import { mockBlogPosts, mockResources } from "../../../lib/Context";
 
 interface BlogContextType {
   posts: BlogPost[];

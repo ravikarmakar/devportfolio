@@ -1,18 +1,16 @@
+<<<<<<< HEAD
 import { ReactNode, useState, useEffect } from "react";
+=======
+import { useEffect } from "react";
+>>>>>>> portfolio-v2
 import { Navigate } from "react-router-dom";
-import LoadingScreen from "../../components/LoadingScreen";
+import { useAuthStore } from "../../store/useAuthStore";
 
-interface ProtectedAdminRouteProps {
-  children?: ReactNode;
-}
-
-export const ProtectedAdminRoute = ({ children }: ProtectedAdminRouteProps) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    isLoading: true,
-  });
+const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
+  const { authUser, checkAuth } = useAuthStore();
 
   useEffect(() => {
+<<<<<<< HEAD
     const checkAuth = async () => {
       try {
         const storedUser = localStorage.getItem("user");
@@ -31,17 +29,22 @@ export const ProtectedAdminRoute = ({ children }: ProtectedAdminRouteProps) => {
         setAuthState({ isAuthenticated: false, isLoading: false });
       }
     };
+=======
+    if (!authUser) {
+      checkAuth();
+    }
+  }, [authUser, checkAuth]);
+>>>>>>> portfolio-v2
 
-    checkAuth();
-  }, []);
-
-  if (authState.isLoading) {
-    return <LoadingScreen key="loading" />;
+  if (!authUser) {
+    return <Navigate to="/login" replace />;
   }
 
-  return authState.isAuthenticated ? (
-    children ?? null
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  if (authUser?.role !== "ADMIN") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
 };
+
+export default ProtectedAdminRoute;

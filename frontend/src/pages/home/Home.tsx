@@ -1,19 +1,19 @@
-import Contact from "../../components/Contact";
-import Education from "../education/Education";
-// import Experience from "../experience/Experience";
 import Hero from "../home/components/Hero";
-import Projects from "../project/Projects";
-import Skills from "../skills/Skills";
+import AboutMeSection from "./components/AboutMeSection";
+import ContactSection from "./components/ContactSection";
+import EducationSection from "./components/EducationSection";
+import Projects from "./components/Projects";
+import SkillSection from "./components/SkillSection";
 
 const Home = () => {
   return (
     <>
       <Hero />
-      <Skills />
+      <AboutMeSection />
+      <SkillSection />
       <Projects />
-      {/* <Experience /> */}
-      <Education />
-      <Contact />
+      <EducationSection />
+      <ContactSection />
     </>
   );
 };

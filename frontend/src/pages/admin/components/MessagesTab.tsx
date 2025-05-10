@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Star, Archive, Trash2, Search } from "lucide-react";
 import MessageCard from "./elements/MessageCard";
-import { useContactStore } from "../../../store/useContectStore";
+import { useContactStore } from "../../../store/useContactStore";
 import toast from "react-hot-toast";
 
 // Types

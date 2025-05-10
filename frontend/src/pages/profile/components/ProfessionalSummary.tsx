@@ -1,14 +1,8 @@
 import { motion } from "framer-motion";
-import { User } from "../../../types";
+import { User } from "../../../store/useAuthStore";
 import DynamicIcon from "../../../components/icon/IconImport";
 
-interface ProfileSummaryrProps {
-  user: User | null; // null agar user data abhi fetch nahi hua
-}
-
-const ProfessionalSummary: React.FC<ProfileSummaryrProps> = ({ user }) => {
-  // const IconComponent = iconMap[skill.iconName] || LucideIcons.Circle;
-
+const ProfessionalSummary = ({ user }: { user: User }) => {
   const summaryPoints = [
     {
       icon: "Code2",
@@ -49,7 +43,7 @@ const ProfessionalSummary: React.FC<ProfileSummaryrProps> = ({ user }) => {
       <div className="bg-white dark:bg-secondary/20 rounded-xl p-6 backdrop-blur-sm">
         <div className="mb-8">
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            {user?.profileSummery}
+            {user?.bio}
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useBlog } from "../context/BlogContext";
-import ResourceCard from "../components/ResourceCard";
 import { Book, Video, PenTool, Newspaper } from "lucide-react";
+import ResourceCard from "../ux/ResourceCard";
 
 const Resources = () => {
   const { resources, loading } = useBlog();

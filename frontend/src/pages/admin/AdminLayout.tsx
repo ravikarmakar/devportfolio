@@ -13,24 +13,35 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { axiosInstance } from "../../lib/axios";
+import { useAuthStore } from "../../store/useAuthStore";
 import toast from "react-hot-toast";
 
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   const menuItems = [
     { path: "/admin", icon: <LayoutDashboard size={20} />, label: "Dashboard" },
+    { path: "/admin/profile", icon: <User size={20} />, label: "Profile View" },
     {
       path: "/admin/projects",
       icon: <Briefcase size={20} />,
-      label: "Projects",
+      label: "Projects List",
+    },
+    {
+      path: "/admin/projects/create",
+      icon: <Briefcase size={20} />,
+      label: "Create Project",
     },
     { path: "/admin/skills", icon: <Wrench size={20} />, label: "Skills" },
+<<<<<<< HEAD
     { path: "/admin/profile", icon: <User size={20} />, label: "Profile" },
     // { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
+=======
+    { path: "/admin/blog", icon: <FileText size={20} />, label: "Blog" },
+>>>>>>> portfolio-v2
     { path: "/admin/messages", icon: <Mail size={20} />, label: "Messages" },
 
     // {
@@ -41,21 +52,9 @@ const AdminLayout = () => {
   ];
 
   const handleLogout = async () => {
-    try {
-      // Call the backend logout endpoint
-      const response = await axiosInstance.post(
-        "/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        toast.success("Logout successful");
-        navigate("/profile");
-      }
-    } catch (error: any) {
-      toast.error("Logout failed:", error.message);
-    }
+    await logout();
+    navigate("/");
+    toast.success("Logged out successfully");
   };
 
   const toggleMobileMenu = () => {
@@ -132,7 +131,7 @@ const AdminLayout = () => {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden">
+      <main className="flex-1 overflow-x-hidden text-white">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

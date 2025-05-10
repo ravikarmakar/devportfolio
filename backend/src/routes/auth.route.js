@@ -1,17 +1,31 @@
 import express from "express";
 import {
-  signup,
+  register,
   login,
   logout,
-  getAuthUser,
+  getUserData,
+  checkAuth,
+  updateProfile,
 } from "../controllers/auth.controller.js";
-import { protectRoute } from "../middleware/protectRoute.js";
+import { isAdmin, protectRoute } from "../middleware/protectRoute.js";
+import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
-router.get("/user", protectRoute, getAuthUser);
+router.get("/user-data", getUserData);
+router.get("/check-auth", protectRoute, checkAuth);
+router.put(
+  "/update-profile",
+  protectRoute,
+  isAdmin,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  updateProfile
+);
 
 export default router;
