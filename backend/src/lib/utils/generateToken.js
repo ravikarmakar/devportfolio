@@ -7,9 +7,8 @@ const generateTokenSetCookie = (authUserId, role, res) => {
 
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development",
-    // sameSite: "strict", // use this when site is hosted on a same domain with CORS-origin
-    sameSite: "None", // use this when site is hosted on a different domain with CORS-origin
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
   });
 

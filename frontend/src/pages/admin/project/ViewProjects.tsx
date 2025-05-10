@@ -4,7 +4,7 @@ import { useProjectStore } from "../../../store/useProjectStore";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
-export default function ProjectView() {
+export default function ViewProject() {
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 

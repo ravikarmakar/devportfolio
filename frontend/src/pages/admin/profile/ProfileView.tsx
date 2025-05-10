@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef, useEffect } from "react";
 import {
   Edit,
   X,
@@ -14,8 +14,16 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import toast from "react-hot-toast";
 
 export default function ProfileView() {
+  const hasFetched = useRef(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user, updateProfile, isLoading } = useAuthStore();
+  const { user, updateProfile, isLoading, fetchUserData } = useAuthStore();
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      fetchUserData();
+      hasFetched.current = true;
+    }
+  }, []);
 
   const [profile, setProfile] = useState({
     username: user?.username,

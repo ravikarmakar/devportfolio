@@ -19,9 +19,10 @@ const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
   origin:
-    process.env.NODE_ENV === "development"
-      ? process.env.DEVELOPEMENT_PORTFOLIO_LINK
-      : process.env.PRODUCTION_PORTFOLIO_LINK,
+    process.env.NODE_ENV === "production"
+      ? process.env.PRODUCTION_PORTFOLIO_LINK
+      : process.env.DEVELOPEMENT_PORTFOLIO_LINK,
+
   credentials: true,
 };
 
