@@ -2,12 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import AdminLayout from "../pages/admin/AdminLayout";
 import Dashboard from "../pages/admin/Dashboard";
 import SkillsTab from "../pages/admin/components/SkillsTab";
-<<<<<<< HEAD
-import ProjectsTab from "../pages/admin/components/ProjectsTab";
 // import BlogsTab from "../pages/admin/components/BlogsTab";
-=======
-import BlogsTab from "../pages/admin/components/BlogsTab";
->>>>>>> portfolio-v2
 import MessagesTab from "../pages/admin/components/MessagesTab";
 import NewProfileView from "../pages/admin/profile/ProfileView";
 import ViewProjec from "../pages/admin/project/ViewProjects";
