@@ -18,6 +18,8 @@ interface NavbarProps {
   setDarkMode: (value: boolean) => void;
 }
 
+const MotionLink = motion(Link);
+
 const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,6 +70,8 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
     { name: "Contact", icon: <Send size={18} />, link: "/contact" },
   ];
 
+  const dropdownItems = [{ id: 1, name: "Profile", link: "/profile" }];
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -99,7 +103,7 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
               <motion.span
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                className="text-blue-500 font-bold text-xl"
+                className="text-xl font-bold text-blue-500"
               >
                 R
               </motion.span>
@@ -111,7 +115,7 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
               Devfolio
             </span>
           </motion.h1>
@@ -232,7 +236,7 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
                         darkMode ? "text-white" : "text-gray-900"
                       }`}
                     >
-                      Ravi Developer
+                      Ravi Karmakar
                     </p>
                     <p
                       className={`text-xs ${
@@ -247,10 +251,10 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
                       darkMode ? "border-gray-800" : "border-gray-200"
                     }`}
                   ></div>
-                  {["Profile"].map((item) => (
-                    <motion.a
-                      key={item}
-                      href="#"
+                  {dropdownItems.map((item) => (
+                    <MotionLink
+                      key={item.id}
+                      to={item.link}
                       className={`block px-4 py-2 text-sm rounded-md ${
                         darkMode
                           ? "hover:bg-gray-800 text-gray-300"
@@ -258,8 +262,8 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
                       }`}
                       whileHover={{ x: 5 }}
                     >
-                      {item}
-                    </motion.a>
+                      {item.name}
+                    </MotionLink>
                   ))}
                   <div
                     className={`border-t ${
@@ -335,14 +339,14 @@ const Navbar = ({ darkMode, setDarkMode }: NavbarProps) => {
       </AnimatePresence>
 
       {/* Glowing particles under navbar */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden h-px">
+      <div className="absolute bottom-0 left-0 w-full h-px overflow-hidden">
         <div className="relative w-full h-full">
           {scrolled && (
             <>
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute h-1 w-1 rounded-full bg-blue-400"
+                  className="absolute w-1 h-1 bg-blue-400 rounded-full"
                   initial={{
                     left: `${Math.random() * 100}%`,
                     opacity: 0,

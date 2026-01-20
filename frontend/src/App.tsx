@@ -9,6 +9,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import NotFound from "./components/NotFound";
 import ProtectedAdminRoute from "./pages/auth/ProtectAdmin";
 import MainLayout from "./components/MainLayout";
+import ProjectDeatils from "./pages/project/page/ProjectDeatils";
 
 // Lazy-Loaded Admin Pages
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
@@ -22,6 +23,7 @@ const ContactSection = lazy(
 );
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
+const AllProjects = lazy(() => import("./pages/project/page/AllProjects"));
 
 function App() {
   // State Management
@@ -87,7 +89,15 @@ function App() {
               path="/projects"
               element={
                 <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <ComingSoon />
+                  <AllProjects />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/projects/:id"
+              element={
+                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+                  <ProjectDeatils />
                 </MainLayout>
               }
             />

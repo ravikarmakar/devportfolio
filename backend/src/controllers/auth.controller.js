@@ -1,8 +1,9 @@
-import generateTokenSetCookie from "../lib/utils/generateToken.js";
-import { User } from "../models/user.model.js";
-import cloudinary from "../config/cloudinary.js";
-import bcrypt from "bcryptjs";
 import fs from "fs";
+import bcrypt from "bcryptjs";
+
+import { User } from "../models/user.model.js";
+import generateTokenSetCookie from "../lib/utils/generateToken.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const cleanupFiles = (imageFile, pdfFile) => {
   if (imageFile?.path) {

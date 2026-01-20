@@ -202,3 +202,25 @@ export const fetchFeaturedProjects = async (req, res) => {
     res.status(500).json({ message: "Internal Server error", error });
   }
 };
+
+export const toggleFeaturedProject = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    project.isFeatured = !project.isFeatured;
+    await project.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Featured status updated successfully",
+    });
+  } catch (error) {
+    console.error("Error in toggling featured project controller:", error);
+    res.status(500).json({ message: "Internal Server error", error });
+  }
+};

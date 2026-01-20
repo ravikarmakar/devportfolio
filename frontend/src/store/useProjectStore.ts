@@ -26,6 +26,7 @@ interface ProjectStoreState {
   fetchProjectDetails: (id: string) => Promise<Project | null>;
   updateProject: (id: string, projectData: FormData) => Promise<Project | null>;
   fetchFeaturedProjects: () => Promise<void>;
+  toggleFeaturedProject: (id: string) => Promise<boolean>;
 }
 
 export const useProjectStore = create<ProjectStoreState>((set) => ({
@@ -96,6 +97,17 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
       set({ projects: response.data.project, isLoading: false });
     } catch (error) {
       set({ error: "Failed to fetch featured project", isLoading: false });
+    }
+  },
+  toggleFeaturedProject: async (id: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.put(`/projects/toggle-featured/${id}`);
+      set({ isLoading: false });
+      return response.data;
+    } catch (error) {
+      set({ error: "Failed to toggle featured project", isLoading: false });
+      return null;
     }
   },
 }));

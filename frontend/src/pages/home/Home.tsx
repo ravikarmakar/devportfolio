@@ -2,7 +2,7 @@ import Hero from "../home/components/Hero";
 import AboutMeSection from "./components/AboutMeSection";
 import ContactSection from "./components/ContactSection";
 import EducationSection from "./components/EducationSection";
-import Projects from "./components/Projects";
+import FeaturedProjects from "../project/components/FeaturedProjects";
 import SkillSection from "./components/SkillSection";
 
 const Home = () => {
@@ -11,7 +11,7 @@ const Home = () => {
       <Hero />
       <AboutMeSection />
       <SkillSection />
-      <Projects />
+      <FeaturedProjects />
       <EducationSection />
       <ContactSection />
     </>

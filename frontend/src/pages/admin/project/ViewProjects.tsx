@@ -1,14 +1,17 @@
-import { Edit, Trash2, ExternalLink, Calendar, Code, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useProjectStore } from "../../../store/useProjectStore";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Edit, Trash2, ExternalLink, Calendar, Code, Plus, Star } from "lucide-react";
+
+import { useProjectStore } from "../../../store/useProjectStore";
 
 export default function ViewProject() {
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 
-  const { projects, fetchAllProjects, deleteProject } = useProjectStore();
+  const { projects, fetchAllProjects, deleteProject, toggleFeaturedProject } = useProjectStore();
+
+  console.log(projects);
 
   useEffect(() => {
     if (!hasFetched.current) {
@@ -25,6 +28,15 @@ export default function ViewProject() {
         toast.success("Project deleted successfully");
         await fetchAllProjects();
       }
+    }
+  };
+
+  // Handle toggle featured project
+  const handleToggleFeatured = async (id: string) => {
+    const result = await toggleFeaturedProject(id);
+    if (result) {
+      toast.success("Project featured status updated successfully");
+      await fetchAllProjects();
     }
   };
 
@@ -109,6 +121,7 @@ export default function ViewProject() {
                   <ExternalLink size={14} className="mr-1" />
                   Live Demo
                 </a>
+
               </div>
 
               {/* Action Buttons */}
@@ -126,6 +139,14 @@ export default function ViewProject() {
                   className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
                 >
                   <Trash2 size={18} />
+                </button>
+
+                <button
+                  onClick={() => handleToggleFeatured(project?._id)}
+                  className={`p-2 transition-colors duration-300 ${project?.isFeatured ? "text-yellow-500" : "text-gray-400 hover:text-yellow-500"
+                    }`}
+                >
+                  <Star size={18} fill={project?.isFeatured ? "currentColor" : "none"} />
                 </button>
               </div>
             </div>

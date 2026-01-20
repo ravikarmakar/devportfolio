@@ -323,9 +323,8 @@ const Hero = () => {
                           className="absolute top-1/2 left-1/2 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-accent/50 to-transparent"
                           style={{
                             transformOrigin: "center",
-                            transform: `translate(-50%, -50%) rotate(${
-                              i * 45
-                            }deg)`,
+                            transform: `translate(-50%, -50%) rotate(${i * 45
+                              }deg)`,
                           }}
                           animate={{ opacity: [0.3, 0.7, 0.3] }}
                           transition={{

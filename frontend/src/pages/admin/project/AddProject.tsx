@@ -237,6 +237,7 @@ export default function AddProject() {
             >
               <option value="">Select Category</option>
               <option value="Web Development">Web Development</option>
+              <option value="Full Stack Development">Full Stack Development</option>
               <option value="Mobile App">Mobile App</option>
               <option value="UI/UX Design">UI/UX Design</option>
               <option value="Data Science">Data Science</option>
@@ -344,9 +345,8 @@ export default function AddProject() {
             type="button"
             onClick={ResetInput}
             disabled={isLoading}
-            className={`px-4 py-2 border border-gray-600 rounded-md text-gray-300 hover:bg-gray-800 transition-colors ${
-              isLoading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`px-4 py-2 border border-gray-600 rounded-md text-gray-300 hover:bg-gray-800 transition-colors ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
           >
             Cancel
           </button>
