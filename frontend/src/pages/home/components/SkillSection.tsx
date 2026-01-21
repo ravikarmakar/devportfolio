@@ -1,506 +1,317 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { skills } from "../../../lib/Context";
+import { memo, useRef, useEffect, useMemo } from "react";
+import { motion, useInView } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
-export default function SkillSection() {
-  const [activeSkill, setActiveSkill] = useState<string | null>(null);
-  const [isInView, setIsInView] = useState(false);
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+import { useSkillStore } from "../../../store/useSkillStore";
 
-  useEffect(() => {
-    // Simulate intersection observer
-    setIsInView(true);
-  }, []);
+// Official tech icons from devicons CDN
+const techIcons: Record<string, string> = {
+  react: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+  javascript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+  typescript: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+  nodejs: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+  "node.js": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+  mongodb: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+  nextjs: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+  "next.js": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+  tailwindcss: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+  "tailwind css": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+  html: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+  css: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+  git: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+  github: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
+  docker: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+  python: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+  redux: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg",
+  graphql: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
+  postgresql: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+  mysql: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+  firebase: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+  figma: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+  express: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+  sass: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg",
+  bootstrap: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
+  linux: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+  jest: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg",
+  vercel: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg",
+};
 
-  // Calculate experience level text
-  const getExperienceText = (level: number) => {
-    if (level >= 90) return "Expert";
-    if (level >= 80) return "Advanced";
-    if (level >= 70) return "Proficient";
-    if (level >= 50) return "Intermediate";
-    return "Beginner";
-  };
+const getIconUrl = (name: string): string | null => {
+  return techIcons[name.toLowerCase()] || null;
+};
 
-  // Define your skills
-  const skillss = [
-    { name: "React", level: 95, icon: "⚛️", color: "#61DAFB" },
-    { name: "TypeScript", level: 90, icon: "🔷", color: "#3178C6" },
-    { name: "Next.js", level: 88, icon: "▲", color: "#ffffff" },
-    { name: "Node.js", level: 85, icon: "🟢", color: "#339933" },
-    { name: "GraphQL", level: 82, icon: "◈", color: "#E535AB" },
-    { name: "Tailwind", level: 92, icon: "🌊", color: "#38BDF8" },
-    { name: "Docker", level: 75, icon: "🐳", color: "#2496ED" },
-    { name: "AWS", level: 78, icon: "☁️", color: "#FF9900" },
-  ];
+// Simple skill item with icon
+const SkillItem = memo<{
+  name: string;
+  index: number;
+}>(({ name, index }) => {
+  const iconUrl = getIconUrl(name);
 
   return (
-    <div className="min-h-screen py-20 px-6 flex items-center justify-center">
-      <div className="max-w-6xl w-full">
-        <div className="mb-16">
-          <motion.h2
-            className="text-4xl md:text-5xl text-center font-bold text-gray-200 mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <span className="text-white">My</span>{" "}
-            <span className="bg-clip-text text-blue-500">Tech Stack</span>
-          </motion.h2>
-          <p className="dark:text-gray-300 text-gray-600 max-w-2xl mx-auto text-center">
-            Specialized in modern web technologies with a focus on building
-            scalable and performant applications
-          </p>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -4 }}
+      className="group flex flex-col items-center gap-3 p-4"
+    >
+      {/* Icon container */}
+      <div className="w-16 h-16 rounded-xl bg-gray-800/50 border border-white/5 flex items-center justify-center group-hover:border-blue-500/30 group-hover:bg-blue-500/5 transition-all duration-300">
+        {iconUrl ? (
+          <img
+            src={iconUrl}
+            alt={name}
+            className="w-8 h-8 group-hover:scale-110 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : (
+          <span className="text-2xl">⚡</span>
+        )}
+      </div>
 
-        <div className="flex flex-col md:flex-row gap-10 mb-20">
-          {skills.map((category, idx) => (
-            <motion.div
-              key={category.category}
-              className="flex-1"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 50 }}
-              transition={{ duration: 0.6, delay: idx * 0.2 }}
-            >
-              <div
-                className={`${category.color} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg`}
-              >
-                <span className="text-3xl">
-                  {category.category === "Frontend"
-                    ? "📱"
-                    : category.category === "Backend"
-                    ? "⚙️"
-                    : "🚀"}
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-center text-white mb-8">
-                {category.category}
-              </h3>
+      {/* Name */}
+      <span className="text-sm text-gray-400 group-hover:text-white transition-colors duration-300">
+        {name}
+      </span>
+    </motion.div>
+  );
+});
 
-              <div className="space-y-6">
-                {category.skills.map((skill) => (
-                  <motion.div
-                    key={skill.name}
-                    className={`bg-gray-800 rounded-xl p-4 cursor-pointer transition-all ${
-                      activeSkill === skill.name
-                        ? "ring-2 ring-blue-400 shadow-blue-400/20 shadow-lg"
-                        : ""
-                    }`}
-                    whileHover={{
-                      scale: 1.02,
-                      backgroundColor: "rgba(49, 46, 81, 0.7)",
-                    }}
-                    onClick={() =>
-                      setActiveSkill(
-                        activeSkill === skill.name ? null : skill.name
-                      )
-                    }
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl">{skill.icon}</span>
-                        <h4 className="text-lg font-medium text-white">
-                          {skill.name}
-                        </h4>
-                      </div>
-                      <span className="px-2 py-1 text-xs rounded-full bg-gray-700 text-gray-300">
-                        {getExperienceText(skill.level)}
-                      </span>
-                    </div>
+SkillItem.displayName = "SkillItem";
 
-                    <motion.div
-                      className="h-1 bg-gray-700 rounded-full w-full overflow-hidden"
-                      initial={{ opacity: 0.5 }}
-                      whileHover={{ opacity: 1 }}
-                    >
-                      <motion.div
-                        className={`h-full rounded-full ${
-                          category.category === "Frontend"
-                            ? "bg-blue-400"
-                            : category.category === "Backend"
-                            ? "bg-green-400"
-                            : "bg-purple-400"
-                        }`}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: 0.1 }}
-                      />
-                    </motion.div>
+// Marquee badge
+const MarqueeBadge = memo<{ name: string }>(({ name }) => {
+  const iconUrl = getIconUrl(name);
 
-                    {activeSkill === skill.name && (
-                      <motion.div
-                        className="mt-4 text-sm text-gray-300"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <p>{skill.description}</p>
-                      </motion.div>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+  return (
+    <div className="inline-flex items-center justify-center gap-3.5 px-5 py-2.5 rounded-full bg-gray-800/40 border border-white/10 whitespace-nowrap">
+      {iconUrl ? (
+        <img src={iconUrl} alt={name} className="w-5 h-5 flex-shrink-0" loading="lazy" />
+      ) : (
+        <span className="text-base leading-none">⚡</span>
+      )}
+      <span className="text-sm font-medium text-gray-200 leading-none">{name}</span>
+    </div>
+  );
+});
 
+MarqueeBadge.displayName = "MarqueeBadge";
+
+// Simple marquee with edge blur
+const Marquee = memo<{
+  children: React.ReactNode;
+  direction?: "left" | "right";
+}>(({ children, direction = "left" }) => (
+  <div className="relative overflow-hidden">
+    {/* Left fade - gradual */}
+    <div
+      className="absolute left-0 top-0 bottom-0 w-28 md:w-44 z-10 pointer-events-none"
+      style={{
+        background: "linear-gradient(to right, #121212 0%, #121212 15%, rgba(18,18,18,0.7) 50%, rgba(18,18,18,0.3) 75%, transparent 100%)"
+      }}
+    />
+
+    {/* Right fade - gradual */}
+    <div
+      className="absolute right-0 top-0 bottom-0 w-28 md:w-44 z-10 pointer-events-none"
+      style={{
+        background: "linear-gradient(to left, #121212 0%, #121212 15%, rgba(18,18,18,0.7) 50%, rgba(18,18,18,0.3) 75%, transparent 100%)"
+      }}
+    />
+
+    <motion.div
+      className="flex gap-3"
+      animate={{ x: direction === "left" ? "-50%" : "0%" }}
+      initial={{ x: direction === "left" ? "0%" : "-50%" }}
+      transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+    >
+      {children}
+      {children}
+    </motion.div>
+  </div>
+));
+
+
+Marquee.displayName = "Marquee";
+
+// Main component
+const SkillSection = memo(() => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  const { Skills, fetchSkills, isLoading } = useSkillStore();
+
+  useEffect(() => {
+    if (Skills.length === 0) fetchSkills();
+  }, [Skills.length, fetchSkills]);
+
+  const firstHalf = useMemo(
+    () => Skills.slice(0, Math.ceil(Skills.length / 2)),
+    [Skills]
+  );
+  const secondHalf = useMemo(
+    () => Skills.slice(Math.ceil(Skills.length / 2)),
+    [Skills]
+  );
+
+  return (
+    <section id="skills" ref={sectionRef} className="py-24 md:py-32">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        {/* Header */}
         <motion.div
-          className="bg-gray-800 p-6 rounded-2xl text-center"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
         >
-          <p className="text-gray-300 mb-4">
-            Always expanding my skills and staying current with latest
-            technologies
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-white/10 mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
+            <Sparkles size={14} className="text-blue-400" />
+            <span className="text-sm font-medium text-gray-300">
+              Skills & Technologies
+            </span>
+          </motion.div>
+
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-white">Technologies I </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+              Work With
+            </span>
+          </h2>
+
+          <p className="text-gray-400 max-w-xl mx-auto">
+            Building modern applications with the latest tools and frameworks
           </p>
-          <div className="flex justify-center gap-4">
-            <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-blue-300">
-              Next.js
-            </span>
-            <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-green-300">
-              GraphQL
-            </span>
-            <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-purple-300">
-              AWS
-            </span>
-            <span className="px-3 py-1 bg-gray-700 rounded-full text-sm text-yellow-300">
-              Testing
-            </span>
-          </div>
         </motion.div>
 
-        {/* Alternative Skills Circle View */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="py-20 px-4 relative"
-        >
-          {/* Background glow effects */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-20 blur-3xl">
-              <motion.div
-                className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600 rounded-full"
-                animate={{
-                  x: [0, -30, 0],
-                  y: [0, -20, 0],
-                  opacity: [0.3, 0.5, 0.3],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              />
-              <motion.div
-                className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600 rounded-full"
-                animate={{
-                  x: [0, 30, 0],
-                  y: [0, 20, 0],
-                  opacity: [0.3, 0.5, 0.3],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Subtle grid overlay */}
-          <div className="absolute inset-0 opacity-[0.03]">
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-                backgroundSize: "40px 40px",
-              }}
-            />
-          </div>
-
-          <div className="max-w-6xl mx-auto relative z-10">
-            <div className="flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-10">
-              {skillss.map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  className="relative"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    delay: index * 0.1,
-                    duration: 0.8,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  onHoverStart={() => setHoveredSkill(skill.name)}
-                  onHoverEnd={() => setHoveredSkill(null)}
-                >
-                  <div className="w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center bg-gray-900/50 backdrop-blur-sm border border-gray-800 shadow-lg relative">
-                    {/* Background pulse animation when hovered */}
-                    {hoveredSkill === skill.name && (
-                      <motion.div
-                        className="absolute inset-0 rounded-full"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 0.15, scale: 1.2 }}
-                        exit={{ opacity: 0, scale: 1.4 }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                        style={{
-                          background: `radial-gradient(circle, ${skill.color} 0%, rgba(0,0,0,0) 70%)`,
-                        }}
-                      />
-                    )}
-
-                    {/* Skill progress circle */}
-                    <svg
-                      viewBox="0 0 100 100"
-                      className="absolute inset-0 w-full h-full"
-                    >
-                      {/* Subtle background circle */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.05)"
-                        strokeWidth="2"
-                      />
-
-                      {/* Dotted reference circle */}
-                      <circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.1)"
-                        strokeWidth="1"
-                        strokeDasharray="1,5"
-                        className="opacity-70"
-                      />
-
-                      {/* Main skill progress circle */}
-                      <motion.circle
-                        cx="50"
-                        cy="50"
-                        r="42"
-                        fill="none"
-                        stroke={`url(#skillGradient-${index})`}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeDasharray={`${skill.level * 2.64} 264`}
-                        strokeDashoffset="66"
-                        initial={{ strokeDasharray: "0 264" }}
-                        whileInView={{
-                          strokeDasharray: `${skill.level * 2.64} 264`,
-                        }}
-                        transition={{
-                          delay: 0.3 + index * 0.1,
-                          duration: 1.8,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                        viewport={{ once: true }}
-                      />
-
-                      {/* Custom gradient for each skill */}
-                      <defs>
-                        <linearGradient
-                          id={`skillGradient-${index}`}
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="100%"
-                        >
-                          <stop offset="0%" stopColor={skill.color} />
-                          <stop
-                            offset="100%"
-                            stopColor={
-                              skill.color === "#ffffff"
-                                ? "#a1a1aa"
-                                : skill.color
-                            }
-                            stopOpacity="0.6"
-                          />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-
-                    {/* Outer decorative ring */}
-                    <motion.div
-                      className="absolute inset-[-2px] rounded-full border border-gray-700"
-                      animate={{
-                        boxShadow:
-                          hoveredSkill === skill.name
-                            ? [
-                                `0 0 0 1px rgba(${parseInt(
-                                  skill.color.slice(1, 3),
-                                  16
-                                )}, ${parseInt(
-                                  skill.color.slice(3, 5),
-                                  16
-                                )}, ${parseInt(
-                                  skill.color.slice(5, 7),
-                                  16
-                                )}, 0.3)`,
-                                `0 0 15px 2px rgba(${parseInt(
-                                  skill.color.slice(1, 3),
-                                  16
-                                )}, ${parseInt(
-                                  skill.color.slice(3, 5),
-                                  16
-                                )}, ${parseInt(
-                                  skill.color.slice(5, 7),
-                                  16
-                                )}, 0.4)`,
-                              ]
-                            : `0 0 0 1px rgba(255, 255, 255, 0.05)`,
-                      }}
-                      transition={{ duration: 0.3 }}
-                    />
-
-                    {/* Skill content */}
-                    <div className="flex flex-col items-center justify-center text-center z-10 p-2">
-                      <span className="text-xl mb-1">{skill.icon}</span>
-                      <p className="text-base font-medium text-white">
-                        {skill.name}
-                      </p>
-                      <motion.p
-                        className="text-xs font-mono mt-1"
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: hoveredSkill === skill.name ? 1 : 0.6,
-                        }}
-                        style={{ color: skill.color }}
-                      >
-                        {skill.level}%
-                      </motion.p>
-                    </div>
-                  </div>
-
-                  {/* Skill name with glow effect */}
-                  <motion.div
-                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full border border-gray-800"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{
-                      opacity: hoveredSkill === skill.name ? 1 : 0,
-                      y: hoveredSkill === skill.name ? 0 : -5,
-                    }}
-                    transition={{ duration: 0.2 }}
-                    style={{
-                      boxShadow:
-                        hoveredSkill === skill.name
-                          ? `0 0 10px 2px rgba(${parseInt(
-                              skill.color.slice(1, 3),
-                              16
-                            )}, ${parseInt(
-                              skill.color.slice(3, 5),
-                              16
-                            )}, ${parseInt(skill.color.slice(5, 7), 16)}, 0.15)`
-                          : "none",
-                    }}
-                  >
-                    <p className="text-xs font-medium whitespace-nowrap">
-                      <span className="text-white">
-                        {skill.level}% proficiency
-                      </span>
-                    </p>
-                  </motion.div>
-                </motion.div>
+        {/* Marquee */}
+        {!isLoading && Skills.length > 0 && (
+          <div className="space-y-3 mb-20">
+            <Marquee direction="left">
+              {firstHalf.map((skill) => (
+                <MarqueeBadge key={skill._id || skill.name} name={skill.name} />
               ))}
-            </div>
-
-            {/* Subtle decorative line */}
-            <motion.div
-              className="w-full h-px max-w-md mx-auto my-16 opacity-20"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, #fff 50%, transparent)",
-              }}
-              initial={{ opacity: 0, scaleX: 0 }}
-              whileInView={{ opacity: 0.2, scaleX: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              viewport={{ once: true }}
-            />
-
-            {/* Additional skill categories */}
-            <motion.div
-              className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              {[
-                { name: "UI/UX Design", level: 85, color: "#F97316" },
-                {
-                  name: "Performance Optimization",
-                  level: 88,
-                  color: "#22C55E",
-                },
-                { name: "Responsive Design", level: 92, color: "#8B5CF6" },
-                { name: "API Integration", level: 90, color: "#EC4899" },
-              ].map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  className="bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-lg p-4"
-                  whileHover={{
-                    y: -5,
-                    transition: { duration: 0.2 },
-                    boxShadow: `0 10px 20px -10px rgba(${parseInt(
-                      skill.color.slice(1, 3),
-                      16
-                    )}, ${parseInt(skill.color.slice(3, 5), 16)}, ${parseInt(
-                      skill.color.slice(5, 7),
-                      16
-                    )}, 0.3)`,
-                  }}
-                >
-                  <p className="text-gray-300 font-medium mb-2">{skill.name}</p>
-                  <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{
-                        background: `linear-gradient(90deg, ${skill.color}, ${skill.color}99)`,
-                      }}
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${skill.level}%` }}
-                      transition={{ duration: 1, delay: 0.2 + index * 0.1 }}
-                      viewport={{ once: true }}
-                    />
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+            </Marquee>
+            {secondHalf.length > 0 && (
+              <Marquee direction="right">
+                {secondHalf.map((skill) => (
+                  <MarqueeBadge key={skill._id || skill.name} name={skill.name} />
+                ))}
+              </Marquee>
+            )}
           </div>
+        )}
 
-          {/* Bottom decorative particles */}
-          <div className="absolute bottom-0 left-0 w-full h-20 opacity-20">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={`particle-${i}`}
-                className="absolute rounded-full bg-blue-500"
-                style={{
-                  width: `${Math.random() * 3 + 1}px`,
-                  height: `${Math.random() * 3 + 1}px`,
-                  bottom: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [-10, 10],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: Math.random() * 5 + 5,
-                  repeat: Infinity,
-                  delay: Math.random() * 5,
-                }}
+        {/* Loading */}
+        {isLoading && (
+          <div className="flex gap-3 overflow-hidden mb-20">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="w-28 h-8 bg-gray-800/30 rounded-full animate-pulse flex-shrink-0"
               />
             ))}
           </div>
-        </motion.div>
+        )}
+
+        {/* Skills Categories - Bento Grid */}
+        {!isLoading && Skills.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {/* Frontend Card */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="p-6 rounded-2xl bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/10 hover:border-blue-500/20 transition-colors"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                  <span className="text-xl">🎨</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Frontend</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Skills.filter(s =>
+                  ['react', 'javascript', 'typescript', 'html', 'css', 'tailwind css', 'tailwindcss', 'next.js', 'nextjs', 'redux', 'sass', 'bootstrap']
+                    .includes(s.name.toLowerCase())
+                ).slice(0, 6).map((skill) => (
+                  <div key={skill._id || skill.name} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800/50 border border-white/5">
+                    {getIconUrl(skill.name) && (
+                      <img src={getIconUrl(skill.name)!} alt={skill.name} className="w-4 h-4" loading="lazy" />
+                    )}
+                    <span className="text-xs text-gray-300">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Backend Card */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="p-6 rounded-2xl bg-gradient-to-br from-green-500/5 to-transparent border border-green-500/10 hover:border-green-500/20 transition-colors"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <span className="text-xl">⚙️</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Backend</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Skills.filter(s =>
+                  ['node.js', 'nodejs', 'express', 'express.js', 'mongodb', 'postgresql', 'mysql', 'graphql', 'python', 'restful apis', 'firebase']
+                    .includes(s.name.toLowerCase())
+                ).slice(0, 6).map((skill) => (
+                  <div key={skill._id || skill.name} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800/50 border border-white/5">
+                    {getIconUrl(skill.name) && (
+                      <img src={getIconUrl(skill.name)!} alt={skill.name} className="w-4 h-4" loading="lazy" />
+                    )}
+                    <span className="text-xs text-gray-300">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Tools & Others Card */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent border border-purple-500/10 hover:border-purple-500/20 transition-colors md:col-span-2 lg:col-span-1"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <span className="text-xl">🛠️</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">Tools & DevOps</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Skills.filter(s =>
+                  ['git', 'github', 'docker', 'linux', 'figma', 'vscode', 'aws', 'vercel', 'jest', 'security', 'npm']
+                    .includes(s.name.toLowerCase())
+                ).slice(0, 6).map((skill) => (
+                  <div key={skill._id || skill.name} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800/50 border border-white/5">
+                    {getIconUrl(skill.name) && (
+                      <img src={getIconUrl(skill.name)!} alt={skill.name} className="w-4 h-4" loading="lazy" />
+                    )}
+                    <span className="text-xs text-gray-300">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
-    </div>
+    </section>
   );
-}
+});
+
+SkillSection.displayName = "SkillSection";
+
+export default SkillSection;

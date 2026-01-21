@@ -1,4 +1,5 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Linkedin, Mail, Twitter, ExternalLink, Github } from "lucide-react";
 
@@ -13,6 +14,45 @@ interface FooterProps {
   };
 }
 
+// OPTIMIZATION: Move animation variants outside component to prevent recreation
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100, damping: 15 },
+  },
+  hover: { scale: 1.1, transition: { duration: 0.2 } },
+};
+
+const lineVariants = {
+  hidden: { scaleX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeInOut",
+    },
+  },
+};
+
+// OPTIMIZATION: Calculate year once outside component
+const CURRENT_YEAR = new Date().getFullYear();
+
+// Create a motion-enabled Link component that accepts Framer Motion props
+const MotionLink = motion.create(Link);
+
 const Footer: React.FC<FooterProps> = ({
   name = "Ravi Karmakar",
   email = "ravikarmkar94475@gmail.com",
@@ -23,44 +63,43 @@ const Footer: React.FC<FooterProps> = ({
     portfolio: "https://yourportfolio.com",
   },
 }) => {
-  const currentYear = new Date().getFullYear();
+  // OPTIMIZATION: Memoize quick links to prevent recreation
+  const quickLinks = useMemo(
+    () => [
+      { href: "/", label: "Home" },
+      { href: "/projects", label: "Projects" },
+      { href: "#about", label: "About" },
+      { href: "#contact", label: "Contact" },
+    ],
+    []
+  );
 
-  // const scrollToTop = () => {
-  //   window.scrollTo({ top: 0, behavior: "smooth" });
-  // };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+  // OPTIMIZATION: Memoize social links array
+  const socialLinksArray = useMemo(
+    () => [
+      {
+        href: socialLinks.github,
+        icon: Github,
+        label: "GitHub",
       },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
-    },
-    hover: { scale: 1.1, transition: { duration: 0.2 } },
-  };
-
-  const lineVariants = {
-    hidden: { scaleX: 0 },
-    visible: {
-      scaleX: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeInOut",
+      {
+        href: socialLinks.linkedin,
+        icon: Linkedin,
+        label: "LinkedIn",
       },
-    },
-  };
+      {
+        href: socialLinks.twitter,
+        icon: Twitter,
+        label: "Twitter",
+      },
+      {
+        href: socialLinks.portfolio,
+        icon: ExternalLink,
+        label: "Portfolio",
+      },
+    ],
+    [socialLinks]
+  );
 
   return (
     <footer className="w-full text-gray-200 py-12 px-4">
@@ -98,42 +137,42 @@ const Footer: React.FC<FooterProps> = ({
               Quick Links
             </motion.h4>
             <motion.ul className="space-y-2" variants={containerVariants}>
-              <motion.li variants={itemVariants}>
-                <motion.a
-                  href="#home"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                  whileHover={{ x: 5 }}
-                >
-                  Home
-                </motion.a>
-              </motion.li>
-              <motion.li variants={itemVariants}>
-                <motion.a
-                  href="#projects"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                  whileHover={{ x: 5 }}
-                >
-                  Projects
-                </motion.a>
-              </motion.li>
-              <motion.li variants={itemVariants}>
-                <motion.a
-                  href="#about"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                  whileHover={{ x: 5 }}
-                >
-                  About
-                </motion.a>
-              </motion.li>
-              <motion.li variants={itemVariants}>
-                <motion.a
-                  href="#contact"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                  whileHover={{ x: 5 }}
-                >
-                  Contact
-                </motion.a>
-              </motion.li>
+              {quickLinks.map((link) => {
+                // Check if it's a hash link (same page navigation)
+                const isHashLink = link.href.startsWith("#");
+
+                return (
+                  <motion.li key={link.href} variants={itemVariants}>
+                    {isHashLink ? (
+                      <motion.a
+                        href={link.href}
+                        className="text-gray-400 hover:text-white transition-colors duration-300"
+                        whileHover={{ x: 5 }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.querySelector(link.href);
+                          if (element) {
+                            element.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }
+                        }}
+                      >
+                        {link.label}
+                      </motion.a>
+                    ) : (
+                      <MotionLink
+                        to={link.href}
+                        className="text-gray-400 hover:text-white transition-colors duration-300"
+                        whileHover={{ x: 5 }}
+                      >
+                        {link.label}
+                      </MotionLink>
+                    )}
+                  </motion.li>
+                );
+              })}
             </motion.ul>
           </motion.div>
 
@@ -170,57 +209,22 @@ const Footer: React.FC<FooterProps> = ({
               Connect
             </motion.h4>
             <motion.div className="flex gap-4" variants={containerVariants}>
-              {socialLinks.github && (
-                <motion.a
-                  href={socialLinks.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  variants={itemVariants}
-                  whileHover="hover"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  <Github size={20} />
-                </motion.a>
-              )}
-              {socialLinks.linkedin && (
-                <motion.a
-                  href={socialLinks.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  variants={itemVariants}
-                  whileHover="hover"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  <Linkedin size={20} />
-                </motion.a>
-              )}
-              {socialLinks.twitter && (
-                <motion.a
-                  href={socialLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Twitter"
-                  variants={itemVariants}
-                  whileHover="hover"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  <Twitter size={20} />
-                </motion.a>
-              )}
-              {socialLinks.portfolio && (
-                <motion.a
-                  href={socialLinks.portfolio}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Portfolio"
-                  variants={itemVariants}
-                  whileHover="hover"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  <ExternalLink size={20} />
-                </motion.a>
+              {socialLinksArray.map(
+                (social) =>
+                  social.href && (
+                    <motion.a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      variants={itemVariants}
+                      whileHover="hover"
+                      className="text-gray-400 hover:text-white transition-colors duration-300"
+                    >
+                      <social.icon size={20} />
+                    </motion.a>
+                  )
               )}
             </motion.div>
           </motion.div>
@@ -243,23 +247,16 @@ const Footer: React.FC<FooterProps> = ({
           viewport={{ once: true, margin: "-100px" }}
         >
           <motion.p variants={itemVariants}>
-            © {currentYear} {name}. All rights reserved.
+            © {CURRENT_YEAR} {name}. All rights reserved.
           </motion.p>
           <motion.p variants={itemVariants} className="mt-2 md:mt-0">
             Designed and built with ❤️
           </motion.p>
         </motion.div>
       </div>
-
-      {/* <motion.button
-        onClick={scrollToTop}
-        whileHover={{ scale: 1.1 }}
-        className="p-2 ml-10 bg-accent rounded-full text-white hover:bg-accent/90 transition-colors"
-      >
-        <ArrowUp size={24} />
-      </motion.button> */}
     </footer>
   );
 };
 
-export default Footer;
+// OPTIMIZATION: Wrap component in memo to prevent unnecessary re-renders
+export default memo(Footer);

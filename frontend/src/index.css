@@ -24,14 +24,11 @@
   }
 
   .btn-primary {
-    @apply px-6 py-3 bg-accent text-white font-semibold rounded-lg 
-           hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1;
+    @apply px-6 py-3 bg-accent text-white font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-300 transform hover:-translate-y-1;
   }
 
   .card {
-    @apply bg-white dark:bg-secondary/20 rounded-xl p-6 shadow-lg dark:shadow-none
-           backdrop-blur-sm transition-all duration-300 hover:shadow-xl
-           dark:hover:bg-secondary/30;
+    @apply bg-white dark:bg-secondary/20 rounded-xl p-6 shadow-lg dark:shadow-none backdrop-blur-sm transition-all duration-300 hover:shadow-xl dark:hover:bg-secondary/30;
   }
 }
 
@@ -39,12 +36,15 @@
   0% {
     transform: translate(0px, 0px) scale(1);
   }
+
   33% {
     transform: translate(30px, -50px) scale(1.1);
   }
+
   66% {
     transform: translate(-20px, 20px) scale(0.9);
   }
+
   100% {
     transform: translate(0px, 0px) scale(1);
   }
@@ -54,6 +54,7 @@
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -63,6 +64,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -93,15 +95,21 @@
   @apply transition-colors duration-200;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling and prevent horizontal overflow */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 @keyframes spin-slow {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -116,6 +124,8 @@ html {
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }

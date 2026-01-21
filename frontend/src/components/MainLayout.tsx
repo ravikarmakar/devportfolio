@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
@@ -7,6 +8,9 @@ interface MainLayoutTypes {
   setDarkMode: (value: boolean) => void;
 }
 
+const MemoizedNavbar = memo(Navbar);
+const MemoizedFooter = memo(Footer);
+
 const MainLayout: React.FC<MainLayoutTypes> = ({
   children,
   darkMode,
@@ -14,14 +18,16 @@ const MainLayout: React.FC<MainLayoutTypes> = ({
 }) => {
   return (
     <div
-      className={`min-h-screen ${
-        darkMode ? "text-textLight" : "text-gray-900"
-      }`}
+      className={`min-h-screen flex flex-col ${darkMode ? "text-textLight" : "text-gray-900"
+        }`}
     >
-      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-      {children}
+      <MemoizedNavbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      <Footer />
+      <main className="flex-grow relative w-full">
+        {children}
+      </main>
+
+      <MemoizedFooter />
     </div>
   );
 };

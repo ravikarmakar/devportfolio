@@ -1,17 +1,20 @@
 // External Imports
-import { useState, useEffect, lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { useState, useEffect, lazy, Suspense, useRef } from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
-// Components
+// Components (eagerly loaded - small/critical components)
 import LoadingScreen from "./components/LoadingScreen";
 import NotFound from "./components/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedAdminRoute from "./pages/auth/ProtectAdmin";
 import MainLayout from "./components/MainLayout";
-import ProjectDeatils from "./pages/project/page/ProjectDeatils";
 
-// Lazy-Loaded Admin Pages
+// Store
+import { useAuthStore } from "./store/useAuthStore";
+
+// Lazy-Loaded Route Bundles
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
 const BlogRoutes = lazy(() => import("./routes/BlogRoutes"));
 
@@ -24,8 +27,27 @@ const ContactSection = lazy(
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const AllProjects = lazy(() => import("./pages/project/page/AllProjects"));
+const ProjectDetails = lazy(() => import("./pages/project/page/ProjectDetails"));
+
+// Layout wrapper component for public routes
+const PublicLayout = ({ darkMode, setDarkMode }: { darkMode: boolean; setDarkMode: (value: boolean) => void }) => (
+  <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+    <Outlet />
+  </MainLayout>
+);
 
 function App() {
+  // Prefetch user data at app level (moved from Hero)
+  const { fetchUserData } = useAuthStore();
+  const hasFetched = useRef(false);
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      fetchUserData();
+      hasFetched.current = true;
+    }
+  }, [fetchUserData]);
+
   // State Management
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");
@@ -38,6 +60,8 @@ function App() {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
+  console.log("page refresh")
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -47,88 +71,45 @@ function App() {
         transition={{ duration: 0.5 }}
         className={`min-h-screen ${darkMode ? "dark bg-bgDark" : "bg-gray-50"}`}
       >
-        <Suspense fallback={<LoadingScreen />}>
-          <Routes>
-            {/* Admin Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <ProtectedAdminRoute>
-                  <AdminRoutes />
-                </ProtectedAdminRoute>
-              }
-            />
-            {/* Blog Routes */}
-            <Route
-              path="/blog/*"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <BlogRoutes />
-                </MainLayout>
-              }
-            />
-            {/* Public Routes */}
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingScreen />}>
+            <Routes>
+              {/* Admin Routes */}
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedAdminRoute>
+                    <AdminRoutes />
+                  </ProtectedAdminRoute>
+                }
+              />
 
-            <Route
-              path="/"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <Home />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <LoginPage />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/projects"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <AllProjects />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/projects/:id"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <ProjectDeatils />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/components"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <ComingSoon />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/contact"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <ContactSection />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
-                  <ProfilePage />
-                </MainLayout>
-              }
-            />
-            {/* 404 Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+              {/* Blog Routes */}
+              <Route
+                path="/blog/*"
+                element={
+                  <MainLayout darkMode={darkMode} setDarkMode={setDarkMode}>
+                    <BlogRoutes />
+                  </MainLayout>
+                }
+              />
+
+              {/* Public Routes with MainLayout */}
+              <Route element={<PublicLayout darkMode={darkMode} setDarkMode={setDarkMode} />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/projects" element={<AllProjects />} />
+                <Route path="/projects/:id" element={<ProjectDetails />} />
+                <Route path="/components" element={<ComingSoon />} />
+                <Route path="/contact" element={<ContactSection />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
+
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
         <Toaster />
       </motion.div>
     </AnimatePresence>

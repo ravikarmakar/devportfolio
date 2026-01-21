@@ -9,6 +9,7 @@ export interface User {
   password: string;
   role?: string;
   imageUrl: string;
+  resumeUrl: string;
   phone: string;
   bio: string;
   techRole: string;

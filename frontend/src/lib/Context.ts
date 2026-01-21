@@ -134,9 +134,9 @@ export const education = [
   },
   {
     id: 2,
-    years: "5 Month - 2024",
+    years: "2024",
     degree: "Full Stack Development Certification",
-    institution: "Tech Bootcamp - Apna College",
+    institution: "Remote - Apna College",
     location: "Online",
     description:
       "Completed a hands-on full stack web development bootcamp covering HTML, CSS, JavaScript, React.js, Node.js, Express.js, and MongoDB. Gained practical experience through real-world projects, including building REST APIs and deploying applications.",

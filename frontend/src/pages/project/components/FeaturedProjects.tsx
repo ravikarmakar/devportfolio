@@ -58,7 +58,7 @@ export default function FeaturedProjects() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden py-16 px-4 md:px-8">
+    <section id="projects" className="relative min-h-screen w-full overflow-hidden py-16 px-4 md:px-8">
       {/* Animated grid pattern overlay */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -92,27 +92,37 @@ export default function FeaturedProjects() {
       >
         {/* Header with animated title */}
         <div className="mb-16 relative text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="inline-block"
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
+              🚀 My Work
+            </span>
+          </motion.div>
+
           <motion.h2
-            className="text-4xl md:text-5xl font-bold text-gray-200 mb-4"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <span className="text-white">Featured</span>
-            <span className="bg-clip-text text-blue-500"> Projects</span>
+            <span className="text-white">Work That </span>
+            <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+              Matters
+            </span>
           </motion.h2>
 
-          {/* Animated underline */}
-          <motion.div
-            className="h-1 w-40 bg-gradient-to-r from-blue-500 to-blue-400 mx-auto mt-4"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 160, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          />
-
-          <p className="text-gray-400 text-lg max-w-2xl mt-5 mx-auto">
+          <motion.p
+            className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
             Explore my latest work and the creative solutions I've built
-          </p>
+          </motion.p>
 
           {/* View toggle buttons */}
 
@@ -189,6 +199,6 @@ export default function FeaturedProjects() {
         isOpen={selectedProject !== null}
         onClose={() => setSelectedProject(null)}
       />
-    </div>
+    </section>
   );
 }
