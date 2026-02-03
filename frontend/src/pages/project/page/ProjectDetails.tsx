@@ -20,6 +20,9 @@ const ProjectDetails = () => {
     const [project, setProject] = useState<Project | null>(null);
 
     useEffect(() => {
+        // Scroll to top when component mounts or id changes
+        window.scrollTo(0, 0);
+
         const loadProject = async () => {
             if (id) {
                 const data = await fetchProjectDetails(id);
@@ -263,27 +266,6 @@ const ProjectDetails = () => {
                                 <ArrowRight className="h-5 w-5" />
                             </motion.a>
                         )}
-                    </div>
-                </motion.section>
-
-                {/* Project Image Gallery (Full Width) */}
-                <motion.section
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
-                    className="mb-12"
-                >
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">
-                        Project Preview
-                    </h2>
-                    <div className="rounded-2xl overflow-hidden border border-blue-500/20">
-                        <motion.img
-                            src={project.imageUrl}
-                            alt={project.title}
-                            className="w-full h-auto object-cover"
-                            whileHover={{ scale: 1.02 }}
-                            transition={{ duration: 0.3 }}
-                        />
                     </div>
                 </motion.section>
 

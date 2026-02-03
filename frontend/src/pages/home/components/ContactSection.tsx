@@ -4,6 +4,7 @@ import { Loader2, Send, CheckCircle2, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useContactStore } from "../../../store/useContactStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 // Modern Contact Method Card with Icon
 const ContactMethodCard = memo(({ method, index }: { method: any; index: number }) => {
@@ -58,6 +59,7 @@ ContactMethodCard.displayName = "ContactMethodCard";
 // Main Component
 export default function ContactSection() {
   const { createContact, isLoading } = useContactStore();
+  const { user } = useAuthStore();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -95,7 +97,7 @@ export default function ContactSection() {
   );
 
   return (
-    <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="contact" className="relative py-20 md:py-28 overflow-hidden bg-[#0A0A0B]">
       {/* Decorative Elements */}
       <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
@@ -134,7 +136,37 @@ export default function ContactSection() {
         </motion.div>
 
         {/* Contact Methods Grid */}
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 md:mb-20">
+          <ContactMethodCard
+            index={0}
+            method={{
+              title: "Email Me",
+              value: user?.email || "ravi@example.com",
+              icon: "📧",
+              color: "from-blue-500 to-cyan-500",
+              link: `mailto:${user?.email}`,
+            }}
+          />
+          <ContactMethodCard
+            index={1}
+            method={{
+              title: "Current Location",
+              value: user?.location || "Bengaluru, KA",
+              icon: "📍",
+              color: "from-purple-500 to-pink-500",
+            }}
+          />
+          <ContactMethodCard
+            index={2}
+            method={{
+              title: "Phone",
+              value: user?.phone || "+91 0000000000",
+              icon: "📱",
+              color: "from-orange-500 to-red-500",
+              link: `tel:${user?.phone}`,
+            }}
+          />
+        </div>
 
         {/* Contact Form */}
         <motion.div

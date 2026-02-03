@@ -60,8 +60,6 @@ function App() {
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  console.log("page refresh")
-
   return (
     <AnimatePresence mode="wait">
       <motion.div

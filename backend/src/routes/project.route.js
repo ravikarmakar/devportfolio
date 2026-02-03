@@ -15,6 +15,7 @@ const router = express.Router();
 
 router.get("/", fetchAllProject);
 router.get("/featured-projects", fetchFeaturedProjects);
+router.get("/:id", fetchProjectDetails);
 
 router.use(protectRoute)
 
@@ -24,7 +25,6 @@ router.post(
   upload.single("image"),
   createProject
 );
-router.get("/:id", fetchProjectDetails);
 
 router.use(isAdmin)
 

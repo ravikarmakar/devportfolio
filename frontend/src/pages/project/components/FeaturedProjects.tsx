@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { LayoutGrid, List } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 
@@ -11,16 +11,10 @@ export default function FeaturedProjects() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isGridView, setIsGridView] = useState(true);
   const controls = useAnimation();
-  const hasFetched = useRef(false);
 
-  const { fetchFeaturedProjects, projects } = useProjectStore();
+  const { projects } = useProjectStore();
 
-  useEffect(() => {
-    if (!hasFetched.current) {
-      fetchFeaturedProjects();
-      hasFetched.current = true;
-    }
-  }, []);
+  // Projects are now pre-fetched at Home level
 
   useEffect(() => {
     controls.start("visible");
@@ -58,7 +52,7 @@ export default function FeaturedProjects() {
   };
 
   return (
-    <section id="projects" className="relative min-h-screen w-full overflow-hidden py-16 px-4 md:px-8">
+    <section id="projects" className="relative min-h-screen w-full overflow-hidden bg-[#0A0A0B] py-16 px-4 md:px-8">
       {/* Animated grid pattern overlay */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

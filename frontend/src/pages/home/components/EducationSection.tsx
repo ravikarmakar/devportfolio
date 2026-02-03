@@ -216,7 +216,7 @@ export default function EducationSection() {
     <section
       id="education"
       ref={containerRef}
-      className="relative py-24 md:py-32 overflow-hidden"
+      className="relative py-24 md:py-32 overflow-hidden bg-[#0A0A0B]"
     >
       {/* Background Decorations */}
       <div className="absolute inset-0 pointer-events-none">
@@ -255,14 +255,14 @@ export default function EducationSection() {
             </span>
           </motion.h2>
           <motion.p
-            className="text-gray-400 text-lg mt-4 max-w-2xl"
+            className="text-gray-400 text-lg mt-4 max-w-2xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             viewport={{ once: true }}
           >
-            My academic background that has shaped my technical expertise and
-            professional approach
+            My academic foundation that has shaped my technical expertise and
+            professional mindset.
           </motion.p>
         </motion.div>
 

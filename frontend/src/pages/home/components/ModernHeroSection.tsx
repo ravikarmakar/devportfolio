@@ -1,15 +1,38 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Sparkles, Code2, Rocket, Download } from "lucide-react";
+import { useMemo } from "react";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export default function ModernHeroSection() {
     const navigate = useNavigate();
+    const { user } = useAuthStore();
     const { scrollY } = useScroll();
     const y1 = useTransform(scrollY, [0, 300], [0, 100]);
     const y2 = useTransform(scrollY, [0, 300], [0, -100]);
 
+    // Stabilize particles to prevent hydration mismatch
+    const particles = useMemo(() => {
+        return [...Array(20)].map((_, i) => ({
+            id: i,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            duration: 3 + Math.random() * 2,
+            delay: Math.random() * 5,
+        }));
+    }, []);
+
+    const handleDownloadCV = () => {
+        if (user?.resumeUrl) {
+            window.open(user.resumeUrl, "_blank", "noopener,noreferrer");
+        } else {
+            // Fallback or notification if no resume URL
+            console.log("No resume URL found");
+        }
+    };
+
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0A0A0B]">
             {/* Background Pattern */}
             <div className="absolute inset-0 overflow-hidden">
                 {/* Grid Pattern */}
@@ -18,13 +41,13 @@ export default function ModernHeroSection() {
 
             {/* Floating Particles */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(20)].map((_, i) => (
+                {particles.map((p) => (
                     <motion.div
-                        key={i}
+                        key={p.id}
                         className="absolute w-1 h-1 bg-blue-400 rounded-full"
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
+                            left: p.left,
+                            top: p.top,
                         }}
                         animate={{
                             y: [0, -30, 0],
@@ -32,9 +55,9 @@ export default function ModernHeroSection() {
                             scale: [0, 1, 0],
                         }}
                         transition={{
-                            duration: 3 + Math.random() * 2,
+                            duration: p.duration,
                             repeat: Infinity,
-                            delay: Math.random() * 5,
+                            delay: p.delay,
                         }}
                     />
                 ))}
@@ -114,6 +137,8 @@ export default function ModernHeroSection() {
                                 className="group px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl font-semibold text-white hover:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={handleDownloadCV}
+                                disabled={!user?.resumeUrl}
                             >
                                 <span className="flex items-center gap-2">
                                     <Download className="w-5 h-5" />
@@ -131,23 +156,24 @@ export default function ModernHeroSection() {
                         >
                             <div>
                                 <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                    50+
+                                    5+
                                 </div>
                                 <div className="text-sm text-gray-400 mt-1">Projects</div>
                             </div>
                             <div>
                                 <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                    5+
+                                    {user?.experience || 1}+
                                 </div>
                                 <div className="text-sm text-gray-400 mt-1">Years Exp</div>
                             </div>
                             <div>
                                 <div className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-blue-400 bg-clip-text text-transparent">
-                                    30+
+                                    10+
                                 </div>
                                 <div className="text-sm text-gray-400 mt-1">Happy Clients</div>
                             </div>
                         </motion.div>
+
                     </div>
 
                     {/* Right Side - 3D Visual Element */}

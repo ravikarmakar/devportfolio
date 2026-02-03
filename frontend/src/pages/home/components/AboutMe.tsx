@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, useMemo } from "react";
+import { memo, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Calendar, ArrowRight, Sparkles } from "lucide-react";
@@ -30,13 +30,9 @@ const AboutMe = memo(() => {
   const isInView = useInView(contentRef, { once: true, amount: 0.2 });
 
   const { user } = useAuthStore();
-  const { Skills, fetchSkills } = useSkillStore();
+  const { Skills } = useSkillStore();
 
-  useEffect(() => {
-    if (Skills.length === 0) {
-      fetchSkills();
-    }
-  }, [Skills.length, fetchSkills]);
+  // Skills are now pre-fetched at Home level
 
   const displaySkills = useMemo(() => {
     return Array.from(new Set(Skills.map((s) => s.name))).slice(0, 8);
@@ -58,7 +54,7 @@ const AboutMe = memo(() => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden"
+      className="relative py-24 md:py-32 overflow-hidden bg-[#0A0A0B]"
     >
       {/* Background decorations */}
       <div className="absolute inset-0 pointer-events-none">
